@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="547.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.RoomsSceneController">
+   <children>
+      <JFXListView layoutX="44.0" layoutY="44.0" prefHeight="467.0" prefWidth="180.0" style="-fx-background-color: #3E3E4A;" AnchorPane.bottomAnchor="40.0" AnchorPane.leftAnchor="40.0" AnchorPane.topAnchor="40.0" />
+      <Label layoutX="63.0" layoutY="216.0" prefHeight="33.0" prefWidth="135.0" text="List View" textFill="WHITE">
+         <font>
+            <Font name="Roboto Regular" size="32.0" />
+         </font>
+      </Label>
+      <Label layoutX="75.0" layoutY="254.0" prefHeight="39.0" prefWidth="112.0" text="Rooms" textFill="WHITE">
+         <font>
+            <Font name="Roboto Regular" size="32.0" />
+         </font>
+      </Label>
+      <AnchorPane layoutX="241.0" layoutY="40.0" prefHeight="467.0" prefWidth="575.0" style="-fx-background-color: #3E3E4A;">
+         <children>
+            <Label layoutX="224.0" layoutY="175.0" text="Calendar" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Regular" size="32.0" />
+               </font>
+            </Label>
+            <Label layoutX="180.0" layoutY="214.0" text="Selected Room" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Regular" size="32.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutX="840.0" layoutY="40.0" prefHeight="467.0" prefWidth="213.0" style="-fx-background-color: #3E3E4A;" AnchorPane.rightAnchor="40.0">
+         <children>
+            <Label layoutX="14.0" layoutY="7.0" text="Add Task" textFill="WHITE" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="86.0">
+               <font>
+                  <Font name="Roboto Regular" size="16.0" />
+               </font>
+            </Label>
+            <JFXButton layoutX="52.0" layoutY="427.0" prefHeight="32.0" prefWidth="75.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Confirm" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+            </JFXButton>
+            <JFXButton fx:id="cancelButton1" layoutX="134.0" layoutY="427.0" prefHeight="32.0" prefWidth="70.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Cancel" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+            </JFXButton>
+            <JFXTextArea focusColor="#11ab97" labelFloat="true" layoutX="10.0" layoutY="234.0" prefHeight="133.0" prefWidth="194.0" promptText="Task Description" style="-fx-background-color: #33333d; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" />
+            <JFXComboBox focusColor="#11ab97" labelFloat="true" layoutX="12.0" layoutY="41.0" prefHeight="25.0" prefWidth="194.0" promptText="Select Room" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" />
+            <JFXComboBox focusColor="#11ab97" labelFloat="true" layoutX="12.0" layoutY="83.0" prefHeight="25.0" prefWidth="194.0" promptText="Select Employee" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" />
+            <JFXComboBox focusColor="#11ab97" labelFloat="true" layoutX="12.0" layoutY="127.0" prefHeight="25.0" prefWidth="194.0" promptText="Assign Priority" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" />
+            <JFXDatePicker defaultColor="#007b68" layoutX="13.0" layoutY="174.0" prefHeight="28.0" prefWidth="194.0" promptText="Due Date" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" />
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

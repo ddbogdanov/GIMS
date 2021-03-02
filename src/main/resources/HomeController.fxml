@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="pane" prefHeight="606.0" prefWidth="1090.0" style="-fx-background-color: #33333D;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.HomeController">
+   <children>
+      <AnchorPane layoutY="7.0" prefHeight="60.0" prefWidth="1090.0" style="-fx-background-color: #007b68;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <effect>
+            <DropShadow color="#464651" height="40.0" radius="14.75" />
+         </effect>
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="1104.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <ImageView fitHeight="60.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@static/Logo1png.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" text="GIMS" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto Regular" size="24.0" />
+                     </font>
+                  </Label>
+                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="homeTab" layoutX="21.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Home" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="HOME" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                     <HBox.margin>
+                        <Insets left="60.0" />
+                     </HBox.margin>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="employeeTab" layoutX="21.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Employees" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="GROUP" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="customerTab" layoutX="14.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Customers" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="MONEY" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="roomTab" layoutX="14.0" prefHeight="60.0" prefWidth="110.0" ripplerFill="#5bddc7" text="Rooms" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="HOTEL" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="eventTab" layoutX="4.0" layoutY="3.0" prefHeight="60.0" prefWidth="90.0" ripplerFill="#5bddc7" text="Events" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="CALENDAR" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="settingsTab" layoutX="94.0" layoutY="-4.0" prefHeight="60.0" prefWidth="90.0" ripplerFill="#5bddc7" text="Settings" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="GEAR" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="minimizeButton" focusTraversable="false" layoutX="106.0" layoutY="18.0" ripplerFill="#5bddc7" text="" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="5.0">
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="WINDOW_MINIMIZE" size="14" />
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="maximizeButton" focusTraversable="false" ripplerFill="#5bddc7" text="" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="5.0">
+                           <graphic>
+                              <FontAwesomeIconView fx:id="maximizeIcon" fill="WHITE" glyphName="WINDOW_MAXIMIZE" size="14" />
+                           </graphic>
+                        </JFXButton>
+                        <JFXButton fx:id="exitButton" focusTraversable="false" layoutX="97.0" layoutY="18.0" ripplerFill="#5bddc7" text="" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="CLOSE" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+      <AnchorPane layoutY="178.0" prefHeight="200.0" prefWidth="80.0" style="-fx-background-color: #007b68;" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="TOP_CENTER" layoutX="-20.0" layoutY="120.0" prefHeight="200.0" prefWidth="100.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+      <BorderPane fx:id="mainView" layoutX="310.0" layoutY="192.0" prefHeight="547.0" prefWidth="1090.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
+   </children>
+</AnchorPane>

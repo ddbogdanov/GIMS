@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.LoginController">
+   <children>
+      <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: #007b68;" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox alignment="TOP_CENTER" prefHeight="500.0" prefWidth="400.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <ImageView disable="true" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" VBox.vgrow="ALWAYS">
+                           <image>
+                              <Image url="@static/Logo1png.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                        </ImageView>
+                        <Label text="The Queen Gypsy Inn" textFill="WHITE" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="Bell MT" size="34.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="20.0" />
+                           </VBox.margin>
+                        </Label>
+                     </children>
+                  </VBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="500.0" prefWidth="400.0" style="-fx-background-color: #33333D;" HBox.hgrow="ALWAYS">
+               <children>
+                  <JFXButton fx:id="minimizeButton" focusTraversable="false" layoutX="327.0" layoutY="14.0" ripplerFill="#5bddc7" text="" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="5.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="#007b68" glyphName="WINDOW_MINIMIZE" size="14" />
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="exitButton" focusTraversable="false" layoutX="357.0" layoutY="14.0" ripplerFill="#5bddc7" text="" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="#007b68" glyphName="CLOSE" size="16" />
+                     </graphic>
+                  </JFXButton>
+                  <JFXButton fx:id="databaseButton" focusTraversable="false" layoutX="8.0" layoutY="3.0" ripplerFill="#5bddc7" text="" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0">
+                     <graphic>
+                        <FontAwesomeIconView fill="#007b68" glyphName="DATABASE" selectionStart="1" size="16" />
+                     </graphic>
+                  </JFXButton>
+                  <VBox alignment="TOP_CENTER" layoutX="110.0" layoutY="29.0" prefHeight="336.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="35.0">
+                     <children>
+                        <Label text="Welcome to GIMS" textFill="WHITE" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="Roboto Regular" size="24.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="50.0" />
+                           </VBox.margin>
+                        </Label>
+                        <JFXTextField focusColor="#11ab97" labelFloat="true" prefWidth="400.0" promptText="Username" style="-fx-background-color: #3e3e4a;" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="100.0" right="100.0" top="50.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Roboto Regular" size="14.0" />
+                           </font>
+                        </JFXTextField>
+                        <JFXPasswordField focusColor="#11ab97" labelFloat="true" promptText="Password" style="-fx-background-color: #3e3e4a;" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="100.0" right="100.0" top="15.0" />
+                           </VBox.margin>
+                           <font>
+                              <Font name="Roboto Regular" size="14.0" />
+                           </font>
+                        </JFXPasswordField>
+                        <JFXButton focusTraversable="false" ripplerFill="#5bddc7" text="Forgot password?" textFill="WHITE" VBox.vgrow="ALWAYS">
+                           <font>
+                              <Font name="Roboto Regular" size="10.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets left="110.0" top="5.0" />
+                           </VBox.margin>
+                        </JFXButton>
+                        <JFXButton fx:id="loginButton" prefHeight="32.0" prefWidth="162.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Sign In" textFill="WHITE">
+                           <font>
+                              <Font name="Roboto Regular" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </JFXButton>
+                        <AnchorPane prefHeight="35.0" prefWidth="400.0">
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label layoutX="195.0" layoutY="12.0" text="Or" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.topAnchor="8.0">
+                                 <font>
+                                    <Font name="Roboto Italic" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Separator layoutY="16.0" prefWidth="80.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="105.0" AnchorPane.topAnchor="16.0" />
+                              <Separator layoutX="10.0" layoutY="26.0" prefWidth="80.0" AnchorPane.bottomAnchor="17.0" AnchorPane.rightAnchor="105.0" AnchorPane.topAnchor="16.0" />
+                           </children>
+                        </AnchorPane>
+                        <JFXButton fx:id="addNewUserButton" opacity="0.9" ripplerFill="#5bddc7" text="Add New User" textFill="WHITE" underline="true">
+                           <font>
+                              <Font name="Roboto Regular" size="14.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                        </JFXButton>
+                     </children>
+                  </VBox>
+               </children></AnchorPane>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
