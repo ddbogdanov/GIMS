@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #33333d; -fx-border-color: #5d5c67; -fx-border-radius: 18; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.DatabaseInfoController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="92.0" layoutY="87.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane prefHeight="40.0">
+               <children>
+                  <Label layoutX="47.0" layoutY="12.0" text="Database Connectivity" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="8.0">
+                     <font>
+                        <Font name="Roboto Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIconView fill="#007b68" glyphName="DATABASE" layoutX="14.0" layoutY="24.0" size="16" AnchorPane.bottomAnchor="12.0" AnchorPane.topAnchor="12.0" />
+               </children>
+            </AnchorPane>
+            <Separator prefWidth="200.0" stylesheets="@static/GIMScss.css">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin>
+            </Separator>
+            <JFXTextField focusColor="#11ab97" labelFloat="true" prefWidth="400.0" promptText="DB Endpoint" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </JFXTextField>
+            <HBox prefHeight="30.0" prefWidth="258.0" spacing="10.0">
+               <children>
+                  <JFXTextField focusColor="#11ab97" labelFloat="true" prefWidth="400.0" promptText="Port" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+                     <font>
+                        <Font name="Roboto Regular" size="14.0" />
+                     </font>
+                  </JFXTextField>
+                  <JFXTextField focusColor="#11ab97" labelFloat="true" prefWidth="400.0" promptText="DB Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+                     <font>
+                        <Font name="Roboto Regular" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </JFXTextField>
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+            <JFXTextField focusColor="#11ab97" labelFloat="true" prefWidth="400.0" promptText="DB Username" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </JFXTextField>
+            <JFXPasswordField focusColor="#11ab97" labelFloat="true" promptText="DB Password" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </JFXPasswordField>
+            <JFXButton prefHeight="32.0" prefWidth="125.0" ripplerFill="#5bddc7" style="-fx-background-color: #3e3e4a;" text="Test Connection" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="135.0" top="20.0" />
+               </VBox.margin>
+            </JFXButton>
+            <Label text="Successful/Not Successful" textFill="#da0000">
+               <font>
+                  <Font name="Roboto Regular" size="10.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="135.0" top="2.0" />
+               </VBox.margin>
+            </Label>
+            <HBox prefHeight="80.0" prefWidth="258.0" spacing="10.0">
+               <children>
+                  <JFXButton prefHeight="32.0" prefWidth="125.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Set Connection" textFill="WHITE" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font name="Roboto Regular" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="55.0" top="50.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="cancelButton" prefHeight="32.0" prefWidth="70.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Cancel" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto Regular" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets top="50.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

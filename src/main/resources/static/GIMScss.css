@@ -1,0 +1,32 @@
+.jfx-text-field, .jfx-password-field {
+    -fx-prompt-text-fill: WHITE;
+    -fx-text-fill: WHITE;
+}
+
+.jfx-hamburger-icon StackPane {
+    -fx-background-color: WHITE;
+}
+
+.separator *.line {
+    -fx-border-style: solid;
+    -fx-border-color: #5D5C67;
+}
+
+
+.jfx-combo-box {
+    -fx-text-inner-color: WHITE;
+    -fx-prompt-text-fill: WHITE;
+}
+.jfx-combo-box .cell {
+    -fx-text-fill: WHITE;
+}
+
+.jfx-date-picker .text-field {
+    -fx-pompt-text-fill: WHITE;
+    -fx-text-fill: WHITE;
+}
+
+.jfx-text-area {
+    -fx-prompt-text-fill: WHITE;
+    -fx-text-fill: WHITE;
+}
