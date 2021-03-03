@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="pane" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #33333d; -fx-border-color: #5d5c67; -fx-border-radius: 18; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.AddUserController">
+   <children>
+      <VBox alignment="TOP_CENTER" layoutX="92.0" layoutY="87.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane prefHeight="40.0">
+               <children>
+                  <Label fx:id="userTitle" layoutX="47.0" layoutY="12.0" text="Add a New User" textFill="WHITE" AnchorPane.bottomAnchor="8.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="13.0">
+                     <font>
+                        <Font name="Roboto Bold" size="20.0" />
+                     </font>
+                  </Label>
+                  <FontAwesomeIconView fill="#007b68" glyphName="USER" layoutX="14.0" layoutY="24.0" size="16" AnchorPane.bottomAnchor="12.0" AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="16.0" />
+               </children>
+            </AnchorPane>
+            <Separator prefWidth="200.0" stylesheets="@static/GIMScss.css">
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </Separator>
+            <JFXTextField fx:id="usernameTextField" focusColor="#11ab97" labelFloat="true" prefWidth="400.0" promptText="Username" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </JFXTextField>
+            <JFXPasswordField fx:id="userPasswordField" focusColor="#11ab97" labelFloat="true" promptText="Password" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </JFXPasswordField>
+            <JFXPasswordField fx:id="userConfirmPasswordField" focusColor="#11ab97" labelFloat="true" promptText="Confirm Password" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+               <font>
+                  <Font name="Roboto Regular" size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </JFXPasswordField>
+            <Label fx:id="passMatchField" text="Login" textFill="WHITE">
+               <font>
+                  <Font name="Roboto Regular" size="10.0" />
+               </font>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </Label>
+            <JFXCheckBox fx:id="isAdminCheck" checkedColor="#007b68" text="Is Admin?" textFill="WHITE" unCheckedColor="#5d5c67">
+               <VBox.margin>
+                  <Insets right="172.0" top="15.0" />
+               </VBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </JFXCheckBox>
+            <JFXCheckBox fx:id="removeUserCheck" checkedColor="#007b68" text="Remove User?" textFill="WHITE" unCheckedColor="#5d5c67">
+               <font>
+                  <Font size="14.0" />
+               </font>
+               <VBox.margin>
+                  <Insets right="145.0" top="10.0" />
+               </VBox.margin>
+            </JFXCheckBox>
+            <HBox prefHeight="80.0" prefWidth="258.0" spacing="10.0">
+               <children>
+                  <JFXButton fx:id="submitButton" prefHeight="32.0" prefWidth="125.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Submit" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto Regular" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="55.0" top="75.0" />
+                     </HBox.margin>
+                  </JFXButton>
+                  <JFXButton fx:id="closeButton" prefHeight="32.0" prefWidth="70.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Close" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto Regular" size="14.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets top="75.0" />
+                     </HBox.margin>
+                  </JFXButton>
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

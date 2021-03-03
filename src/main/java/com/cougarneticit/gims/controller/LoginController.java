@@ -1,42 +1,55 @@
 package com.cougarneticit.gims.controller;
 
+import com.cougarneticit.gims.model.User;
+import com.cougarneticit.gims.model.repos.UserRepo;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXPasswordField;
+import com.jfoenix.controls.JFXTextField;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 @Component
 @FxmlView("/LoginController.fxml")
 public class LoginController implements Initializable {
 
     private final FxWeaver fxWeaver;
-    //private static User user; //TODO: IMPLEMENT
+    private static User user;
 
     public static HomeController homeController;
 
-    //@Autowired
-    //private UserRepo userRepo; //TODO: IMPLEMENT
+    @Autowired
+    private UserRepo userRepo;
 
+    @FXML private JFXTextField usernameField;
+    @FXML private JFXPasswordField passwordField;
     @FXML private JFXButton minimizeButton, exitButton, addNewUserButton, databaseButton, loginButton;
+    @FXML private Label loginStatus;
 
     public LoginController(FxWeaver fxWeaver) { this.fxWeaver = fxWeaver; }
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle){
         databaseButton.setDisable(true);
-        //loginStatus.setVisible(false);
+        loginStatus.setVisible(false);
 
         loginButton.setOnAction(e -> {
             login();
         });
         addNewUserButton.setOnAction(e -> {
+            //TODO: Add modality to pop-up window
             addUser();
         });
 
@@ -53,19 +66,47 @@ public class LoginController implements Initializable {
     }
 
     private void login() {
-        homeController = fxWeaver.loadController(HomeController.class);
-        homeController.show();
-        loginButton.getScene().getWindow().hide();
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        UUID userId;
+        boolean isAdmin;
+
+        Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
+
+        try {
+            if(passwordEncoder.matches(password, userRepo.findByUsername(username).get(0).getPassword())) {
+
+                String hashedPassword = userRepo.findByUsername(username).get(0).getPassword();
+                userId = userRepo.findByUsername(username).get(0).getId();
+                isAdmin = userRepo.findByUsername(username).get(0).getIsAdmin();
+                user = new User(userId, username, hashedPassword, isAdmin);
+
+                loginStatus.setTextFill(Color.web("#FFFFFF"));
+                loginStatus.setText("Login Successful!");
+                loginStatus.setVisible(true);
+                homeController = fxWeaver.loadController(HomeController.class);
+                homeController.show();
+                loginButton.getScene().getWindow().hide();
+
+            } else {
+                loginStatus.setTextFill(Color.web("#F73331"));
+                loginStatus.setVisible(true);
+                loginStatus.setText("Password is incorrect");
+            }
+        }
+        catch(IndexOutOfBoundsException ex) {
+            loginStatus.setTextFill(Color.web("#F73331"));
+            loginStatus.setVisible(true);
+            loginStatus.setText("This username may not exist");
+        }
     }
     private void showDbInfo() {
         //TODO
     }
     private void addUser() {
-        //TODO
+        fxWeaver.loadController(AddUserController.class).show();
     }
-
-    //TODO: IMPLEMENT
-    /*public static User getUser() {
+    public static User getUser() {
         return user;
-    }*/
+    }
 }
