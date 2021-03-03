@@ -13,7 +13,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 @Component
-@FxmlView("/HomeSceneController")
+@FxmlView("/HomeSceneController.fxml")
 public class HomeSceneController implements Initializable {
 
     private final FxWeaver fxWeaver;
