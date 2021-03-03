@@ -8,6 +8,8 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
+//TODO: use mysqldump to share sql schemas
+
 @Entity
 @Table(name="usertable")
 public class User {
