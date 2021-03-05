@@ -42,6 +42,7 @@ public class DatabaseInfoController implements Initializable {
         Scene scene = new Scene(pane);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
 
         cancelButton.setOnAction(e -> {
             Stage stage = (Stage)cancelButton.getScene().getWindow();

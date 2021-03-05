@@ -1,5 +1,6 @@
 package com.cougarneticit.gims.controller;
 
+import com.cougarneticit.gims.application.ResizeHelper;
 import com.cougarneticit.gims.model.User;
 import com.cougarneticit.gims.model.repos.UserRepo;
 import com.jfoenix.controls.JFXButton;
@@ -55,6 +56,7 @@ public class AddUserController implements Initializable {
         Scene scene = new Scene(pane);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
 
         passMatchField.setVisible(false);
 
