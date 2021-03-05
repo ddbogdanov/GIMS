@@ -159,7 +159,7 @@ public class HomeController implements Initializable {
         mainView.setCenter(eventsScene);
     }
     public void showSettingsView() {
-        mainView.setCenter(roomsScene);
+        mainView.setCenter(settingsScene);
     }
 
     //there's probably a better way to do this - store buttons in an array and loop through? or abstract and enumerate all possible values. less lines of code + safer. maybe. too lazy rn
