@@ -162,7 +162,7 @@ public class HomeController implements Initializable {
         mainView.setCenter(settingsScene);
     }
 
-    //there's probably a better way to do this - store buttons in an array and loop through? or abstract and enumerate all possible values. less lines of code + safer. maybe. too lazy rn
+    //there's probably a better way to do this - store buttons in an array and loop through? or abstract and enumerate all possible values. less lines of code + safer. maybe.
     private void setActiveButton(String activeButtonToSet) {
         switch(activeButtonToSet) {
             case "home":
