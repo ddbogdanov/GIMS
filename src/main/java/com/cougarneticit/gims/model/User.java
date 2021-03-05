@@ -16,13 +16,13 @@ import java.util.UUID;
 public class User {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(name="id")
+    @Column(name="id") //varchar(36)
     private UUID id;
-    @Column(name="username")
+    @Column(name="username") //varchar(16)
     private String username;
-    @Column(name="password")
+    @Column(name="password") //varchar(140)
     private String password;
-    @Column(name="isadmin")
+    @Column(name="isadmin") //tinyint(1)
     private boolean isadmin;
 
     public User() {
