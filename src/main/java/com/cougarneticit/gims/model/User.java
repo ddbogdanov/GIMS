@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 //TODO: use mysqldump to share sql schemas
+//TODO: change isadmin to ismanager or something like that
 
 @Entity
 @Table(name="usertable")

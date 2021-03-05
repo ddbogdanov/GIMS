@@ -9,6 +9,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -26,13 +27,14 @@ import java.util.UUID;
 public class LoginController implements Initializable {
 
     private final FxWeaver fxWeaver;
-    private static User user;
+    private static User user; //pass logged in user in static context. probably not best way to do this but i dont feel like abstracting stuff
 
     public static HomeController homeController;
 
     @Autowired
     private UserRepo userRepo;
 
+    @FXML private AnchorPane pane;
     @FXML private JFXTextField usernameField;
     @FXML private JFXPasswordField passwordField;
     @FXML private JFXButton minimizeButton, exitButton, addNewUserButton, databaseButton, loginButton;
@@ -42,17 +44,14 @@ public class LoginController implements Initializable {
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle){
-        databaseButton.setDisable(true);
         loginStatus.setVisible(false);
 
         loginButton.setOnAction(e -> {
             login();
         });
         addNewUserButton.setOnAction(e -> {
-            //TODO: Add modality to pop-up window
             addUser();
         });
-
         databaseButton.setOnAction(e -> {
             showDbInfo();
         });
@@ -65,6 +64,7 @@ public class LoginController implements Initializable {
         });
     }
 
+    //TODO: Differentiate between employee/manager and load appropriate view in home view
     private void login() {
         String username = usernameField.getText();
         String password = passwordField.getText();
@@ -101,12 +101,15 @@ public class LoginController implements Initializable {
         }
     }
     private void showDbInfo() {
-        //TODO
+        fxWeaver.loadController(DatabaseInfoController.class).show();
     }
     private void addUser() {
         fxWeaver.loadController(AddUserController.class).show();
     }
     public static User getUser() {
         return user;
+    }
+    public AnchorPane getScene() {
+        return pane;
     }
 }

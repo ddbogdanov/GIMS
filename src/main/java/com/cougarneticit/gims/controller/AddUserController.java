@@ -1,6 +1,5 @@
 package com.cougarneticit.gims.controller;
 
-import com.cougarneticit.gims.application.ResizeHelper;
 import com.cougarneticit.gims.model.User;
 import com.cougarneticit.gims.model.repos.UserRepo;
 import com.jfoenix.controls.JFXButton;
@@ -13,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -49,12 +49,12 @@ public class AddUserController implements Initializable {
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
-        stage.initStyle(StageStyle.TRANSPARENT);
         stage.setResizable(false);
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.initModality(Modality.APPLICATION_MODAL);
         Scene scene = new Scene(pane);
         scene.setFill(Color.TRANSPARENT);
         stage.setScene(scene);
-        ResizeHelper.addResizeListener(stage);
 
         passMatchField.setVisible(false);
 
@@ -133,6 +133,7 @@ public class AddUserController implements Initializable {
             }
         }
     }
+
     public void show() {
         stage.show();
     }
