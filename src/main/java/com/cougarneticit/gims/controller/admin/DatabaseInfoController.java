@@ -1,4 +1,4 @@
-package com.cougarneticit.gims.controller;
+package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.application.ResizeHelper;
 import com.jfoenix.controls.JFXButton;

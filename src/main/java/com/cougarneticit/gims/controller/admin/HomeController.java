@@ -1,6 +1,7 @@
-package com.cougarneticit.gims.controller;
+package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.application.ResizeHelper;
+import com.cougarneticit.gims.controller.common.GIMSController;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -20,7 +21,7 @@ import java.util.ResourceBundle;
 
 @Component
 @FxmlView("/HomeController.fxml")
-public class HomeController implements Initializable {
+public class HomeController extends GIMSController implements Initializable {
     //TODO: Implement mutlithreading. UI on main, non-UI functions on secondary
     //1) "Class" level objects
     //ie. final vars, static objects, etc.
@@ -28,7 +29,7 @@ public class HomeController implements Initializable {
     private static final String ACTIVE_BUTTON ="-fx-background-color: #11AB97";
     private static final String INACTIVE_BUTTON ="-fx-background-color: #007B68";
 
-    //2) static objects, nodes are scenes to be preloaded for each "tab"
+    //2) static objects, nodes are scenes to be preloaded for each "tab" - should get rid of statics eventually though
     public static Node homeScene, employeeScene, customersScene, roomsScene, eventsScene, settingsScene;
     public static HomeSceneController homeSceneController;
     public static EmployeeSceneController employeeSceneController;
@@ -38,7 +39,7 @@ public class HomeController implements Initializable {
     public static SettingsSceneController settingsSceneController;
 
     //fxWeaver necessities
-    private final FxWeaver fxWeaver;
+    //private final FxWeaver fxWeaver;
     private Stage stage;
 
     //3) Springboot
@@ -50,7 +51,11 @@ public class HomeController implements Initializable {
     @FXML JFXButton homeTab, employeeTab, customerTab, roomTab, eventTab, settingsTab;
     @FXML BorderPane mainView;
 
-    public HomeController(FxWeaver fxWeaver) { this.fxWeaver = fxWeaver; }
+    public HomeController(FxWeaver fxWeaver) {
+        super(fxWeaver);
+        //this.fxWeaver = fxWeaver;
+        //System.out.println("Constructing in HomeController with this user:\n" + activeUser.toString());
+    }
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {

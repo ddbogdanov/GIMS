@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="606.0" prefWidth="1090.0" style="-fx-background-color: #33333D;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.HomeController">
+<AnchorPane fx:id="pane" prefHeight="606.0" prefWidth="1090.0" style="-fx-background-color: #33333D;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.nonadmin.EmpHomeController">
    <children>
       <AnchorPane layoutY="7.0" prefHeight="60.0" prefWidth="1090.0" style="-fx-background-color: #007b68;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <effect>
@@ -46,33 +46,6 @@
                      <HBox.margin>
                         <Insets left="60.0" />
                      </HBox.margin>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <JFXButton fx:id="employeeTab" layoutX="21.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Employees" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="GROUP" size="16" />
-                           </graphic>
-                        </JFXButton>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <JFXButton fx:id="customerTab" layoutX="14.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Customers" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="MONEY" size="16" />
-                           </graphic>
-                        </JFXButton>
-                     </children>
                   </AnchorPane>
                   <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
                      <children>

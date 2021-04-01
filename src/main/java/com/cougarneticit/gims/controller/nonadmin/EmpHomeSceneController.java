@@ -1,5 +1,6 @@
-package com.cougarneticit.gims.controller;
+package com.cougarneticit.gims.controller.nonadmin;
 
+import com.cougarneticit.gims.controller.common.GIMSController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
@@ -13,16 +14,15 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 @Component
-@FxmlView("/EmployeeSceneController.fxml")
-public class EmployeeSceneController implements Initializable {
+@FxmlView("/EmpHomeSceneController.fxml")
+public class EmpHomeSceneController extends GIMSController implements Initializable {
 
-    private final FxWeaver fxWeaver;
     private Stage stage;
 
     @FXML private AnchorPane pane;
 
-    public EmployeeSceneController(FxWeaver fxWeaver) {
-        this.fxWeaver = fxWeaver;
+    public EmpHomeSceneController(FxWeaver fxWeaver) {
+        super(fxWeaver);
     }
 
     @FXML
@@ -32,5 +32,7 @@ public class EmployeeSceneController implements Initializable {
         stage.setScene(scene);
     }
 
-    public AnchorPane getScene() { return pane; }
+    public AnchorPane getScene() {
+        return pane;
+    }
 }
