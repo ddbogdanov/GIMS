@@ -1,6 +1,7 @@
 package com.cougarneticit.gims.model;
 
 import org.hibernate.annotations.Type;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,19 +9,17 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.UUID;
 
-//TODO: use mysqldump to share sql schemas
-//TODO: change isadmin to ismanager or something like that
-
 @Entity
-@Table(name="usertable")
+@Component
+@Table(name="user")
 public class User {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(name="id") //varchar(36)
+    @Column(name="id", length=36) //varchar(36)
     private UUID id;
-    @Column(name="username") //varchar(16)
+    @Column(name="username", length=16) //varchar(16)
     private String username;
-    @Column(name="password") //varchar(140)
+    @Column(name="password", length=140) //varchar(140)
     private String password;
     @Column(name="isadmin") //tinyint(1)
     private boolean isadmin;
@@ -44,7 +43,7 @@ public class User {
     public String getPassword() {
         return password;
     }
-    public boolean getIsAdmin() { return isadmin; }
+    public boolean isAdmin() { return isadmin; }
 
     public String toString() {
         return this.id.toString() + " " + this.username + " " + this.password + " " + this.isadmin;
