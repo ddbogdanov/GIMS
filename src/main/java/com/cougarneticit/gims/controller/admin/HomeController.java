@@ -17,6 +17,7 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @Component
@@ -25,9 +26,6 @@ public class HomeController extends GIMSController implements Initializable {
     //TODO: Implement mutlithreading. UI on main, non-UI functions on secondary
     //1) "Class" level objects
     //ie. final vars, static objects, etc.
-    //button styles
-    private static final String ACTIVE_BUTTON ="-fx-background-color: #11AB97";
-    private static final String INACTIVE_BUTTON ="-fx-background-color: #007B68";
 
     //2) static objects, nodes are scenes to be preloaded for each "tab" - should get rid of statics eventually though
     public static Node homeScene, employeeScene, customersScene, roomsScene, eventsScene, settingsScene;
@@ -53,8 +51,6 @@ public class HomeController extends GIMSController implements Initializable {
 
     public HomeController(FxWeaver fxWeaver) {
         super(fxWeaver);
-        //this.fxWeaver = fxWeaver;
-        //System.out.println("Constructing in HomeController with this user:\n" + activeUser.toString());
     }
 
     @FXML
@@ -67,6 +63,14 @@ public class HomeController extends GIMSController implements Initializable {
         stage.setScene(scene);
         ResizeHelper.addResizeListener(stage);
 
+        ArrayList<JFXButton> buttonList = new ArrayList<>();
+        buttonList.add(homeTab);
+        buttonList.add(employeeTab);
+        buttonList.add(customerTab);
+        buttonList.add(roomTab);
+        buttonList.add(eventTab);
+        buttonList.add(settingsTab);
+
         preloadViews();
 
         /*
@@ -74,35 +78,37 @@ public class HomeController extends GIMSController implements Initializable {
         mainView.setMaxSize(1920, 1080);
         * TODO: need to set min and max size of entire window. too lazy rn
         */
-        homeTab.setStyle(ACTIVE_BUTTON);
+
+        setActiveButton(homeTab, buttonList);
         showHomeView();
 
         //Event listeners and action handlers
         homeTab.setOnAction(e -> {
-            setActiveButton("home");
+            setActiveButton(homeTab, buttonList);
             showHomeView();
         });
         employeeTab.setOnAction(e -> {
-            setActiveButton("employee");
+            setActiveButton(employeeTab, buttonList);
             showEmployeeView();
         });
         customerTab.setOnAction(e -> {
-            setActiveButton("customer");
+            setActiveButton(customerTab, buttonList);
             showCustomersView();
         });
         roomTab.setOnAction(e -> {
-            setActiveButton("room");
+            setActiveButton(roomTab, buttonList);
             showRoomsView();
         });
         eventTab.setOnAction(e -> {
-            setActiveButton("event");
-           showEventsView();
+            setActiveButton(eventTab, buttonList);
+            showEventsView();
         });
         settingsTab.setOnAction(e -> {
-            setActiveButton("settings");
+            setActiveButton(settingsTab, buttonList);
             showSettingsView();
         });
 
+        //Duplicated code - fix by dynamically loading tabs into a common HomeController. Too much work for me.
         minimizeButton.setOnAction(e -> {
             Stage stage = (Stage)minimizeButton.getScene().getWindow();
             stage.setIconified(true);
@@ -167,60 +173,4 @@ public class HomeController extends GIMSController implements Initializable {
         mainView.setCenter(settingsScene);
     }
 
-    //there's probably a better way to do this - store buttons in an array and loop through? or abstract and enumerate all possible values. less lines of code + safer. maybe.
-    private void setActiveButton(String activeButtonToSet) {
-        switch(activeButtonToSet) {
-            case "home":
-                homeTab.setStyle(ACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "employee":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(ACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "customer":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(ACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "room":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(ACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "event":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(ACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "settings":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(ACTIVE_BUTTON);
-                break;
-            default:
-                System.err.println("Didn't set button style for some reason");
-                break;
-        }
-    }
 }
