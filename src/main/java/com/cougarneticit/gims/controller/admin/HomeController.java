@@ -113,10 +113,12 @@ public class HomeController extends GIMSController implements Initializable {
             Stage stage = (Stage)maximizeButton.getScene().getWindow();
             if(stage.isMaximized()) {
                 ResizeHelper.disableWindowDrag(false);
+                stage.setResizable(true);
                 stage.setMaximized(false);
             }
             else {
                 ResizeHelper.disableWindowDrag(true);
+                stage.setResizable(false);
                 stage.setMaximized(true);
             }
         });
