@@ -1,6 +1,7 @@
 package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.application.ResizeHelper;
+import com.cougarneticit.gims.controller.common.GIMSController;
 import com.jfoenix.controls.JFXButton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,30 +20,23 @@ import java.util.ResourceBundle;
 
 @Component
 @FxmlView("/DatabaseInfoController.fxml")
-public class DatabaseInfoController implements Initializable {
+public class DatabaseInfoController extends GIMSController implements Initializable {
 
     //TODO: Implement
 
-    private final FxWeaver fxWeaver;
     private Stage stage;
 
     @FXML private AnchorPane pane;
     @FXML private JFXButton cancelButton;
 
     public DatabaseInfoController(FxWeaver fxWeaver) {
-        this.fxWeaver = fxWeaver;
+        super(fxWeaver);
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
-        stage.setResizable(false);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(pane);
-        scene.setFill(Color.TRANSPARENT);
-        stage.setScene(scene);
-        ResizeHelper.addResizeListener(stage);
+        initStage(stage, pane, null, StageStyle.TRANSPARENT, Modality.APPLICATION_MODAL, Color.TRANSPARENT, false);
 
         cancelButton.setOnAction(e -> {
             Stage stage = (Stage)cancelButton.getScene().getWindow();
