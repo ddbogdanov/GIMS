@@ -57,7 +57,7 @@ public class HomeController extends GIMSController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Initialize the stage, set the scene, apply styling etc.
         this.stage = new Stage();
-        initStage(stage, pane,"GIMS - Home/Admin", StageStyle.UNDECORATED, true);
+        initStage(stage, pane,"GIMS - Home/Admin", StageStyle.UNDECORATED, null, null, true);
 
         ArrayList<JFXButton> buttonList = new ArrayList<>();
         buttonList.add(homeTab);

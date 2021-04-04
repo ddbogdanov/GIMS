@@ -44,7 +44,7 @@ public class EmpHomeController extends GIMSController implements Initializable {
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
-        initStage(stage, pane,"GIMS - Home/Employee", StageStyle.UNDECORATED, true);
+        initStage(stage, pane,"GIMS - Home/Employee", StageStyle.UNDECORATED, null, null, true);
 
         ArrayList<JFXButton> buttonList = new ArrayList<>();
         buttonList.add(homeTab);
@@ -54,6 +54,7 @@ public class EmpHomeController extends GIMSController implements Initializable {
 
         preloadViews();
 
+        setActiveButton(homeTab, buttonList);
         mainView.setCenter(empHomeScene);
 
         homeTab.setOnAction(e -> {

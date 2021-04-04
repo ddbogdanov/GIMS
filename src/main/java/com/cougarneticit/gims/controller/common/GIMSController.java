@@ -5,6 +5,8 @@ import com.cougarneticit.gims.model.User;
 import com.jfoenix.controls.JFXButton;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -30,11 +32,13 @@ public class GIMSController {
         return activeUser;
     }
 
-    public void initStage(Stage stage, Pane parentPane, String title, StageStyle stageStyle, boolean isResizable) {
+    public void initStage(Stage stage, Pane parentPane, String title, StageStyle stageStyle, Modality modality, Color sceneFill, boolean isResizable) {
         stage.setTitle(title);
         stage.initStyle(stageStyle);
+        stage.initModality(modality);
         stage.setResizable(isResizable);
         Scene scene = new Scene(parentPane);
+        scene.setFill(sceneFill);
         stage.setScene(scene);
         ResizeHelper.addResizeListener(stage);
     }
