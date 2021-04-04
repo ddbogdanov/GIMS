@@ -1,7 +1,12 @@
 package com.cougarneticit.gims.controller.common;
 
+import com.cougarneticit.gims.application.ResizeHelper;
 import com.cougarneticit.gims.model.User;
 import com.jfoenix.controls.JFXButton;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import net.rgielen.fxweaver.core.FxWeaver;
 
 import java.util.ArrayList;
@@ -23,6 +28,15 @@ public class GIMSController {
     }
     public User getActiveUser() {
         return activeUser;
+    }
+
+    public void initStage(Stage stage, Pane parentPane, String title, StageStyle stageStyle, boolean isResizable) {
+        stage.setTitle(title);
+        stage.initStyle(stageStyle);
+        stage.setResizable(isResizable);
+        Scene scene = new Scene(parentPane);
+        stage.setScene(scene);
+        ResizeHelper.addResizeListener(stage);
     }
 
     //there was a better way to do this. :)
