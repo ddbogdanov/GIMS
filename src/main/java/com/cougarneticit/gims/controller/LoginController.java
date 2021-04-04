@@ -31,9 +31,6 @@ import java.util.UUID;
 @FxmlView("/LoginController.fxml")
 public class LoginController extends GIMSController implements Initializable {
 
-    //private final FxWeaver fxWeaver;
-    private static User user; //pass logged in user in static context. probably not best way to do this but i dont feel like abstracting stuff
-
     public static HomeController homeController; //TODO remove static references
     public static EmpHomeController empHomeController;
 
@@ -72,7 +69,6 @@ public class LoginController extends GIMSController implements Initializable {
         });
     }
 
-    //TODO: Differentiate between employee/manager and load appropriate view in home view
     private void login() {
         String username = usernameField.getText();
         String password = passwordField.getText();
@@ -87,7 +83,7 @@ public class LoginController extends GIMSController implements Initializable {
                 String hashedPassword = userRepo.findByUsername(username).get(0).getPassword();
                 userId = userRepo.findByUsername(username).get(0).getId();
                 isAdmin = userRepo.findByUsername(username).get(0).isAdmin();
-                user = new User(userId, username, hashedPassword, isAdmin);
+                User user = new User(userId, username, hashedPassword, isAdmin);
 
                 loginStatus.setTextFill(Color.web("#FFFFFF"));
                 loginStatus.setText("Login Successful!");
@@ -133,9 +129,7 @@ public class LoginController extends GIMSController implements Initializable {
         empHomeController.show();
 
     }
-    public static User getUser() {
-        return user;
-    } //TODO: Depreciate. I think
+
     public AnchorPane getScene() {
         return pane;
     }
