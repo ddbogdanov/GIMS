@@ -1,6 +1,7 @@
-package com.cougarneticit.gims.controller;
+package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.application.ResizeHelper;
+import com.cougarneticit.gims.controller.common.GIMSController;
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,19 +17,17 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 @Component
 @FxmlView("/HomeController.fxml")
-public class HomeController implements Initializable {
+public class HomeController extends GIMSController implements Initializable {
     //TODO: Implement mutlithreading. UI on main, non-UI functions on secondary
     //1) "Class" level objects
     //ie. final vars, static objects, etc.
-    //button styles
-    private static final String ACTIVE_BUTTON ="-fx-background-color: #11AB97";
-    private static final String INACTIVE_BUTTON ="-fx-background-color: #007B68";
 
-    //2) static objects, nodes are scenes to be preloaded for each "tab"
+    //2) static objects, nodes are scenes to be preloaded for each "tab" - should get rid of statics eventually though
     public static Node homeScene, employeeScene, customersScene, roomsScene, eventsScene, settingsScene;
     public static HomeSceneController homeSceneController;
     public static EmployeeSceneController employeeSceneController;
@@ -38,7 +37,7 @@ public class HomeController implements Initializable {
     public static SettingsSceneController settingsSceneController;
 
     //fxWeaver necessities
-    private final FxWeaver fxWeaver;
+    //private final FxWeaver fxWeaver;
     private Stage stage;
 
     //3) Springboot
@@ -50,17 +49,23 @@ public class HomeController implements Initializable {
     @FXML JFXButton homeTab, employeeTab, customerTab, roomTab, eventTab, settingsTab;
     @FXML BorderPane mainView;
 
-    public HomeController(FxWeaver fxWeaver) { this.fxWeaver = fxWeaver; }
+    public HomeController(FxWeaver fxWeaver) {
+        super(fxWeaver);
+    }
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         //Initialize the stage, set the scene, apply styling etc.
         this.stage = new Stage();
-        stage.setTitle("GIMS - Home");
-        stage.initStyle(StageStyle.UNDECORATED);
-        Scene scene = new Scene(pane);
-        stage.setScene(scene);
-        ResizeHelper.addResizeListener(stage);
+        initStage(stage, pane,"GIMS - Home/Admin", StageStyle.UNDECORATED, null, null, true);
+
+        ArrayList<JFXButton> buttonList = new ArrayList<>();
+        buttonList.add(homeTab);
+        buttonList.add(employeeTab);
+        buttonList.add(customerTab);
+        buttonList.add(roomTab);
+        buttonList.add(eventTab);
+        buttonList.add(settingsTab);
 
         preloadViews();
 
@@ -69,35 +74,37 @@ public class HomeController implements Initializable {
         mainView.setMaxSize(1920, 1080);
         * TODO: need to set min and max size of entire window. too lazy rn
         */
-        homeTab.setStyle(ACTIVE_BUTTON);
+
+        setActiveButton(homeTab, buttonList);
         showHomeView();
 
         //Event listeners and action handlers
         homeTab.setOnAction(e -> {
-            setActiveButton("home");
+            setActiveButton(homeTab, buttonList);
             showHomeView();
         });
         employeeTab.setOnAction(e -> {
-            setActiveButton("employee");
+            setActiveButton(employeeTab, buttonList);
             showEmployeeView();
         });
         customerTab.setOnAction(e -> {
-            setActiveButton("customer");
+            setActiveButton(customerTab, buttonList);
             showCustomersView();
         });
         roomTab.setOnAction(e -> {
-            setActiveButton("room");
+            setActiveButton(roomTab, buttonList);
             showRoomsView();
         });
         eventTab.setOnAction(e -> {
-            setActiveButton("event");
-           showEventsView();
+            setActiveButton(eventTab, buttonList);
+            showEventsView();
         });
         settingsTab.setOnAction(e -> {
-            setActiveButton("settings");
+            setActiveButton(settingsTab, buttonList);
             showSettingsView();
         });
 
+        //Duplicated code - fix by dynamically loading tabs into a common HomeController. Too much work for me.
         minimizeButton.setOnAction(e -> {
             Stage stage = (Stage)minimizeButton.getScene().getWindow();
             stage.setIconified(true);
@@ -106,10 +113,12 @@ public class HomeController implements Initializable {
             Stage stage = (Stage)maximizeButton.getScene().getWindow();
             if(stage.isMaximized()) {
                 ResizeHelper.disableWindowDrag(false);
+                stage.setResizable(true);
                 stage.setMaximized(false);
             }
             else {
                 ResizeHelper.disableWindowDrag(true);
+                stage.setResizable(false);
                 stage.setMaximized(true);
             }
         });
@@ -162,60 +171,4 @@ public class HomeController implements Initializable {
         mainView.setCenter(settingsScene);
     }
 
-    //there's probably a better way to do this - store buttons in an array and loop through? or abstract and enumerate all possible values. less lines of code + safer. maybe.
-    private void setActiveButton(String activeButtonToSet) {
-        switch(activeButtonToSet) {
-            case "home":
-                homeTab.setStyle(ACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "employee":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(ACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "customer":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(ACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "room":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(ACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "event":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(ACTIVE_BUTTON);
-                settingsTab.setStyle(INACTIVE_BUTTON);
-                break;
-            case "settings":
-                homeTab.setStyle(INACTIVE_BUTTON);
-                employeeTab.setStyle(INACTIVE_BUTTON);
-                customerTab.setStyle(INACTIVE_BUTTON);
-                roomTab.setStyle(INACTIVE_BUTTON);
-                eventTab.setStyle(INACTIVE_BUTTON);
-                settingsTab.setStyle(ACTIVE_BUTTON);
-                break;
-            default:
-                System.err.println("Didn't set button style for some reason");
-                break;
-        }
-    }
 }
