@@ -1,6 +1,7 @@
-package com.cougarneticit.gims.controller;
+package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.application.ResizeHelper;
+import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.User;
 import com.cougarneticit.gims.model.repos.UserRepo;
 import com.jfoenix.controls.JFXButton;
@@ -28,9 +29,8 @@ import java.util.UUID;
 
 @Component
 @FxmlView("/AddUserController.fxml")
-public class AddUserController implements Initializable {
+public class AddUserController extends GIMSController implements Initializable {
 
-    private FxWeaver fxWeaver;
     private Stage stage;
 
     @Autowired
@@ -44,19 +44,13 @@ public class AddUserController implements Initializable {
     @FXML Label passMatchField, userTitle;
 
     public AddUserController(FxWeaver fxWeaver) {
-        this.fxWeaver = fxWeaver;
+        super(fxWeaver);
     }
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
-        stage.setResizable(false);
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.initModality(Modality.APPLICATION_MODAL);
-        Scene scene = new Scene(pane);
-        scene.setFill(Color.TRANSPARENT);
-        stage.setScene(scene);
-        ResizeHelper.addResizeListener(stage);
+        initStage(stage, pane, null, StageStyle.TRANSPARENT, Modality.APPLICATION_MODAL, null, false);
 
         passMatchField.setVisible(false);
 
