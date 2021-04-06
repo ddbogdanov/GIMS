@@ -37,7 +37,7 @@
                                  <children>
                                     <Label text="Add an Employee" textFill="WHITE" VBox.vgrow="ALWAYS">
                                        <font>
-                                          <Font name="Roboto Regular" size="24.0" />
+                                          <Font name="Roboto Regular" size="20.0" />
                                        </font>
                                        <VBox.margin>
                                           <Insets />
@@ -45,7 +45,7 @@
                                     </Label>
                                     <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="25.0" prefWidth="161.0" promptText="Choose User" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
-                                          <Insets top="5.0" />
+                                          <Insets top="10.0" />
                                        </VBox.margin>
                                     </JFXComboBox>
                                     <JFXTextField fx:id="nameTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
@@ -53,12 +53,12 @@
                                           <Font name="Roboto Regular" size="14.0" />
                                        </font>
                                        <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="15.0" />
+                                          <Insets left="15.0" right="15.0" top="10.0" />
                                        </VBox.margin>
                                     </JFXTextField>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                          <Label fx:id="nameHelpLabel" prefHeight="13.0" prefWidth="46.0" text="First Last" textFill="#5bddc7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="197.0" AnchorPane.topAnchor="0.0">
+                                          <Label fx:id="nameHelpLabel" prefHeight="13.0" prefWidth="46.0" text="First Last" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="197.0" AnchorPane.topAnchor="0.0">
                                              <font>
                                                 <Font name="Roboto Regular" size="10.0" />
                                              </font>
@@ -78,7 +78,7 @@
                                     </JFXTextField>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                          <Label fx:id="phoneHelpLabel" prefHeight="13.0" prefWidth="62.0" text="xxx-xxx-xxxx" textFill="#5bddc7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="181.0" AnchorPane.topAnchor="0.0">
+                                          <Label fx:id="phoneHelpLabel" prefHeight="13.0" prefWidth="62.0" text="xxx-xxx-xxxx" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="181.0" AnchorPane.topAnchor="0.0">
                                              <font>
                                                 <Font name="Roboto Regular" size="10.0" />
                                              </font>
@@ -98,7 +98,7 @@
                                     </JFXTextField>
                                     <AnchorPane prefHeight="200.0" prefWidth="200.0">
                                        <children>
-                                          <Label fx:id="emailHelpLabel" prefHeight="13.0" prefWidth="89.0" text="email@domain.xxx" textFill="#5bddc7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="154.0" AnchorPane.topAnchor="0.0">
+                                          <Label fx:id="emailHelpLabel" prefHeight="13.0" prefWidth="89.0" text="email@domain.xxx" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="154.0" AnchorPane.topAnchor="0.0">
                                              <font>
                                                 <Font name="Roboto Regular" size="10.0" />
                                              </font>
