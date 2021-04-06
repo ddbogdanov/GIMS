@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UserRepo extends CrudRepository<User, UUID> {
+    List<User> findAll();
     List<User> findByUsername(String username);
 
     @Transactional

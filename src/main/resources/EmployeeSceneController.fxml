@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="547.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.EmployeeSceneController">
+<AnchorPane fx:id="pane" prefHeight="547.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.EmployeeSceneController">
    <children>
       <HBox layoutX="201.0" layoutY="191.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -21,7 +21,7 @@
                   <Insets />
                </HBox.margin>
                <children>
-                  <JFXListView fx:id="employeeListView" prefHeight="255.0" prefWidth="490.0" stylesheets="@../../../../../CIS-3368/covidtrackr/src/main/resources/static/MainCss.css" VBox.vgrow="ALWAYS">
+                  <JFXListView fx:id="employeeListView" prefHeight="255.0" prefWidth="490.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                      </VBox.margin>
