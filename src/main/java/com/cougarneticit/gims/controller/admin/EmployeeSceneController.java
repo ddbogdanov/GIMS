@@ -37,7 +37,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<User> userComboBox;
     @FXML private JFXTextField nameTextField, phoneTextField, emailTextField;
-    @FXML private Label nameHelpLabel, phoneHelpLabel, emailHelpLabel; //TODO: Hide labels on unfocus
+    @FXML private Label nameHelpLabel, phoneHelpLabel, emailHelpLabel; //TODO: Hide labels on unfocus also just make form look better
     @FXML private JFXButton addEmployeeButton;
 
 
@@ -49,16 +49,24 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
         initStage(stage, pane, null, null, null, null, true);
+        populateComboBox();
 
+        addEmployeeButton.setOnAction(e -> {
+
+        });
+
+        //Focus listeners for text fields. Show/Hide on focus/un-focus
+        nameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> nameHelpLabel.setVisible(newVal));
+        phoneTextField.focusedProperty().addListener((obs, oldVal, newVal) -> phoneHelpLabel.setVisible(newVal));
+        emailTextField.focusedProperty().addListener((obs, oldVal, newVal) -> emailHelpLabel.setVisible(newVal));
+    }
+
+    private void populateComboBox() {
         ObservableList<User> userList = FXCollections.observableArrayList();
         if(userRepo.count() != 0) {
             userList.addAll(userRepo.findAll());
         }
         userComboBox.getItems().addAll(userList);
-
-        addEmployeeButton.setOnAction(e -> {
-
-        });
     }
 
     public AnchorPane getScene() { return pane; }
