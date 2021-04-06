@@ -81,7 +81,7 @@ public class LoginController extends GIMSController implements Initializable {
             if(passwordEncoder.matches(password, userRepo.findByUsername(username).get(0).getPassword())) {
 
                 String hashedPassword = userRepo.findByUsername(username).get(0).getPassword();
-                userId = userRepo.findByUsername(username).get(0).getId();
+                userId = userRepo.findByUsername(username).get(0).getUser_id();
                 isAdmin = userRepo.findByUsername(username).get(0).isAdmin();
                 User user = new User(userId, username, hashedPassword, isAdmin);
 
