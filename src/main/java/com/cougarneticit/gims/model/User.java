@@ -21,12 +21,7 @@ public class User {
     @Column(name="isadmin") //tinyint(1)
     private boolean isadmin;
 
-    @OneToOne(cascade=CascadeType.ALL)
-    @JoinTable(name="employee",
-            joinColumns =
-                    { @JoinColumn(name="user_id", referencedColumnName = "user_id")},
-            inverseJoinColumns =
-                    { @JoinColumn(name="employee_id", referencedColumnName = "employee_id")})
+    @OneToOne(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
     private Employee employee;
 
     public User() {
@@ -54,6 +49,9 @@ public class User {
     }
     public String getPassword() {
         return password;
+    }
+    public Employee getEmployee() {
+        return employee;
     }
     public boolean isAdmin() { return isadmin; }
 
