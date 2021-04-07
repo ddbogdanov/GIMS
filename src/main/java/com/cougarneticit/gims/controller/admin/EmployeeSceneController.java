@@ -1,6 +1,7 @@
 package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
+import com.cougarneticit.gims.model.Employee;
 import com.cougarneticit.gims.model.User;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
 import com.cougarneticit.gims.model.repos.UserRepo;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 @Component
 @FxmlView("/EmployeeSceneController.fxml")
@@ -40,7 +42,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     @FXML private Label nameHelpLabel, phoneHelpLabel, emailHelpLabel; //TODO: Hide labels on unfocus also just make form look better
     @FXML private JFXButton addEmployeeButton;
 
-
     public EmployeeSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
     }
@@ -52,7 +53,9 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         populateComboBox();
 
         addEmployeeButton.setOnAction(e -> {
-
+            //TODO: Sanitize input + error handling
+            Employee emp = new Employee(UUID.randomUUID(), userComboBox.getSelectionModel().getSelectedItem(), nameTextField.getText(), phoneTextField.getText(), emailTextField.getText());
+            employeeRepo.save(emp);
         });
 
         //Focus listeners for text fields. Show/Hide on focus/un-focus

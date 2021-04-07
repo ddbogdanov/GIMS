@@ -14,10 +14,6 @@ public class Employee {
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="employee_id", length=36)
     private UUID employee_id;
-
-    @OneToOne(mappedBy = "employee")
-    private User user;
-
     @Column(name="employee_name")
     private String employee_name;
     @Column(name="employee_phone")
@@ -25,14 +21,20 @@ public class Employee {
     @Column(name="employee_email")
     private String employee_email;
 
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
+
     public Employee() {
         employee_id = UUID.randomUUID();
+        user = null;
         employee_name = null;
         employee_phone = null;
         employee_email = null;
     }
-    public Employee(UUID employee_id, String employee_name, String employee_phone, String employee_email) {
+    public Employee(UUID employee_id, User user, String employee_name, String employee_phone, String employee_email) {
         this.employee_id = employee_id;
+        this.user = user;
         this.employee_name = employee_name;
         this.employee_phone = employee_phone;
         this.employee_email = employee_email;
