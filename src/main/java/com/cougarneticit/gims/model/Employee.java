@@ -12,13 +12,13 @@ import java.util.UUID;
 public class Employee {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(name="employee_id", length=36)
+    @Column(name="employee_id", length=36) //VarChar(36)
     private UUID employee_id;
-    @Column(name="employee_name")
+    @Column(name="employee_name") //VarChar(50)
     private String employee_name;
-    @Column(name="employee_phone")
+    @Column(name="employee_phone") //VarChar(45)
     private String employee_phone;
-    @Column(name="employee_email")
+    @Column(name="employee_email") //VarChar(320)
     private String employee_email;
 
     @OneToOne(fetch=FetchType.LAZY)
