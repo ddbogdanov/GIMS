@@ -43,8 +43,30 @@ public class Employee {
     public void setUser(User user) {
         this.user = user;
     }
+    public User getUser() {
+        return user;
+    }
+
+    public UUID getEmployee_id() {
+        return employee_id;
+    }
+    public UUID getUser_id() {
+        return user.getUser_id();
+    }
+    public String getName() {
+        return employee_name;
+    }
+    public String getPhone() {
+        return employee_phone;
+    }
+    public String getEmail() {
+        return employee_email;
+    }
 
     public String toString() {
+        return this.employee_name;
+    }
+    public String toStringFull() {
         return this.employee_id.toString() + " " + this.user.getUser_id().toString() + " " + this.employee_name + " " + this.employee_phone + " " + this.employee_email;
     }
 }
