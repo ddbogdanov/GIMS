@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
@@ -53,11 +54,12 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
         initStage(stage, pane, null, null, null, null, true);
+
         populateComboBox();
 
+
         addEmployeeButton.setOnAction(e -> {
-            //TODO: Sanitize input + error handling
-            User activeUser = userComboBox.getSelectionModel().getSelectedItem();
+            User selectedUser = userComboBox.getSelectionModel().getSelectedItem();
             String name = nameTextField.getText();
             String phone = phoneTextField.getText();
             String email = emailTextField.getText();
@@ -67,19 +69,34 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             boolean isEmailValid = validateEmail(email);
 
             if (isNameValid && isPhoneValid && isEmailValid) {
-                Employee emp = new Employee(UUID.randomUUID(), activeUser, name, phone, email);
+                Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email);
                 employeeRepo.save(emp);
+
+                nameHelpLabel.setTextFill(Color.web("#5BDDC7"));
+                nameHelpLabel.setText("First Last");
+                nameHelpLabel.setVisible(false);
+                phoneHelpLabel.setTextFill(Color.web("#5BDDC7"));
+                phoneHelpLabel.setText("xxx-xxx-xxxx");
+                phoneHelpLabel.setVisible(false);
+                emailHelpLabel.setTextFill(Color.web("#5BDDC7"));
+                emailHelpLabel.setText("email@domain.com");
+                emailHelpLabel.setVisible(false);
             }
             else {
-                //TODO: Change color + revert to original text once fixed.
                 if(!isNameValid) {
+                    nameHelpLabel.setTextFill(Color.web("#F73331"));
                     nameHelpLabel.setText("Invalid format: First Last");
+                    nameHelpLabel.setVisible(true);
                 }
                 else if(!isPhoneValid) {
+                    phoneHelpLabel.setTextFill(Color.web("#F73331"));
                     phoneHelpLabel.setText("Invalid format: xxx-xxx-xxxx");
+                    phoneHelpLabel.setVisible(true);
                 }
                 else {
+                    emailHelpLabel.setTextFill(Color.web("#F73331"));
                     emailHelpLabel.setText("Invalid format: email@domain.com");
+                    emailHelpLabel.setVisible(true);
                 }
             }
         });
@@ -103,11 +120,11 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         return isValid;
     }
     private boolean validateName(String name) {
-        //TODO
-        return true;
+        Pattern pattern = Pattern.compile("^[a-zA-Z\\s]+");
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
     }
     private boolean validatePhone(String phone) {
-        //TODO
         Pattern pattern = Pattern.compile("^(\\d{3}[-]?){2}\\d{4}$");
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
