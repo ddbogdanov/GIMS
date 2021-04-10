@@ -56,6 +56,14 @@
                                     <Insets top="15.0" />
                                  </VBox.margin>
                               </Label>
+                              <JFXButton fx:id="viewEmployeeButton" prefHeight="32.0" prefWidth="130.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View Employee" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </JFXButton>
                               <JFXButton fx:id="editEmployeeButton" prefHeight="32.0" prefWidth="130.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit Employee" textFill="WHITE">
                                  <font>
                                     <Font name="Roboto Regular" size="14.0" />
