@@ -47,7 +47,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     @FXML private JFXListView<Employee> employeeListView;
     @FXML private JFXTextField nameTextField, phoneTextField, emailTextField;
     @FXML private Label nameHelpLabel, phoneHelpLabel, emailHelpLabel, deleteStatusLabel, employeeFormLabel;
-    @FXML private JFXButton addEmployeeButton, editEmployeeButton, deleteEmployeeButton, cancelButton;
+    @FXML private JFXButton addEmployeeButton, viewEmployeeButton, editEmployeeButton, deleteEmployeeButton, cancelButton;
 
     public EmployeeSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -66,6 +66,9 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         });
         cancelButton.setOnAction(e -> {
             resetEmployeeForm();
+        });
+        viewEmployeeButton.setOnAction(e -> {
+            viewEmployee();
         });
         editEmployeeButton.setOnAction(e -> {
             editEmployee();
@@ -119,13 +122,21 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         userComboBox.getSelectionModel().clearSelection();
         userComboBox.setDisable(false);
 
-        employeeFormLabel.setText("Add an Employee");
+        //Reset buttons
         addEmployeeButton.setText("Add Employee");
+        addEmployeeButton.setDisable(false);
+        cancelButton.setText("Cancel");
 
+        //Reset text fields
         nameTextField.clear();
+        nameTextField.setDisable(false);
         phoneTextField.clear();
+        phoneTextField.setDisable(false);
         emailTextField.clear();
+        emailTextField.setDisable(false);
 
+        //Reset labels
+        employeeFormLabel.setText("Add an Employee");
         nameHelpLabel.setTextFill(Color.web("#5BDDC7"));
         nameHelpLabel.setText("First Last");
         nameHelpLabel.setVisible(false);
@@ -136,7 +147,21 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         emailHelpLabel.setText("email@domain.com");
         emailHelpLabel.setVisible(false);
     }
+    private void viewEmployee() {
+        resetEmployeeForm();
+        userComboBox.setDisable(true);
+        nameTextField.setDisable(true);
+        phoneTextField.setDisable(true);
+        emailTextField.setDisable(true);
+        addEmployeeButton.setDisable(true);
+
+        cancelButton.setText("Reset");
+        employeeFormLabel.setText("View an Employee");
+
+        populateForm();
+    }
     private void editEmployee() {
+        resetEmployeeForm();
         try {
             addEmployeeButton.setOnAction(e -> {
                 //Submit edits
@@ -147,20 +172,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
                 });
             });
 
-            Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
-
-            //Set combobox and fill text fields
-            for (User user : userComboBox.getItems()) {
-                if (selectedEmployee.getUser_id().equals(user.getUser_id())) {
-                    userComboBox.getSelectionModel().select(user);
-                    userComboBox.setDisable(true);
-                    break;
-                }
-            }
-            nameTextField.setText(selectedEmployee.getName());
-            phoneTextField.setText(selectedEmployee.getPhone());
-            emailTextField.setText(selectedEmployee.getEmail());
-
+            populateForm();
             employeeFormLabel.setText("Edit an Employee");
             addEmployeeButton.setText("Submit Edits");
         }
@@ -176,6 +188,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     private void deleteEmployee() {
         //TODO add ScheduledExecutorService + Future to schedule status label setVisible(false)
         //TODO add confirmation popup
+        resetEmployeeForm();
         try {
             Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
             employeeRepo.deleteById(selectedEmployee.getEmployee_id());
@@ -206,6 +219,20 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             employeeList.addAll(employeeRepo.findAll());
         }
         employeeListView.setItems(employeeList.sorted());
+    }
+    private void populateForm() {
+        Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
+
+        for (User user : userComboBox.getItems()) {
+            if (selectedEmployee.getUser_id().equals(user.getUser_id())) {
+                userComboBox.getSelectionModel().select(user);
+                userComboBox.setDisable(true);
+                break;
+            }
+        }
+        nameTextField.setText(selectedEmployee.getName());
+        phoneTextField.setText(selectedEmployee.getPhone());
+        emailTextField.setText(selectedEmployee.getEmail());
     }
     private boolean validateEmail(String email) {
         EmailValidator emailValidator = EmailValidator.getInstance();
