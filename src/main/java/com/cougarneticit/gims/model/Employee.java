@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -14,16 +15,19 @@ public class Employee {
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="employee_id", length=36) //VarChar(36)
     private UUID employee_id;
-    @Column(name="employee_name") //VarChar(50)
+    @Column(name="employee_name", length=50) //VarChar(50)
     private String employee_name;
-    @Column(name="employee_phone") //VarChar(45)
+    @Column(name="employee_phone", length=45) //VarChar(45)
     private String employee_phone;
-    @Column(name="employee_email") //VarChar(320)
+    @Column(name="employee_email", length=320) //VarChar(320)
     private String employee_email;
 
     @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id")
     private User user;
+
+    @OneToMany(mappedBy="employee")
+    private List<Task> tasks;
 
     public Employee() {
         employee_id = UUID.randomUUID();
@@ -43,12 +47,12 @@ public class Employee {
     public void setUser(User user) {
         this.user = user;
     }
-    public User getUser() {
-        return user;
-    }
 
     public UUID getEmployee_id() {
         return employee_id;
+    }
+    public User getUser() {
+        return user;
     }
     public UUID getUser_id() {
         return user.getUser_id();
