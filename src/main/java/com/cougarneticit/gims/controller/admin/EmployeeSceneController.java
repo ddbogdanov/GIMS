@@ -84,6 +84,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     }
 
     private void addEmployee() {
+        //TODO prevent duplicate user -> employee relationships
         User selectedUser = userComboBox.getSelectionModel().getSelectedItem();
         String name = nameTextField.getText();
         String phone = phoneTextField.getText();
