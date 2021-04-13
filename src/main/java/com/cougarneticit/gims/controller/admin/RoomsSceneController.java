@@ -3,12 +3,15 @@ package com.cougarneticit.gims.controller.admin;
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Employee;
 import com.cougarneticit.gims.model.Room;
-import com.cougarneticit.gims.model.Task;
-import com.cougarneticit.gims.model.common.Priority;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
 import com.cougarneticit.gims.model.repos.TaskRepo;
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXListView;
+import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.JFXToggleButton;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.AnchorPane;
@@ -19,9 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 
 @Component
@@ -38,7 +39,10 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     EmployeeRepo employeeRepo;
 
     @FXML private AnchorPane pane;
-    @FXML JFXButton confirmButton;
+    @FXML private JFXListView<Room> roomListView;
+    @FXML private JFXToggleButton editToggleButton;
+    @FXML private JFXTextField roomIdTextField, roomNameTextField;
+    @FXML private JFXButton roomFormConfirmButton, roomFormCancelButton;
 
     public RoomsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -49,18 +53,41 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         this.stage = new Stage();
         initStage(stage, pane, null, null, null, null, true);
 
-        confirmButton.setOnAction(e -> {
+        populateRoomListView();
 
-            Optional<Room> roomOptional = roomRepo.findById('A');
-            Optional<Employee> employeeOptional = employeeRepo.findById(UUID.fromString("04d9a12e-e18c-4f9b-8269-48f829d8950d"));
-
-            Room room = roomOptional.get();
-            Employee employee = employeeOptional.get();
-            Task task = new Task(UUID.randomUUID(), room, employee, Priority.HIGH, "12/12/2020 11:59 PM", "Description goes here");
-
-            taskRepo.save(task);
-
+        roomListView.getSelectionModel().selectedItemProperty().addListener((observableValue, room, t1) -> {
+            if(editToggleButton.isSelected()) {
+                populateRoomForm();
+            }
         });
+
+        editToggleButton.setOnAction(e -> {
+            if(editToggleButton.isSelected()) {
+                populateRoomForm();
+            }
+            else {
+                resetRoomForm();
+            }
+        });
+    }
+
+    public void populateRoomListView() {
+        ObservableList<Room> roomList = FXCollections.observableArrayList();
+
+        if(roomRepo.count() != 0) {
+            roomList.addAll(roomRepo.findAll());
+        }
+        roomListView.setItems(roomList.sorted());
+    }
+    public void populateRoomForm() {
+        Room selectedRoom = roomListView.getSelectionModel().getSelectedItem();
+
+        roomIdTextField.setText(String.valueOf(selectedRoom.getRoomId()));
+        roomNameTextField.setText(selectedRoom.getRoomName());
+    }
+    public void resetRoomForm() {
+        roomIdTextField.clear();
+        roomNameTextField.clear();
     }
 
     public AnchorPane getScene() {

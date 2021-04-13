@@ -1,5 +1,6 @@
 package com.cougarneticit.gims.model;
 
+import com.cougarneticit.gims.model.common.RoomStatus;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -14,6 +15,9 @@ public class Room {
     private char room_id;
     @Column(name="room_name", length=120)
     private String room_name;
+    @Column(name="status", length=8)
+    @Enumerated(EnumType.STRING)
+    private RoomStatus status;
 
     @OneToMany(mappedBy="room")
     private List<Task> tasks;
