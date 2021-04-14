@@ -20,7 +20,20 @@
                <children>
                   <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="265.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <JFXListView fx:id="roomListView" prefHeight="335.0" prefWidth="235.0" stylesheets="@static/GIMScss.css" VBox.vgrow="SOMETIMES">
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Rooms" textFill="WHITE">
+                           <font>
+                              <Font name="Roboto Regular" size="34.0" />
+                           </font>
+                           <VBox.margin>
+                              <Insets top="15.0" />
+                           </VBox.margin>
+                        </Label>
+                        <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                           <VBox.margin>
+                              <Insets left="15.0" top="5.0" />
+                           </VBox.margin>
+                        </Separator>
+                        <JFXListView fx:id="roomListView" prefHeight="325.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
                            </VBox.margin>
@@ -81,7 +94,7 @@
                                     <Insets left="15.0" right="15.0" top="5.0" />
                                  </VBox.margin>
                               </AnchorPane>
-                              <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="243.0" VBox.vgrow="ALWAYS">
+                              <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="255.0" VBox.vgrow="ALWAYS">
                                  <children>
                                     <JFXButton fx:id="roomFormConfirmButton" prefHeight="32.0" prefWidth="158.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Room" textFill="WHITE">
                                        <font>
@@ -112,44 +125,85 @@
             </AnchorPane>
             <AnchorPane prefHeight="700.0" prefWidth="520.0" HBox.hgrow="ALWAYS">
                <children>
-                  <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="15.0" AnchorPane.topAnchor="15.0" />
-                  <Label fx:id="roomFormLabel1" layoutX="146.0" layoutY="15.0" text="A: Room Name" textFill="WHITE">
-                     <font>
-                        <Font name="Roboto Regular" size="34.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="roomFormLabel11" layoutX="53.0" layoutY="82.0" text="Stays" textFill="WHITE">
-                     <font>
-                        <Font name="Roboto Regular" size="20.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="roomFormLabel111" layoutX="387.0" layoutY="82.0" text="Status" textFill="WHITE">
-                     <font>
-                        <Font name="Roboto Regular" size="20.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="roomFormLabel112" layoutX="203.0" layoutY="301.0" text="Active Tasks" textFill="WHITE">
-                     <font>
-                        <Font name="Roboto Regular" size="20.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="roomFormLabel1121" layoutX="362.0" layoutY="372.0" text="Task Employee" textFill="WHITE">
-                     <font>
-                        <Font name="Roboto Regular" size="16.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="roomFormLabel11211" layoutX="375.0" layoutY="480.0" text="Description" textFill="WHITE">
-                     <font>
-                        <Font name="Roboto Regular" size="16.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="roomFormLabel112111" layoutX="354.0" layoutY="598.0" text="Due Date/Priority" textFill="WHITE">
-                     <font>
-                        <Font name="Roboto Regular" size="16.0" />
-                     </font>
-                  </Label>
+                  <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="15.0" />
+                  <VBox alignment="TOP_CENTER" layoutX="181.0" layoutY="141.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="170.0" prefWidth="520.0" VBox.vgrow="ALWAYS">
+                           <VBox.margin>
+                              <Insets left="2.0" right="2.0" />
+                           </VBox.margin>
+                           <children>
+                              <Label fx:id="roomNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="A: Room Name" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="34.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                                 <VBox.margin>
+                                    <Insets top="5.0" />
+                                 </VBox.margin>
+                              </Separator>
+                              <HBox alignment="TOP_CENTER" minHeight="170.0" prefHeight="170.0" prefWidth="520.0">
+                                 <children>
+                                    <VBox alignment="TOP_CENTER" prefWidth="260.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Active Tasks" textFill="WHITE">
+                                             <font>
+                                                <Font name="Roboto Regular" size="20.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets top="15.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label fx:id="activeTasksLabel" alignment="CENTER" text="21" textFill="#5d5c67">
+                                             <font>
+                                                <Font name="Roboto Regular" size="48.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets top="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                    <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css" />
+                                    <VBox alignment="TOP_CENTER" prefWidth="260.0" HBox.hgrow="ALWAYS">
+                                       <children>
+                                          <Label text="Current Status" textFill="WHITE">
+                                             <font>
+                                                <Font name="Roboto Regular" size="20.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets top="15.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                          <Label fx:id="statusLabel" alignment="CENTER" text="OCCUPIED" textFill="#5d5c67">
+                                             <font>
+                                                <Font name="Roboto Regular" size="48.0" />
+                                             </font>
+                                             <VBox.margin>
+                                                <Insets top="30.0" />
+                                             </VBox.margin>
+                                          </Label>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </HBox>
+                              <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css" />
+                           </children>
+                        </VBox>
+                        <AnchorPane prefHeight="530.0" prefWidth="200.0">
+                           <VBox.margin>
+                              <Insets left="2.0" right="2.0" />
+                           </VBox.margin>
+                        </AnchorPane>
+                     </children>
+                  </VBox>
+                  <Separator layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0" />
                </children></AnchorPane>
-            <AnchorPane prefHeight="700.0" prefWidth="285.0" HBox.hgrow="SOMETIMES" />
+            <VBox prefHeight="700.0" prefWidth="285.0" HBox.hgrow="ALWAYS" />
          </children>
       </HBox>
    </children>

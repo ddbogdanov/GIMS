@@ -206,6 +206,16 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             deleteStatusLabel.setVisible(true);
         }
     }
+    private void submitEmployeeEdits() {
+        Employee updatedEmployee = new Employee(
+                employeeListView.getSelectionModel().getSelectedItem().getEmployee_id(),
+                employeeListView.getSelectionModel().getSelectedItem().getUser(),
+                nameTextField.getText(), phoneTextField.getText(), emailTextField.getText());
+        employeeRepo.save(updatedEmployee);
+
+        populateEmployeeListView();
+        resetEmployeeForm();
+    }
     private void populateComboBox() {
         ObservableList<User> userList = FXCollections.observableArrayList();
         if(userRepo.count() != 0) {
@@ -235,6 +245,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         phoneTextField.setText(selectedEmployee.getPhone());
         emailTextField.setText(selectedEmployee.getEmail());
     }
+
     private boolean validateEmail(String email) {
         EmailValidator emailValidator = EmailValidator.getInstance();
         return emailValidator.isValid(email);
@@ -248,17 +259,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         Pattern pattern = Pattern.compile("^(\\d{3}[-]?){2}\\d{4}$");
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
-    }
-
-    private void submitEmployeeEdits() {
-        Employee updatedEmployee = new Employee(
-                employeeListView.getSelectionModel().getSelectedItem().getEmployee_id(),
-                employeeListView.getSelectionModel().getSelectedItem().getUser(),
-                nameTextField.getText(), phoneTextField.getText(), emailTextField.getText());
-        employeeRepo.save(updatedEmployee);
-
-        populateEmployeeListView();
-        resetEmployeeForm();
     }
 
     public AnchorPane getScene() { return pane; }

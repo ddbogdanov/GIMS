@@ -44,6 +44,9 @@ public class Room {
     public String getRoomName() {
         return room_name;
     }
+    public RoomStatus getStatus() {
+        return status;
+    }
 
     public String toString() {
         return room_id + ": " + room_name;
