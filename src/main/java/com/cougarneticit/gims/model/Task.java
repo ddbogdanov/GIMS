@@ -23,6 +23,8 @@ public class Task {
     private String due_date;
     @Column(name="description", length=256)
     private String description;
+    @Column(name="completed", length=1)
+    private boolean completed;
 
     @ManyToOne
     @JoinColumn(name="employee_id")
@@ -45,6 +47,10 @@ public class Task {
         this.priority = priority;
         this.due_date = due_date;
         this.description = description;
+    }
+
+    public boolean isCompleted() {
+        return completed;
     }
 
     public void setEmployee(Employee employee) {
