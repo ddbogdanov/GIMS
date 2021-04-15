@@ -2,7 +2,6 @@ package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Room;
-import com.cougarneticit.gims.model.common.RoomStatus;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
 import com.cougarneticit.gims.model.repos.TaskRepo;
@@ -44,8 +43,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     @FXML private JFXListView<Room> roomListView;
     @FXML private JFXToggleButton editToggleButton;
     @FXML private JFXTextField roomIdTextField, roomNameTextField;
-    @FXML private Label roomNameLabel, activeTasksLabel, statusLabel;
-    @FXML private JFXButton roomFormConfirmButton, roomFormCancelButton;
+    @FXML private Label roomFormLabel, roomNameLabel, activeTasksLabel, statusLabel;
+    @FXML private JFXButton roomFormConfirmButton, roomFormCancelButton, roomFormDeleteButton;
 
     public RoomsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -69,11 +68,19 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
         editToggleButton.setOnAction(e -> {
             if(editToggleButton.isSelected()) {
+                roomFormLabel.setText("Edit a Room");
+                roomFormConfirmButton.setText("Submit");
                 populateRoomForm();
             }
             else {
                 resetRoomForm();
             }
+        });
+        roomFormConfirmButton.setOnAction(e -> {
+
+        });
+        roomFormCancelButton.setOnAction(e -> {
+            resetRoomForm();
         });
     }
 
@@ -92,6 +99,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         roomNameTextField.setText(selectedRoom.getRoomName());
     }
     private void resetRoomForm() {
+        roomFormLabel.setText("Add a Room");
+        roomFormConfirmButton.setText("Add Room");
         roomIdTextField.clear();
         roomNameTextField.clear();
     }
