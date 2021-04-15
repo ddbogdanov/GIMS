@@ -147,6 +147,11 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         emailHelpLabel.setTextFill(Color.web("#5BDDC7"));
         emailHelpLabel.setText("email@domain.com");
         emailHelpLabel.setVisible(false);
+
+        //Reset event handlers
+        addEmployeeButton.setOnAction(ee -> {
+            addEmployee();
+        });
     }
     private void viewEmployee() {
         resetEmployeeForm();
