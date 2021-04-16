@@ -12,7 +12,7 @@ import java.util.List;
 public class Room {
     @Id
     @Column(name="room_id", length=1)
-    private char room_id;
+    private Character room_id;
     @Column(name="room_name", length=120)
     private String room_name;
     @Column(name="status", length=8)
@@ -26,9 +26,10 @@ public class Room {
         room_id = 0;
         room_name = null;
     }
-    public Room(char room_id, String room_name) {
+    public Room(char room_id, String room_name, RoomStatus status) {
         this.room_id = room_id;
         this.room_name = room_name;
+        this.status = status;
     }
 
     public void setRoomId(char room_id) {

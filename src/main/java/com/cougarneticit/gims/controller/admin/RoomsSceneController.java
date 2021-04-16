@@ -2,13 +2,11 @@ package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Room;
+import com.cougarneticit.gims.model.common.RoomStatus;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
 import com.cougarneticit.gims.model.repos.TaskRepo;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXTextField;
-import com.jfoenix.controls.JFXToggleButton;
+import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -42,9 +40,10 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     @FXML private AnchorPane pane;
     @FXML private JFXListView<Room> roomListView;
     @FXML private JFXToggleButton editToggleButton;
-    @FXML private JFXTextField roomIdTextField, roomNameTextField;
-    @FXML private Label roomFormLabel, roomNameLabel, activeTasksLabel, statusLabel;
-    @FXML private JFXButton roomFormConfirmButton, roomFormCancelButton, roomFormDeleteButton;
+    @FXML private JFXTextField roomIdTextField, roomNameTextField, taskNameTextField;
+    @FXML private JFXTextArea taskDescriptionTextArea;
+    @FXML private Label roomFormLabel, roomNameLabel, activeTasksLabel, statusLabel, roomIdHelpLabel, roomNameHelpLabel, taskNameHelpLabel, taskDescriptionHelpLabel;
+    @FXML private JFXButton roomFormSubmitButton, roomFormCancelButton, roomFormDeleteButton;
 
     public RoomsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -59,29 +58,101 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         roomListView.getSelectionModel().select(0);
         setInfoLabels();
 
-        roomListView.getSelectionModel().selectedItemProperty().addListener((observableValue, room, t1) -> {
+        editToggleButton.setOnAction(e -> {
+            editToggle();
+        });
+        roomFormSubmitButton.setOnAction(e -> {
+            submitRoom();
+        });
+        roomFormCancelButton.setOnAction(e -> {
+            resetRoomForm();
+        });
+        roomFormDeleteButton.setOnAction(e -> {
+            deleteRoom();
+        });
+
+        //Event Listeners
+        roomIdTextField.focusedProperty().addListener((obs, oldVal, newVal) -> roomIdHelpLabel.setVisible(newVal));
+        roomNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> roomNameHelpLabel.setVisible(newVal));
+        taskNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> taskNameHelpLabel.setVisible(newVal));
+        taskDescriptionTextArea.focusedProperty().addListener((obs, oldVal, newVal) -> taskDescriptionHelpLabel.setVisible(newVal));
+        roomListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                roomListView.getSelectionModel().select(oldVal);
+            }
             setInfoLabels();
             if(editToggleButton.isSelected()) {
                 populateRoomForm();
             }
         });
+        roomIdTextField.textProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal.length() > 1) {
+                roomIdTextField.setText(oldVal);
+            }
+        });
+    }
 
-        editToggleButton.setOnAction(e -> {
-            if(editToggleButton.isSelected()) {
-                roomFormLabel.setText("Edit a Room");
-                roomFormConfirmButton.setText("Submit");
+    private void editToggle() {
+        if(editToggleButton.isSelected()) {
+            try {
+                roomFormSubmitButton.setOnAction(e -> {
+                    submitRoomEdits();
+                    roomFormSubmitButton.setOnAction(ee -> {
+                        submitRoom();
+                    });
+                });
+
                 populateRoomForm();
+                roomFormLabel.setText("Edit a Room");
+                roomFormSubmitButton.setText("Submit");
             }
-            else {
-                resetRoomForm();
+            catch(NullPointerException ex) {
+                roomFormSubmitButton.setOnAction(ee -> {
+                    submitRoom();
+                });
+                System.err.println("Nothing selected");
+                //TODO
             }
-        });
-        roomFormConfirmButton.setOnAction(e -> {
-
-        });
-        roomFormCancelButton.setOnAction(e -> {
+        }
+        else {
             resetRoomForm();
-        });
+        }
+    }
+    private void submitRoomEdits() {
+        Room updatedRoom = new Room(
+                roomIdTextField.getText().charAt(0),
+                roomNameTextField.getText(),
+                RoomStatus.VACANT); //TODO: Accept RoomStatus in Room Form
+        roomRepo.save(updatedRoom);
+
+        populateRoomListView();
+        resetRoomForm();
+    }
+    private void submitRoom() {
+        if(!roomRepo.existsById(roomIdTextField.getText().charAt(0))) {
+            Room room = new Room(roomIdTextField.getText().charAt(0), roomNameTextField.getText(), RoomStatus.VACANT);
+            roomRepo.save(room);
+
+            populateRoomListView();
+            resetRoomForm();
+        }
+        else {
+            //TODO
+            System.err.println("already exists");
+        }
+    }
+    private void deleteRoom() {
+        try {
+            Room selectedRoom = roomListView.getSelectionModel().getSelectedItem();
+            roomRepo.deleteById(selectedRoom.getRoomId());
+
+            populateRoomListView();
+            resetRoomForm();
+        }
+        catch(Exception ex) {
+            //TODO
+            System.err.println("nothing selected in list");
+        }
     }
 
     private void populateRoomListView() {
@@ -96,13 +167,23 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         Room selectedRoom = roomListView.getSelectionModel().getSelectedItem();
 
         roomIdTextField.setText(String.valueOf(selectedRoom.getRoomId()));
+        roomIdTextField.setDisable(true);
         roomNameTextField.setText(selectedRoom.getRoomName());
     }
     private void resetRoomForm() {
+        editToggleButton.selectedProperty().setValue(false);
+        roomFormSubmitButton.setText("Add Room");
+
         roomFormLabel.setText("Add a Room");
-        roomFormConfirmButton.setText("Add Room");
+
         roomIdTextField.clear();
+        roomIdTextField.setDisable(false);
         roomNameTextField.clear();
+
+        //Reset event handler
+        roomFormSubmitButton.setOnAction(e -> {
+            submitRoom();
+        });
     }
     private void setInfoLabels() {
         Room selectedRoom = roomListView.getSelectionModel().getSelectedItem();
