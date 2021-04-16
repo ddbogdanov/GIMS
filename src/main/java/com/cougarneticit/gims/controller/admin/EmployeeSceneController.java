@@ -191,6 +191,16 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             //TODO
         }
     }
+    private void submitEmployeeEdits() {
+        Employee updatedEmployee = new Employee(
+                employeeListView.getSelectionModel().getSelectedItem().getEmployee_id(),
+                employeeListView.getSelectionModel().getSelectedItem().getUser(),
+                nameTextField.getText(), phoneTextField.getText(), emailTextField.getText());
+        employeeRepo.save(updatedEmployee);
+
+        populateEmployeeListView();
+        resetEmployeeForm();
+    }
     private void deleteEmployee() {
         //TODO add ScheduledExecutorService + Future to schedule status label setVisible(false)
         //TODO add confirmation popup
@@ -210,16 +220,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             deleteStatusLabel.setText("Nothing selected in list");
             deleteStatusLabel.setVisible(true);
         }
-    }
-    private void submitEmployeeEdits() {
-        Employee updatedEmployee = new Employee(
-                employeeListView.getSelectionModel().getSelectedItem().getEmployee_id(),
-                employeeListView.getSelectionModel().getSelectedItem().getUser(),
-                nameTextField.getText(), phoneTextField.getText(), emailTextField.getText());
-        employeeRepo.save(updatedEmployee);
-
-        populateEmployeeListView();
-        resetEmployeeForm();
     }
     private void populateComboBox() {
         ObservableList<User> userList = FXCollections.observableArrayList();

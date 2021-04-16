@@ -36,9 +36,21 @@
                               <Insets left="15.0" top="5.0" />
                            </VBox.margin>
                         </Separator>
+                        <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                           <children>
+                              <Label prefHeight="15.0" prefWidth="243.0" text="Room List - All" textFill="#5bddc7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="Roboto Regular" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="15.0" right="15.0" top="5.0" />
+                           </VBox.margin>
+                        </AnchorPane>
                         <JFXListView fx:id="roomListView" prefHeight="250.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                              <Insets bottom="15.0" left="15.0" right="15.0" />
                            </VBox.margin>
                         </JFXListView>
                         <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
@@ -99,7 +111,7 @@
                               </AnchorPane>
                               <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="255.0" VBox.vgrow="ALWAYS">
                                  <children>
-                                    <JFXButton fx:id="roomFormConfirmButton" prefHeight="32.0" prefWidth="106.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Room" textFill="WHITE">
+                                    <JFXButton fx:id="roomFormSubmitButton" prefHeight="32.0" prefWidth="106.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Room" textFill="WHITE">
                                        <font>
                                           <Font name="Roboto Regular" size="14.0" />
                                        </font>
@@ -212,9 +224,21 @@
                            <children>
                               <VBox HBox.hgrow="ALWAYS">
                                  <children>
+                                    <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                                       <children>
+                                          <Label prefHeight="15.0" prefWidth="243.0" text="Task List - All" textFill="#5bddc7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Regular" size="10.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="15.0" right="15.0" top="5.0" />
+                                       </VBox.margin>
+                                    </AnchorPane>
                                     <JFXListView fx:id="taskListView" prefHeight="250.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="15.0" />
+                                          <Insets left="15.0" right="15.0" />
                                        </VBox.margin>
                                     </JFXListView>
                                     <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="255.0">
@@ -318,7 +342,7 @@
                                     </JFXTextArea>
                                     <AnchorPane prefHeight="12.0" prefWidth="243.0">
                                        <children>
-                                          <Label fx:id="taskNameHelpLabel1" prefHeight="15.0" prefWidth="243.0" text="256 Character Max" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <Label fx:id="taskDescriptionHelpLabel" prefHeight="15.0" prefWidth="243.0" text="256 Character Max" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <font>
                                                 <Font name="Roboto Regular" size="10.0" />
                                              </font>
@@ -328,7 +352,7 @@
                                           <Insets left="15.0" right="15.0" top="5.0" />
                                        </VBox.margin>
                                     </AnchorPane>
-                                    <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="255.0" VBox.vgrow="ALWAYS">
+                                    <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="255.0">
                                        <children>
                                           <JFXButton fx:id="taskFormConfirmButton" prefHeight="32.0" prefWidth="170.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Task" textFill="WHITE">
                                              <font>
