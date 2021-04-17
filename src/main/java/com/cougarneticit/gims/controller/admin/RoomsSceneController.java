@@ -3,6 +3,7 @@ package com.cougarneticit.gims.controller.admin;
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Employee;
 import com.cougarneticit.gims.model.Room;
+import com.cougarneticit.gims.model.Task;
 import com.cougarneticit.gims.model.common.Priority;
 import com.cougarneticit.gims.model.common.RoomStatus;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 
 @Component
@@ -45,12 +47,19 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     @FXML private JFXComboBox<RoomStatus> roomStatusComboBox;
     @FXML private JFXComboBox<Room> roomComboBox;
     @FXML private JFXComboBox<Employee> employeeComboBox;
+    @FXML private JFXDatePicker dueDatePicker;
     @FXML private JFXListView<Room> roomListView;
+    @FXML private JFXListView<Task> taskListView;
     @FXML private JFXToggleButton editToggleButton;
     @FXML private JFXTextField roomIdTextField, roomNameTextField, taskNameTextField;
     @FXML private JFXTextArea taskDescriptionTextArea;
-    @FXML private Label roomFormLabel, roomNameLabel, roomStatusHelpLabel, activeTasksLabel, statusLabel, roomIdHelpLabel, roomNameHelpLabel, taskNameHelpLabel, taskDescriptionHelpLabel;
-    @FXML private JFXButton roomFormSubmitButton, roomFormCancelButton, roomFormDeleteButton;
+
+    @FXML private Label
+            roomFormLabel, roomNameLabel, roomStatusHelpLabel, activeTasksLabel,
+            statusLabel, roomIdHelpLabel, roomNameHelpLabel, roomHelpLabel,
+            employeeHelpLabel, priorityHelpLabel, taskNameHelpLabel, taskDescriptionHelpLabel;
+
+    @FXML private JFXButton roomFormSubmitButton, roomFormCancelButton, roomFormDeleteButton, refreshTaskFormButton, taskFormSubmitButton, taskFormCancelButton;
 
     public RoomsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -64,6 +73,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         populateRoomListView();
         roomListView.getSelectionModel().select(0);
         setInfoLabels();
+        populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
 
         //Initialize ComboBoxes
         priorityComboBox.getItems().addAll(Priority.values());
@@ -81,6 +91,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         });
         employeeComboBox.getItems().addAll(employeeRepo.findAll());
 
+        //Room Form Actions
         editToggleButton.setOnAction(e -> {
             editToggle();
         });
@@ -94,7 +105,21 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             deleteRoom();
         });
 
-        //Event Listeners
+        //Task Form Actions
+        refreshTaskFormButton.setOnAction(e -> {
+            roomComboBox.getItems().clear();
+            employeeComboBox.getItems().clear();
+            roomComboBox.getItems().addAll(roomRepo.findAll());
+            employeeComboBox.getItems().addAll(employeeRepo.findAll());
+        });
+        taskFormSubmitButton.setOnAction(e -> {
+            submitTask();
+        });
+        taskFormCancelButton.setOnAction(e -> {
+            resetTaskForm();
+        });
+
+        //Event Listeners - Room form
         roomIdTextField.focusedProperty().addListener((obs, oldVal, newVal) -> roomIdHelpLabel.setVisible(newVal));
         roomNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> roomNameHelpLabel.setVisible(newVal));
         taskNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> taskNameHelpLabel.setVisible(newVal));
@@ -103,7 +128,10 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             if(newVal == null) {
                 roomListView.getSelectionModel().select(oldVal);
             }
-            setInfoLabels();
+            else {
+                setInfoLabels();
+                populateTaskListView(newVal.getRoomId());
+            }
             if(editToggleButton.isSelected()) {
                 populateRoomForm();
             }
@@ -113,8 +141,12 @@ public class RoomsSceneController extends GIMSController implements Initializabl
                 roomIdTextField.setText(oldVal);
             }
         });
+        //Event Listeners - Task form
+        taskNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> taskNameHelpLabel.setVisible(newVal));
+        taskDescriptionTextArea.focusedProperty().addListener((obs, oldVal, newVal) -> taskDescriptionHelpLabel.setVisible(newVal));
     }
 
+    //Button Actions - Room form
     private void editToggle() {
         if(editToggleButton.isSelected()) {
             try {
@@ -178,7 +210,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             System.err.println("Nothing selected in list");
         }
     }
-
+    //Util Methods - Room form
     private void populateRoomListView() {
         ObservableList<Room> roomList = FXCollections.observableArrayList();
 
@@ -223,12 +255,11 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         editToggleButton.selectedProperty().setValue(false);
         roomFormSubmitButton.setText("Add Room");
 
-        roomFormLabel.setText("Add a Room");
-
         roomIdTextField.clear();
         roomIdTextField.setDisable(false);
         roomNameTextField.clear();
 
+        roomFormLabel.setText("Add a Room");
         roomIdHelpLabel.setText("Single Character");
         roomIdHelpLabel.setTextFill(Color.web("#5BDDC7"));
         roomIdHelpLabel.setVisible(false);
@@ -243,6 +274,97 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         roomFormSubmitButton.setOnAction(e -> {
             submitRoom();
         });
+    }
+
+    //Button Actions - Task form
+    private void submitTask() {
+        if (validateTaskForm()) {
+            Task task = new Task(
+                    UUID.randomUUID(),
+                    roomComboBox.getValue(),
+                    employeeComboBox.getValue(),
+                    taskNameTextField.getText(),
+                    priorityComboBox.getValue(),
+                    dueDatePicker.getValue().toString(),
+                    taskDescriptionTextArea.getText());
+            taskRepo.save(task);
+
+            populateTaskListView(roomComboBox.getValue().getRoomId());
+            resetTaskForm();
+        }
+    }
+    private void resetTaskForm() {
+        roomComboBox.getSelectionModel().clearSelection();
+        employeeComboBox.getSelectionModel().clearSelection();
+        priorityComboBox.getSelectionModel().clearSelection();
+        dueDatePicker.getEditor().clear();
+
+        taskNameTextField.clear();
+        taskDescriptionTextArea.clear();
+
+        roomHelpLabel.setText("Room");
+        roomHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        roomHelpLabel.setVisible(false);
+        employeeHelpLabel.setText("Employee");
+        employeeHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        employeeHelpLabel.setVisible(false);
+        taskNameHelpLabel.setText("48 Character Max");
+        taskNameHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        taskNameHelpLabel.setVisible(false);
+        priorityHelpLabel.setText("Priority");
+        priorityHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        priorityHelpLabel.setVisible(false);
+        taskDescriptionHelpLabel.setText("256 Character Max");
+        taskDescriptionHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        taskDescriptionHelpLabel.setVisible(false);
+
+        taskFormSubmitButton.setOnAction(e -> {
+            submitTask();
+        });
+    }
+    //Util Methods - Task form
+    private boolean validateTaskForm() {
+        if(roomComboBox.getSelectionModel().isEmpty()) {
+            roomHelpLabel.setText("Select a room");
+            roomHelpLabel.setTextFill(Color.web("#F73331"));
+            roomHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(employeeComboBox.getSelectionModel().isEmpty()) {
+            employeeHelpLabel.setText("Select an employee");
+            employeeHelpLabel.setTextFill(Color.web("#F73331"));
+            employeeHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(taskNameTextField.getText().isBlank()) {
+            taskNameHelpLabel.setText("Task name cannot be blank");
+            taskNameHelpLabel.setTextFill(Color.web("#F73331"));
+            taskNameHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(priorityComboBox.getSelectionModel().isEmpty()) {
+            priorityHelpLabel.setText("Select a priority");
+            priorityHelpLabel.setTextFill(Color.web("#F73331"));
+            priorityHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(taskDescriptionTextArea.getText().isBlank()) {
+            taskDescriptionHelpLabel.setText("Description cannot be blank");
+            taskDescriptionHelpLabel.setTextFill(Color.web("#F73331"));
+            taskDescriptionHelpLabel.setVisible(true);
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    private void populateTaskListView(char roomId) {
+        ObservableList<Task> taskList = FXCollections.observableArrayList();
+
+        if(taskRepo.count() != 0){
+            taskList.addAll(taskRepo.findAllByRoom_RoomId(roomId));
+        }
+        taskListView.setItems(taskList.sorted());
     }
 
     private void setInfoLabels() {

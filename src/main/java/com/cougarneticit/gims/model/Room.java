@@ -12,9 +12,9 @@ import java.util.List;
 public class Room {
     @Id
     @Column(name="room_id", length=1)
-    private Character room_id;
+    private Character roomId;
     @Column(name="room_name", length=120)
-    private String room_name;
+    private String roomName;
     @Column(name="status", length=8)
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
@@ -23,33 +23,33 @@ public class Room {
     private List<Task> tasks;
 
     public Room() {
-        room_id = 0;
-        room_name = null;
+        roomId = 0;
+        roomName = null;
     }
     public Room(char room_id, String room_name, RoomStatus status) {
-        this.room_id = room_id;
-        this.room_name = room_name;
+        this.roomId = room_id;
+        this.roomName = room_name;
         this.status = status;
     }
 
     public void setRoomId(char room_id) {
-        this.room_id = room_id;
+        this.roomId = room_id;
     }
     public void setRoomName(String room_name) {
-        this.room_name = room_name;
+        this.roomName = room_name;
     }
 
     public char getRoomId() {
-        return room_id;
+        return roomId;
     }
     public String getRoomName() {
-        return room_name;
+        return roomName;
     }
     public RoomStatus getStatus() {
         return status;
     }
 
     public String toString() {
-        return room_id + ": " + room_name;
+        return roomId + ": " + roomName;
     }
 }
