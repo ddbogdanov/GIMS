@@ -16,6 +16,8 @@ public class Task {
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="task_id", length=36)
     private UUID task_id;
+    @Column(name="name")
+    private String name;
     @Column(name="priority", length=6)
     @Enumerated(EnumType.STRING)
     private Priority priority;
@@ -40,10 +42,11 @@ public class Task {
         due_date = null;
         description = null;
     }
-    public Task(UUID task_id, Room room, Employee employee, Priority priority, String due_date, String description) {
+    public Task(UUID task_id, Room room, Employee employee, String name, Priority priority, String due_date, String description) {
         this.task_id = task_id;
         this.room = room;
         this.employee = employee;
+        this.name = name;
         this.priority = priority;
         this.due_date = due_date;
         this.description = description;
@@ -58,5 +61,10 @@ public class Task {
     }
     public void setRoom(Room room) {
         this.room = room;
+    }
+
+    @Override
+    public String toString() {
+        return name + " | Priority: " + priority;
     }
 }
