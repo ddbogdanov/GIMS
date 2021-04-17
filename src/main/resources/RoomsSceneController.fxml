@@ -109,6 +109,23 @@
                                     <Insets left="15.0" right="15.0" top="5.0" />
                                  </VBox.margin>
                               </AnchorPane>
+                              <JFXComboBox fx:id="roomStatusComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="128.0" promptText="Room Status" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
+                                 <VBox.margin>
+                                    <Insets right="125.0" top="15.0" />
+                                 </VBox.margin>
+                              </JFXComboBox>
+                              <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                                 <children>
+                                    <Label fx:id="roomStatusHelpLabel" prefHeight="15.0" prefWidth="243.0" text="Room Status" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="Roboto Regular" size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="5.0" />
+                                 </VBox.margin>
+                              </AnchorPane>
                               <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="255.0" VBox.vgrow="ALWAYS">
                                  <children>
                                     <JFXButton fx:id="roomFormSubmitButton" prefHeight="32.0" prefWidth="106.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Room" textFill="WHITE">
@@ -281,14 +298,14 @@
                                           <Insets top="5.0" />
                                        </VBox.margin>
                                     </Label>
-                                    <HBox alignment="TOP_CENTER" prefHeight="25.0" prefWidth="285.0">
+                                    <HBox alignment="TOP_CENTER" prefHeight="28.0" prefWidth="285.0">
                                        <children>
-                                          <JFXComboBox fx:id="roomComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="25.0" prefWidth="102.0" promptText="Room" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
+                                          <JFXComboBox fx:id="roomComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="102.0" promptText="Room" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="ALWAYS">
                                              <HBox.margin>
                                                 <Insets />
                                              </HBox.margin>
                                           </JFXComboBox>
-                                          <JFXComboBox fx:id="employeeComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="25.0" prefWidth="140.0" promptText="Employee" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
+                                          <JFXComboBox fx:id="employeeComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="140.0" promptText="Employee" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="ALWAYS">
                                              <HBox.margin>
                                                 <Insets left="15.0" />
                                              </HBox.margin>
@@ -320,25 +337,28 @@
                                     </AnchorPane>
                                     <HBox alignment="TOP_CENTER" prefHeight="35.0" prefWidth="285.0">
                                        <children>
-                                          <JFXComboBox fx:id="priorityComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="33.0" prefWidth="80.0" promptText="Priority" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
+                                          <JFXComboBox fx:id="priorityComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="32.0" prefWidth="100.0" promptText="Priority" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="ALWAYS">
                                              <HBox.margin>
                                                 <Insets />
                                              </HBox.margin>
                                           </JFXComboBox>
-                                          <JFXDatePicker fx:id="dueDatePicker" defaultColor="#007b68" editable="false" prefHeight="25.0" prefWidth="160.0" promptText="Due Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
+                                          <JFXDatePicker fx:id="dueDatePicker" defaultColor="#007b68" editable="false" prefHeight="28.0" prefWidth="150.0" promptText="Due Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="ALWAYS">
                                              <HBox.margin>
                                                 <Insets left="15.0" />
                                              </HBox.margin>
                                           </JFXDatePicker>
                                        </children>
                                        <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="15.0" />
+                                          <Insets left="15.0" right="15.0" top="5.0" />
                                        </VBox.margin>
                                     </HBox>
-                                    <JFXTextArea fx:id="taskDescriptionTextArea" focusColor="#11ab97" labelFloat="true" prefHeight="175.0" prefWidth="255.0" promptText="Task Description" style="-fx-background-color: #3e3e4a; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@../../../../../CIS%20-%203343/Project/GIMSPrototype/src/main/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                                    <JFXTextArea fx:id="taskDescriptionTextArea" focusColor="#11ab97" labelFloat="true" prefHeight="175.0" prefWidth="255.0" promptText="Task Description" style="-fx-background-color: #3e3e4a; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets left="15.0" right="15.0" top="20.0" />
                                        </VBox.margin>
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
                                     </JFXTextArea>
                                     <AnchorPane prefHeight="12.0" prefWidth="243.0">
                                        <children>
