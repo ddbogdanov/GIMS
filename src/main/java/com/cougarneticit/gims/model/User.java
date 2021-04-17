@@ -53,6 +53,9 @@ public class User {
     public Employee getEmployee() {
         return employee;
     }
+    public boolean isEmployee() {
+        return !(employee == null);
+    }
     public boolean isAdmin() { return isadmin; }
 
     public String toString() {

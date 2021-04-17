@@ -46,7 +46,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     @FXML private JFXComboBox<User> userComboBox;
     @FXML private JFXListView<Employee> employeeListView;
     @FXML private JFXTextField nameTextField, phoneTextField, emailTextField;
-    @FXML private Label nameHelpLabel, phoneHelpLabel, emailHelpLabel, deleteStatusLabel, employeeFormLabel;
+    @FXML private Label userHelpLabel, nameHelpLabel, phoneHelpLabel, emailHelpLabel, deleteStatusLabel, employeeFormLabel;
     @FXML private JFXButton addEmployeeButton, viewEmployeeButton, editEmployeeButton, deleteEmployeeButton, cancelButton;
 
     public EmployeeSceneController(FxWeaver fxWeaver) {
@@ -84,8 +84,18 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     }
 
     private void addEmployee() {
-        //TODO prevent duplicate user -> employee relationships
         User selectedUser = userComboBox.getSelectionModel().getSelectedItem();
+
+        System.out.println(selectedUser.isEmployee());
+        if(selectedUser.isEmployee()) {
+            userHelpLabel.setTextFill(Color.web("#F73331"));
+            userHelpLabel.setText("User already assigned an employee");
+            userHelpLabel.setVisible(true);
+            return;
+        }
+
+        System.out.println("adding employee");
+
         String name = nameTextField.getText();
         String phone = phoneTextField.getText();
         String email = emailTextField.getText();
@@ -120,6 +130,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         }
     }
     private void resetEmployeeForm() {
+        populateComboBox();
         userComboBox.getSelectionModel().clearSelection();
         userComboBox.setDisable(false);
 
@@ -138,6 +149,9 @@ public class EmployeeSceneController extends GIMSController implements Initializ
 
         //Reset labels
         employeeFormLabel.setText("Add an Employee");
+        userHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        userHelpLabel.setText("User");
+        userHelpLabel.setVisible(false);
         nameHelpLabel.setTextFill(Color.web("#5BDDC7"));
         nameHelpLabel.setText("First Last");
         nameHelpLabel.setVisible(false);
@@ -204,7 +218,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     private void deleteEmployee() {
         //TODO add ScheduledExecutorService + Future to schedule status label setVisible(false)
         //TODO add confirmation popup
-        resetEmployeeForm();
         try {
             Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
             employeeRepo.deleteById(selectedEmployee.getEmployee_id());
@@ -214,6 +227,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             deleteStatusLabel.setVisible(true);
 
             populateEmployeeListView();
+            resetEmployeeForm();
         }
         catch(NullPointerException ex) {
             deleteStatusLabel.setTextFill(Color.web("#F73331"));
@@ -222,6 +236,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         }
     }
     private void populateComboBox() {
+        userComboBox.getItems().clear();
         ObservableList<User> userList = FXCollections.observableArrayList();
         if(userRepo.count() != 0) {
             userList.addAll(userRepo.findAll());
