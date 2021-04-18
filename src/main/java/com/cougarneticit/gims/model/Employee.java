@@ -26,7 +26,7 @@ public class Employee {
     @JoinColumn(name="user_id")
     private User user;
 
-    @OneToMany(mappedBy="employee")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="employee")
     private List<Task> tasks;
 
     public Employee() {
@@ -65,6 +65,9 @@ public class Employee {
     }
     public String getEmail() {
         return employee_email;
+    }
+    public List<Task> getTasks() {
+        return tasks;
     }
 
     public String toString() {

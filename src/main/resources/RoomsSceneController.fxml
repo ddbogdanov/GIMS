@@ -261,7 +261,7 @@
                                     </JFXListView>
                                     <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="255.0">
                                        <children>
-                                          <JFXButton prefHeight="32.0" prefWidth="100.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit Task" textFill="WHITE">
+                                          <JFXButton fx:id="taskEditButton" prefHeight="32.0" prefWidth="100.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit Task" textFill="WHITE">
                                              <font>
                                                 <Font name="Roboto Regular" size="14.0" />
                                              </font>
@@ -269,7 +269,15 @@
                                                 <Insets right="10.0" />
                                              </HBox.margin>
                                           </JFXButton>
-                                          <JFXButton prefHeight="32.0" prefWidth="65.0" ripplerFill="#f71c19" style="-fx-border-color: #F73331; -fx-border-radius: 5;" text="Delete" textFill="WHITE">
+                                          <JFXButton fx:id="taskViewButton" prefHeight="32.0" prefWidth="100.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View Task" textFill="WHITE">
+                                             <font>
+                                                <Font name="Roboto Regular" size="14.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets right="10.0" />
+                                             </HBox.margin>
+                                          </JFXButton>
+                                          <JFXButton fx:id="taskDeleteButton" prefHeight="32.0" prefWidth="65.0" ripplerFill="#f71c19" style="-fx-border-color: #F73331; -fx-border-radius: 5;" text="Delete" textFill="WHITE">
                                              <font>
                                                 <Font name="Roboto Regular" size="14.0" />
                                              </font>

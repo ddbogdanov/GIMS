@@ -4,7 +4,9 @@ import com.cougarneticit.gims.model.common.RoomStatus;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Component
@@ -19,7 +21,7 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
-    @OneToMany(mappedBy="room")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="room")
     private List<Task> tasks;
 
     public Room() {
@@ -47,6 +49,9 @@ public class Room {
     }
     public RoomStatus getStatus() {
         return status;
+    }
+    public List<Task> getTasks() {
+        return tasks;
     }
 
     public String toString() {

@@ -169,5 +169,4 @@ public class HomeController extends GIMSController implements Initializable {
     public void showSettingsView() {
         mainView.setCenter(settingsScene);
     }
-
 }

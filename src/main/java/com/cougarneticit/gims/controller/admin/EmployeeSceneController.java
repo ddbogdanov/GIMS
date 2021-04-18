@@ -80,6 +80,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         emailTextField.focusedProperty().addListener((obs, oldVal, newVal) -> emailHelpLabel.setVisible(newVal));
     }
 
+    //Button Actions - Employee form
     private void addEmployee() {
         User selectedUser = userComboBox.getSelectionModel().getSelectedItem();
 
@@ -126,44 +127,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             }
         }
     }
-    private void resetEmployeeForm() {
-        populateComboBox();
-        userComboBox.getSelectionModel().clearSelection();
-        userComboBox.setDisable(false);
-
-        //Reset buttons
-        addEmployeeButton.setText("Add Employee");
-        addEmployeeButton.setDisable(false);
-        cancelButton.setText("Cancel");
-
-        //Reset text fields
-        nameTextField.clear();
-        nameTextField.setDisable(false);
-        phoneTextField.clear();
-        phoneTextField.setDisable(false);
-        emailTextField.clear();
-        emailTextField.setDisable(false);
-
-        //Reset labels
-        employeeFormLabel.setText("Add an Employee");
-        userHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        userHelpLabel.setText("User");
-        userHelpLabel.setVisible(false);
-        nameHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        nameHelpLabel.setText("First Last");
-        nameHelpLabel.setVisible(false);
-        phoneHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        phoneHelpLabel.setText("xxx-xxx-xxxx");
-        phoneHelpLabel.setVisible(false);
-        emailHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        emailHelpLabel.setText("email@domain.com");
-        emailHelpLabel.setVisible(false);
-
-        //Reset event handlers
-        addEmployeeButton.setOnAction(ee -> {
-            addEmployee();
-        });
-    }
     private void viewEmployee() {
         resetEmployeeForm();
         userComboBox.setDisable(true);
@@ -181,12 +144,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         resetEmployeeForm();
         try {
             addEmployeeButton.setOnAction(e -> {
-                //Submit edits
                 submitEmployeeEdits();
-                //Revert to original event handler
-                addEmployeeButton.setOnAction(ee -> {
-                    addEmployee();
-                });
             });
 
             populateForm();
@@ -232,6 +190,21 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             deleteStatusLabel.setVisible(true);
         }
     }
+    //Util Methods - Employee form
+    private void populateForm() {
+        Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
+
+        for (User user : userComboBox.getItems()) {
+            if (selectedEmployee.getUser_id().equals(user.getUser_id())) {
+                userComboBox.getSelectionModel().select(user);
+                userComboBox.setDisable(true);
+                break;
+            }
+        }
+        nameTextField.setText(selectedEmployee.getName());
+        phoneTextField.setText(selectedEmployee.getPhone());
+        emailTextField.setText(selectedEmployee.getEmail());
+    }
     private void populateComboBox() {
         userComboBox.getItems().clear();
         ObservableList<User> userList = FXCollections.observableArrayList();
@@ -248,21 +221,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         }
         employeeListView.setItems(employeeList.sorted());
     }
-    private void populateForm() {
-        Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
-
-        for (User user : userComboBox.getItems()) {
-            if (selectedEmployee.getUser_id().equals(user.getUser_id())) {
-                userComboBox.getSelectionModel().select(user);
-                userComboBox.setDisable(true);
-                break;
-            }
-        }
-        nameTextField.setText(selectedEmployee.getName());
-        phoneTextField.setText(selectedEmployee.getPhone());
-        emailTextField.setText(selectedEmployee.getEmail());
-    }
-
     private boolean validateEmail(String email) {
         EmailValidator emailValidator = EmailValidator.getInstance();
         return emailValidator.isValid(email);
@@ -276,6 +234,44 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         Pattern pattern = Pattern.compile("^(\\d{3}[-]?){2}\\d{4}$");
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
+    }
+    private void resetEmployeeForm() {
+        populateComboBox();
+        userComboBox.getSelectionModel().clearSelection();
+        userComboBox.setDisable(false);
+
+        //Reset buttons
+        addEmployeeButton.setText("Add Employee");
+        addEmployeeButton.setDisable(false);
+        cancelButton.setText("Cancel");
+
+        //Reset text fields
+        nameTextField.clear();
+        nameTextField.setDisable(false);
+        phoneTextField.clear();
+        phoneTextField.setDisable(false);
+        emailTextField.clear();
+        emailTextField.setDisable(false);
+
+        //Reset labels
+        employeeFormLabel.setText("Add an Employee");
+        userHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        userHelpLabel.setText("User");
+        userHelpLabel.setVisible(false);
+        nameHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        nameHelpLabel.setText("First Last");
+        nameHelpLabel.setVisible(false);
+        phoneHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        phoneHelpLabel.setText("xxx-xxx-xxxx");
+        phoneHelpLabel.setVisible(false);
+        emailHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        emailHelpLabel.setText("email@domain.com");
+        emailHelpLabel.setVisible(false);
+
+        //Reset event handlers
+        addEmployeeButton.setOnAction(ee -> {
+            addEmployee();
+        });
     }
 
     public AnchorPane getScene() { return pane; }
