@@ -1,3 +1,8 @@
+/*@font-face {
+    src: url("/static/fonts/RobotoMono-VariableFont_wght.ttf") format("ttf");
+}
+TODO: remove comments for deployment. SceneBuilder doesnt like this line for some reason.
+*/
 .jfx-text-field, .jfx-password-field {
     -fx-prompt-text-fill: WHITE;
     -fx-text-fill: WHITE;
@@ -24,11 +29,26 @@
 }
 
 /*List view styling*/
+.list-cell {
+    /*-fx-font-family: "Roboto Mono Regular";*/
+    -fx-font-size: 12px;
+}
 .list-view {
     -fx-background-color: #3E3E4A;
 }
-.list-view .list-cell:hover {
-    -fx-background-color: #5D5C67;
+.list-view .list-cell:even:hover {
+    -fx-background-color: #585869;
+
+}
+.list-view .list-cell:odd:hover {
+    -fx-background-color: #545463;
+
+}
+.list-view .list-cell:even:selected:hover {
+    -fx-background-color: #009982;
+}
+.list-view .list-cell:odd:selected:hover {
+    -fx-background-color: #009982;
 }
 .list-view .list-cell:selected {
     -fx-background-color: #007B68;

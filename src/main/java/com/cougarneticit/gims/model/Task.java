@@ -15,14 +15,14 @@ public class Task {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="task_id", length=36)
-    private UUID task_id;
+    private UUID taskId;
     @Column(name="name")
     private String name;
     @Column(name="priority", length=6)
     @Enumerated(EnumType.STRING)
     private Priority priority;
     @Column(name="due_date", length=20)
-    private String due_date;
+    private String dueDate;
     @Column(name="description", length=256)
     private String description;
     @Column(name="completed", length=1)
@@ -37,21 +37,42 @@ public class Task {
     private Room room;
 
     public Task() {
-        task_id = UUID.randomUUID();
+        taskId = UUID.randomUUID();
         priority = null;
-        due_date = null;
+        dueDate = null;
         description = null;
     }
-    public Task(UUID task_id, Room room, Employee employee, String name, Priority priority, String due_date, String description) {
-        this.task_id = task_id;
+    public Task(UUID taskId, Room room, Employee employee, String name, Priority priority, String dueDate, String description) {
+        this.taskId = taskId;
         this.room = room;
         this.employee = employee;
         this.name = name;
         this.priority = priority;
-        this.due_date = due_date;
+        this.dueDate = dueDate;
         this.description = description;
     }
 
+    public UUID getTaskId() {
+        return taskId;
+    }
+    public Room getRoom() {
+        return room;
+    }
+    public Employee getEmployee() {
+        return employee;
+    }
+    public String getName() {
+        return name;
+    }
+    public Priority getPriority() {
+        return priority;
+    }
+    public String getDueDate() {
+        return dueDate;
+    }
+    public String getDescription() {
+        return description;
+    }
     public boolean isCompleted() {
         return completed;
     }
@@ -65,6 +86,7 @@ public class Task {
 
     @Override
     public String toString() {
-        return name + " | Priority: " + priority;
+        String c = completed ? "Yes" : "No ";
+        return "Priority: " + String.format("%1$-6s", priority) + " | Completed?: " + c + " | " + name;
     }
 }

@@ -4,12 +4,14 @@ import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Employee;
 import com.cougarneticit.gims.model.Room;
 import com.cougarneticit.gims.model.Task;
+import com.cougarneticit.gims.model.User;
 import com.cougarneticit.gims.model.common.Priority;
 import com.cougarneticit.gims.model.common.RoomStatus;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
 import com.cougarneticit.gims.model.repos.TaskRepo;
 import com.jfoenix.controls.*;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,6 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -56,10 +62,12 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
     @FXML private Label
             roomFormLabel, roomNameLabel, roomStatusHelpLabel, activeTasksLabel,
-            statusLabel, roomIdHelpLabel, roomNameHelpLabel, roomHelpLabel,
+            statusLabel, roomIdHelpLabel, roomNameHelpLabel, roomHelpLabel, taskFormLabel,
             employeeHelpLabel, priorityHelpLabel, taskNameHelpLabel, taskDescriptionHelpLabel;
 
-    @FXML private JFXButton roomFormSubmitButton, roomFormCancelButton, roomFormDeleteButton, refreshTaskFormButton, taskFormSubmitButton, taskFormCancelButton;
+    @FXML private JFXButton
+            roomFormSubmitButton, roomFormCancelButton, roomFormDeleteButton, refreshTaskFormButton,
+            taskEditButton, taskViewButton, taskDeleteButton, taskFormSubmitButton, taskFormCancelButton;
 
     public RoomsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -107,16 +115,22 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
         //Task Form Actions
         refreshTaskFormButton.setOnAction(e -> {
-            roomComboBox.getItems().clear();
-            employeeComboBox.getItems().clear();
-            roomComboBox.getItems().addAll(roomRepo.findAll());
-            employeeComboBox.getItems().addAll(employeeRepo.findAll());
+            refreshTaskForm();
         });
         taskFormSubmitButton.setOnAction(e -> {
             submitTask();
         });
         taskFormCancelButton.setOnAction(e -> {
             resetTaskForm();
+        });
+        taskEditButton.setOnAction(e -> {
+            editTask();
+        });
+        taskViewButton.setOnAction(e -> {
+            viewTask();
+        });
+        taskDeleteButton.setOnAction(e -> {
+            deleteTask();
         });
 
         //Event Listeners - Room form
@@ -144,6 +158,12 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         //Event Listeners - Task form
         taskNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> taskNameHelpLabel.setVisible(newVal));
         taskDescriptionTextArea.focusedProperty().addListener((obs, oldVal, newVal) -> taskDescriptionHelpLabel.setVisible(newVal));
+        dueDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                dueDatePicker.getEditor().setText(dueDatePicker.getConverter().toString(dueDatePicker.getValue()));
+            }
+        });
     }
 
     //Button Actions - Room form
@@ -180,6 +200,10 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             roomRepo.save(updatedRoom);
 
             populateRoomListView();
+            roomListView.getSelectionModel().select(updatedRoom);
+            roomListView.getFocusModel().focus(roomListView.getItems().indexOf(updatedRoom));
+            roomListView.scrollTo(updatedRoom);
+            setInfoLabels();
             resetRoomForm();
         }
     }
@@ -290,18 +314,31 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             taskRepo.save(task);
 
             populateTaskListView(roomComboBox.getValue().getRoomId());
+            setInfoLabels();
             resetTaskForm();
         }
     }
     private void resetTaskForm() {
+        roomComboBox.setDisable(false);
         roomComboBox.getSelectionModel().clearSelection();
+        employeeComboBox.setDisable(false);
         employeeComboBox.getSelectionModel().clearSelection();
+        priorityComboBox.setDisable(false);
         priorityComboBox.getSelectionModel().clearSelection();
+        dueDatePicker.setDisable(false);
         dueDatePicker.getEditor().clear();
 
+        taskFormSubmitButton.setDisable(false);
+        taskFormSubmitButton.setText("Add Task");
+        taskFormCancelButton.setDisable(false);
+        taskFormCancelButton.setText("Cancel");
+
+        taskNameTextField.setDisable(false);
         taskNameTextField.clear();
+        taskDescriptionTextArea.setDisable(false);
         taskDescriptionTextArea.clear();
 
+        taskFormLabel.setText("Add a Task");
         roomHelpLabel.setText("Room");
         roomHelpLabel.setTextFill(Color.web("#5BDDC7"));
         roomHelpLabel.setVisible(false);
@@ -321,6 +358,75 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         taskFormSubmitButton.setOnAction(e -> {
             submitTask();
         });
+    }
+    private void editTask() {
+        try {
+            taskFormSubmitButton.setOnAction(e -> {
+                submitTaskEdits();
+            });
+
+            populateTaskForm();
+            roomComboBox.setDisable(true);
+            taskFormLabel.setText("Edit a Task");
+            taskFormSubmitButton.setText("Submit");
+        }
+        catch(NullPointerException ex) {
+            taskFormSubmitButton.setOnAction(e -> {
+                submitTask();
+            });
+            System.err.println("Nothing selected in task list");
+        }
+    }
+    private void submitTaskEdits() {
+        if(validateTaskForm()) {
+            Task updatedTask = new Task(
+                    taskListView.getSelectionModel().getSelectedItem().getTaskId(),
+                    roomComboBox.getValue(),
+                    employeeComboBox.getValue(),
+                    taskNameTextField.getText(),
+                    priorityComboBox.getValue(),
+                    dueDatePicker.getValue().toString(),
+                    taskDescriptionTextArea.getText());
+            taskRepo.save(updatedTask);
+
+            populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
+            resetTaskForm();
+            refreshTaskForm();
+
+        }
+    }
+    private void viewTask() {
+        resetTaskForm();
+        taskFormLabel.setText("View a Task");
+        roomComboBox.setDisable(true);
+        employeeComboBox.setDisable(true);
+        taskNameTextField.setDisable(true);
+        priorityComboBox.setDisable(true);
+        dueDatePicker.setDisable(true);
+        taskDescriptionTextArea.setDisable(true);
+        taskFormSubmitButton.setDisable(true);
+        taskFormCancelButton.setText("Reset");
+
+        populateTaskForm();
+    }
+    private void deleteTask() {
+        try {
+            Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
+            taskRepo.deleteById(selectedTask.getTaskId());
+
+            populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
+            resetTaskForm();
+        }
+        catch(Exception ex) {
+            System.err.println("Nothing selected in list");
+        }
+    }
+    private void refreshTaskForm() {
+        roomComboBox.getItems().clear();
+        employeeComboBox.getItems().clear();
+        dueDatePicker.getEditor().clear();
+        roomComboBox.getItems().addAll(roomRepo.findAll());
+        employeeComboBox.getItems().addAll(employeeRepo.findAll());
     }
     //Util Methods - Task form
     private boolean validateTaskForm() {
@@ -366,7 +472,42 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         }
         taskListView.setItems(taskList.sorted());
     }
+    private void populateTaskForm() {
+        Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
 
+        populateTaskFormRoomComboBox(selectedTask);
+        populateTaskFormEmployeeComboBox(selectedTask);
+        taskNameTextField.setText(selectedTask.getName());
+        priorityComboBox.getSelectionModel().select(selectedTask.getPriority());
+        dueDatePicker.setValue(LocalDate.parse(selectedTask.getDueDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+        taskDescriptionTextArea.setText(selectedTask.getDescription());
+    }
+    private void populateTaskFormRoomComboBox(Task selectedTask) {
+        //Loop through rooms in the roomComboBox
+        for(Room room : roomComboBox.getItems()) {
+            //Fetch list of tasks for each room in the roomComboBox
+            List<Task> taskIds = room.getTasks();
+            //Loop through each task from above list
+            for(Task task : taskIds) {
+                //If selected task ID in taskListView equals task a ID from the list of tasks - select it
+                if(selectedTask.getTaskId().equals(task.getTaskId())) {
+                    roomComboBox.getSelectionModel().select(room);
+                    return;
+                }
+            }
+        }
+    }
+    private void populateTaskFormEmployeeComboBox(Task selectedTask) {
+        for(Employee employee : employeeComboBox.getItems()) {
+            List<Task> taskIds = employee.getTasks();
+            for(Task task : taskIds) {
+                if(selectedTask.getTaskId().equals(task.getTaskId())) {
+                    employeeComboBox.getSelectionModel().select(employee);
+                    return;
+                }
+            }
+        }
+    }
     private void setInfoLabels() {
         Room selectedRoom = roomListView.getSelectionModel().getSelectedItem();
 

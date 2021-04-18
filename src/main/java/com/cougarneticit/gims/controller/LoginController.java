@@ -127,7 +127,6 @@ public class LoginController extends GIMSController implements Initializable {
         EmpHomeController ehc = new EmpHomeController((fxWeaver));
         empHomeController = fxWeaver.loadController(ehc.getClass());
         empHomeController.show();
-
     }
 
     public AnchorPane getScene() {
