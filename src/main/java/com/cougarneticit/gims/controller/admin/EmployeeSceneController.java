@@ -2,8 +2,10 @@ package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Employee;
+import com.cougarneticit.gims.model.Shift;
 import com.cougarneticit.gims.model.User;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
+import com.cougarneticit.gims.model.repos.ShiftRepo;
 import com.cougarneticit.gims.model.repos.UserRepo;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -38,12 +40,14 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     private UserRepo userRepo;
     @Autowired
     private EmployeeRepo employeeRepo;
+    @Autowired
+    private ShiftRepo shiftRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<User> userComboBox;
     @FXML private JFXListView<Employee> employeeListView;
     @FXML private JFXTextField nameTextField, phoneTextField, emailTextField;
-    @FXML private Label userHelpLabel, nameHelpLabel, phoneHelpLabel, emailHelpLabel, deleteStatusLabel, employeeFormLabel;
+    @FXML private Label userHelpLabel, nameHelpLabel, phoneHelpLabel, emailHelpLabel, employeeFormLabel;
     @FXML private JFXButton addEmployeeButton, viewEmployeeButton, editEmployeeButton, deleteEmployeeButton, cancelButton;
 
     public EmployeeSceneController(FxWeaver fxWeaver) {
@@ -171,23 +175,16 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         resetEmployeeForm();
     }
     private void deleteEmployee() {
-        //TODO add ScheduledExecutorService + Future to schedule status label setVisible(false)
         //TODO add confirmation popup
         try {
             Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
             employeeRepo.deleteById(selectedEmployee.getEmployee_id());
 
-            deleteStatusLabel.setTextFill(Color.web("#5BDDC7"));
-            deleteStatusLabel.setText("Deleted!");
-            deleteStatusLabel.setVisible(true);
-
             populateEmployeeListView();
             resetEmployeeForm();
         }
         catch(NullPointerException ex) {
-            deleteStatusLabel.setTextFill(Color.web("#F73331"));
-            deleteStatusLabel.setText("Nothing selected in list");
-            deleteStatusLabel.setVisible(true);
+            System.err.println("Nothing selected in employee list");
         }
     }
     //Util Methods - Employee form
@@ -275,4 +272,5 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     }
 
     public AnchorPane getScene() { return pane; }
+
 }

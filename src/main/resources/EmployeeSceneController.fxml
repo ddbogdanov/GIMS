@@ -17,6 +17,11 @@
       <HBox layoutX="201.0" layoutY="191.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane prefHeight="200.0" prefWidth="545.0" HBox.hgrow="ALWAYS" />
+            <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
+               <HBox.margin>
+                  <Insets bottom="15.0" top="15.0" />
+               </HBox.margin>
+            </Separator>
             <VBox prefHeight="200.0" prefWidth="545.0" HBox.hgrow="ALWAYS">
                <HBox.margin>
                   <Insets />
@@ -26,61 +31,91 @@
                      <children>
                         <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="520.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label prefHeight="24.0" prefWidth="127.0" text="Employee List" textFill="WHITE">
-                                 <font>
-                                    <Font name="Roboto Regular" size="20.0" />
-                                 </font>
+                              <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                                 <children>
+                                    <Label prefHeight="15.0" prefWidth="243.0" text="Employee List - All" textFill="#5bddc7" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="Roboto Regular" size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
                                  <VBox.margin>
-                                    <Insets top="15.0" />
+                                    <Insets left="15.0" right="15.0" top="15.0" />
                                  </VBox.margin>
-                              </Label>
+                              </AnchorPane>
                               <JFXListView fx:id="employeeListView" prefHeight="290.0" prefWidth="366.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                                  <VBox.margin>
-                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                    <Insets left="15.0" right="15.0" />
                                  </VBox.margin>
                               </JFXListView>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="367.0">
+                                 <VBox.margin>
+                                    <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <JFXButton fx:id="editEmployeeButton" prefHeight="32.0" prefWidth="120.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit Employee" textFill="WHITE">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="viewEmployeeButton" prefHeight="30.0" prefWidth="120.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View Employee" textFill="WHITE">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="deleteEmployeeButton" prefHeight="30.0" prefWidth="65.0" ripplerFill="#f71c19" style="-fx-border-color: #F73331; -fx-border-radius: 5;" text="Delete" textFill="WHITE">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                    </JFXButton>
+                                 </children>
+                              </HBox>
                            </children>
                         </VBox>
+                     </children>
+                  </HBox>
+                  <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                     <VBox.margin>
+                        <Insets right="15.0" />
+                     </VBox.margin>
+                  </Separator>
+                  <HBox alignment="CENTER_RIGHT" prefHeight="335.0" prefWidth="545.0" VBox.vgrow="SOMETIMES">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="335.0" prefWidth="273.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <JFXButton fx:id="testButton" prefHeight="32.0" prefWidth="120.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit Employee" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="14.0" />
+                                 </font>
+                              </JFXButton>
+                           </children></VBox>
                         <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
                            <HBox.margin>
-                              <Insets top="15.0" />
+                              <Insets bottom="15.0" />
                            </HBox.margin>
                         </Separator>
-                        <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="270.0" HBox.hgrow="NEVER">
+                        <VBox alignment="TOP_CENTER" prefHeight="335.0" prefWidth="273.0" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label prefHeight="24.0" prefWidth="70.0" text="Options" textFill="WHITE">
+                              <Label fx:id="employeeFormLabel" text="Add an Employee" textFill="WHITE" VBox.vgrow="ALWAYS">
                                  <font>
                                     <Font name="Roboto Regular" size="20.0" />
                                  </font>
                                  <VBox.margin>
-                                    <Insets top="15.0" />
+                                    <Insets top="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <JFXButton fx:id="viewEmployeeButton" prefHeight="32.0" prefWidth="130.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View Employee" textFill="WHITE">
-                                 <font>
-                                    <Font name="Roboto Regular" size="14.0" />
-                                 </font>
+                              <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="25.0" prefWidth="161.0" promptText="Choose User" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                                  <VBox.margin>
-                                    <Insets top="15.0" />
+                                    <Insets top="10.0" />
                                  </VBox.margin>
-                              </JFXButton>
-                              <JFXButton fx:id="editEmployeeButton" prefHeight="32.0" prefWidth="130.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit Employee" textFill="WHITE">
-                                 <font>
-                                    <Font name="Roboto Regular" size="14.0" />
-                                 </font>
-                                 <VBox.margin>
-                                    <Insets top="15.0" />
-                                 </VBox.margin>
-                              </JFXButton>
-                              <JFXButton fx:id="deleteEmployeeButton" prefHeight="32.0" prefWidth="130.0" ripplerFill="#f71c19" style="-fx-border-color: #F73331; -fx-border-radius: 5;" text="Delete Employee" textFill="WHITE">
-                                 <font>
-                                    <Font name="Roboto Regular" size="14.0" />
-                                 </font>
-                                 <VBox.margin>
-                                    <Insets top="15.0" />
-                                 </VBox.margin>
-                              </JFXButton>
-                              <Label fx:id="deleteStatusLabel" alignment="CENTER" prefHeight="15.0" prefWidth="130.0" text="Delete Status" textFill="#5bddc7" visible="false">
+                              </JFXComboBox>
+                              <Label fx:id="userHelpLabel" prefHeight="13.0" prefWidth="161.0" text="User" textFill="#5bddc7" visible="false">
                                  <font>
                                     <Font name="Roboto Regular" size="10.0" />
                                  </font>
@@ -88,133 +123,91 @@
                                     <Insets top="5.0" />
                                  </VBox.margin>
                               </Label>
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-                  <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
-                     <VBox.margin>
-                        <Insets left="15.0" right="15.0" />
-                     </VBox.margin>
-                  </Separator>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="335.0" prefWidth="545.0" VBox.vgrow="SOMETIMES">
-                     <children>
-                        <AnchorPane prefHeight="270.0" prefWidth="545.0" HBox.hgrow="ALWAYS">
-                           <HBox.margin>
-                              <Insets />
-                           </HBox.margin>
-                           <children>
-                              <VBox alignment="TOP_CENTER" prefHeight="335.0" prefWidth="273.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="272.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                              <JFXTextField fx:id="nameTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Roboto Regular" size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="15.0" />
+                                 </VBox.margin>
+                              </JFXTextField>
+                              <AnchorPane prefHeight="12.0" prefWidth="243.0">
                                  <children>
-                                    <Label fx:id="employeeFormLabel" text="Add an Employee" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                       <font>
-                                          <Font name="Roboto Regular" size="20.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets top="5.0" />
-                                       </VBox.margin>
-                                    </Label>
-                                    <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="25.0" prefWidth="161.0" promptText="Choose User" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
-                                       <VBox.margin>
-                                          <Insets top="10.0" />
-                                       </VBox.margin>
-                                    </JFXComboBox>
-                                    <Label fx:id="userHelpLabel" prefHeight="13.0" prefWidth="161.0" text="User" textFill="#5bddc7" visible="false">
+                                    <Label fx:id="nameHelpLabel" prefHeight="15.0" prefWidth="243.0" text="First Last" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <font>
                                           <Font name="Roboto Regular" size="10.0" />
                                        </font>
-                                       <VBox.margin>
-                                          <Insets top="5.0" />
-                                       </VBox.margin>
                                     </Label>
-                                    <JFXTextField fx:id="nameTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
-                                       <font>
-                                          <Font name="Roboto Regular" size="14.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="15.0" />
-                                       </VBox.margin>
-                                    </JFXTextField>
-                                    <AnchorPane prefHeight="12.0" prefWidth="243.0">
-                                       <children>
-                                          <Label fx:id="nameHelpLabel" prefHeight="15.0" prefWidth="243.0" text="First Last" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <font>
-                                                <Font name="Roboto Regular" size="10.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="5.0" />
-                                       </VBox.margin>
-                                    </AnchorPane>
-                                    <JFXTextField fx:id="phoneTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Phone Number" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
-                                       <font>
-                                          <Font name="Roboto Regular" size="14.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="15.0" />
-                                       </VBox.margin>
-                                    </JFXTextField>
-                                    <AnchorPane prefHeight="12.0" prefWidth="243.0">
-                                       <children>
-                                          <Label fx:id="phoneHelpLabel" prefHeight="15.0" prefWidth="243.0" text="xxx-xxx-xxxx" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <font>
-                                                <Font name="Roboto Regular" size="10.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="5.0" />
-                                       </VBox.margin>
-                                    </AnchorPane>
-                                    <JFXTextField fx:id="emailTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Email" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
-                                       <font>
-                                          <Font name="Roboto Regular" size="14.0" />
-                                       </font>
-                                       <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="15.0" />
-                                       </VBox.margin>
-                                    </JFXTextField>
-                                    <AnchorPane prefHeight="12.0" prefWidth="243.0">
-                                       <children>
-                                          <Label fx:id="emailHelpLabel" prefHeight="15.0" prefWidth="243.0" text="email@domain.xxx" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                             <font>
-                                                <Font name="Roboto Regular" size="10.0" />
-                                             </font>
-                                          </Label>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets left="15.0" right="15.0" top="5.0" />
-                                       </VBox.margin>
-                                    </AnchorPane>
-                                    <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="243.0" VBox.vgrow="ALWAYS">
-                                       <children>
-                                          <JFXButton fx:id="addEmployeeButton" prefHeight="32.0" prefWidth="158.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Employee" textFill="WHITE">
-                                             <font>
-                                                <Font name="Roboto Regular" size="14.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </JFXButton>
-                                          <JFXButton fx:id="cancelButton" prefHeight="32.0" prefWidth="70.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Cancel" textFill="WHITE">
-                                             <font>
-                                                <Font name="Roboto Regular" size="14.0" />
-                                             </font>
-                                             <HBox.margin>
-                                                <Insets left="15.0" />
-                                             </HBox.margin>
-                                          </JFXButton>
-                                       </children>
-                                       <VBox.margin>
-                                          <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                                       </VBox.margin>
-                                    </HBox>
                                  </children>
-                              </VBox>
-                              <Separator layoutX="271.0" layoutY="107.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="15.0" AnchorPane.topAnchor="0.0" />
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="5.0" />
+                                 </VBox.margin>
+                              </AnchorPane>
+                              <JFXTextField fx:id="phoneTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Phone Number" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Roboto Regular" size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="15.0" />
+                                 </VBox.margin>
+                              </JFXTextField>
+                              <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                                 <children>
+                                    <Label fx:id="phoneHelpLabel" prefHeight="15.0" prefWidth="243.0" text="xxx-xxx-xxxx" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="Roboto Regular" size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="5.0" />
+                                 </VBox.margin>
+                              </AnchorPane>
+                              <JFXTextField fx:id="emailTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Email" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font name="Roboto Regular" size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="15.0" />
+                                 </VBox.margin>
+                              </JFXTextField>
+                              <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                                 <children>
+                                    <Label fx:id="emailHelpLabel" prefHeight="15.0" prefWidth="243.0" text="email@domain.xxx" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="Roboto Regular" size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="5.0" />
+                                 </VBox.margin>
+                              </AnchorPane>
+                              <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="243.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <JFXButton fx:id="addEmployeeButton" prefHeight="32.0" prefWidth="158.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Employee" textFill="WHITE">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="cancelButton" prefHeight="32.0" prefWidth="70.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Cancel" textFill="WHITE">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="15.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                 </VBox.margin>
+                              </HBox>
                            </children>
-                        </AnchorPane>
+                        </VBox>
                      </children>
                   </HBox>
                </children>
