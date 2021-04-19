@@ -87,14 +87,7 @@
                   </Separator>
                   <HBox alignment="CENTER_RIGHT" prefHeight="335.0" prefWidth="545.0" VBox.vgrow="SOMETIMES">
                      <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="335.0" prefWidth="273.0" HBox.hgrow="ALWAYS">
-                           <children>
-                              <JFXButton fx:id="testButton" prefHeight="32.0" prefWidth="120.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit Employee" textFill="WHITE">
-                                 <font>
-                                    <Font name="Roboto Regular" size="14.0" />
-                                 </font>
-                              </JFXButton>
-                           </children></VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="335.0" prefWidth="273.0" HBox.hgrow="ALWAYS" />
                         <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
                            <HBox.margin>
                               <Insets bottom="15.0" />
