@@ -22,6 +22,9 @@ public class Room {
     @OneToMany(mappedBy="room")
     private List<Task> tasks;
 
+    @ManyToOne
+    private Customer customer;
+
     public Room() {
         roomId = 0;
         roomName = null;
@@ -47,6 +50,18 @@ public class Room {
     }
     public RoomStatus getStatus() {
         return status;
+    }
+
+    public void setStatus(RoomStatus status) {
+        this.status = status;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public String toString() {
