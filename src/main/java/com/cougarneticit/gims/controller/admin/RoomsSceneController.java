@@ -29,10 +29,7 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
-import java.util.UUID;
+import java.util.*;
 
 
 @Component
@@ -499,7 +496,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     }
     private void populateTaskFormEmployeeComboBox(Task selectedTask) {
         for(Employee employee : employeeComboBox.getItems()) {
-            List<Task> taskIds = employee.getTasks();
+            Set<Task> taskIds = employee.getTasks();
             for(Task task : taskIds) {
                 if(selectedTask.getTaskId().equals(task.getTaskId())) {
                     employeeComboBox.getSelectionModel().select(employee);

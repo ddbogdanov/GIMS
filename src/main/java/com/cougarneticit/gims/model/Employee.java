@@ -1,10 +1,15 @@
 package com.cougarneticit.gims.model;
 
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -26,8 +31,11 @@ public class Employee {
     @JoinColumn(name="user_id")
     private User user;
 
+    //TODO: Switch FetchType to LAZY and use Lists instead of Sets. Possible future performance degradation due to EAGER fetching
     @OneToMany(fetch = FetchType.EAGER, mappedBy="employee")
-    private List<Task> tasks;
+    private Set<Task> tasks;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="employee")
+    private Set<Shift> shifts;
 
     public Employee() {
         employee_id = UUID.randomUUID();
@@ -66,8 +74,11 @@ public class Employee {
     public String getEmail() {
         return employee_email;
     }
-    public List<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
+    }
+    public Set<Shift> getShifts() {
+        return shifts;
     }
 
     public String toString() {

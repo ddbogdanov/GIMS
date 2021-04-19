@@ -1,8 +1,8 @@
 /*@font-face {
     src: url("/static/fonts/RobotoMono-VariableFont_wght.ttf") format("ttf");
-}
-TODO: remove comments for deployment. SceneBuilder doesnt like this line for some reason.
-*/
+}*/
+/*TODO: remove comments for deployment. SceneBuilder doesnt like this line for some reason.*/
+
 .jfx-text-field, .jfx-password-field {
     -fx-prompt-text-fill: WHITE;
     -fx-text-fill: WHITE;
