@@ -22,6 +22,9 @@ public class Room {
     @OneToMany(fetch = FetchType.EAGER, mappedBy="room")
     private List<Task> tasks;
 
+    @ManyToOne
+    private Customer customer;
+
     public Room() {
         roomId = 0;
         roomName = null;
@@ -50,6 +53,18 @@ public class Room {
     }
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public void setStatus(RoomStatus status) {
+        this.status = status;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
     }
 
     public String toString() {
