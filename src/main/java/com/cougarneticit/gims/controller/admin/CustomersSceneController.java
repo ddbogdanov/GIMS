@@ -6,8 +6,6 @@ import com.cougarneticit.gims.model.Room;
 import com.cougarneticit.gims.model.common.RoomStatus;
 import com.cougarneticit.gims.model.repos.CustomerRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
-import com.cougarneticit.gims.model.repos.UserRepo;
-import com.cougarneticit.gims.validators.FieldValidator;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,14 +33,10 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
     private Stage stage;
 
-
-    @Autowired
-    private UserRepo userRepo;
     @Autowired
     private CustomerRepo customerRepo;
     @Autowired
     private RoomRepo roomRepo;
-
 
     @FXML private AnchorPane pane;
     @FXML JFXButton confirmCustomer, cancelCustomerBooking, viewCustomerButton, editCustomerButton, deleteCustomerButton;
@@ -67,25 +61,21 @@ public class CustomersSceneController extends GIMSController implements Initiali
         confirmCustomer.setOnAction(e -> {
             addCustomer();
         });
-
         viewCustomerButton.setOnAction(e -> {
             viewCustomer();
         });
-
         editCustomerButton.setOnAction(e -> {
-
             editCustomer();
         });
-
         deleteCustomerButton.setOnAction(e -> {
             deleteCustomer();
         });
-
         cancelCustomerBooking.setOnAction(e -> {
             resetCustomerForm();
         });
     }
 
+    //Button Actions - Customer Form
     private void addCustomer() {
         Room selectedRoom = customerRoomComboBox.getSelectionModel().getSelectedItem();
         String name = customerName.getText();
@@ -95,12 +85,12 @@ public class CustomersSceneController extends GIMSController implements Initiali
         Date start = Date.from(startDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
         Date end = Date.from(endDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
 
-        boolean isNameValid = FieldValidator.validateName(name);
-        boolean isPhoneValid = FieldValidator.validatePhone(phone);
-        boolean isEmailValid = FieldValidator.validateEmail(email);
+        boolean isNameValid = validateName(name);
+        boolean isPhoneValid =validatePhone(phone);
+        boolean isEmailValid = validateEmail(email);
 
         if (isNameValid && isPhoneValid && isEmailValid) {
-            Customer customer = null;
+            Customer customer;
             if(confirmCustomer.getText().equals("Save Changes")) {
                 customer = customerListView.getSelectionModel().getSelectedItem();
                 customer.setCustomerEmail(email);
@@ -109,12 +99,12 @@ public class CustomersSceneController extends GIMSController implements Initiali
                 customer.setExtraInfo(extraInformation);
                 customer.setStartDate(start);
                 customer.setEndDate(end);
-                if(Objects.nonNull(customer.getRoomId())) {
-                    Room room = roomRepo.findById(customer.getRoomId()).orElse(null);
-                    if(Objects.nonNull(room)) {
-                        room.setCustomer(null);
-                        room.setStatus(RoomStatus.VACANT);
-                    }
+
+                Room room = roomRepo.findById(customer.getRoomId()).orElse(null);
+
+                if(Objects.nonNull(room)) {
+                    room.setCustomer(null);
+                    room.setStatus(RoomStatus.VACANT);
                 }
             } else {
                 customer = new Customer(UUID.randomUUID(), name, phone, email, extraInformation, start, end);
@@ -123,6 +113,8 @@ public class CustomersSceneController extends GIMSController implements Initiali
             selectedRoom.setCustomer(customerRepo.save(customer));
             selectedRoom.setStatus(RoomStatus.OCCUPIED);
             roomRepo.save(selectedRoom);
+
+
             populateCustomerList();
             populateRoomComboBox();
             resetCustomerForm();
@@ -151,7 +143,6 @@ public class CustomersSceneController extends GIMSController implements Initiali
             }
         }
     }
-
     private void viewCustomer() {
         customerOperationLabel.setText("Viewing Customer");
         Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
@@ -177,7 +168,6 @@ public class CustomersSceneController extends GIMSController implements Initiali
         endDate.setDisable(false);
         confirmCustomer.setVisible(false);
     }
-
     private void editCustomer() {
         resetCustomerForm();
         customerOperationLabel.setText("Edit Customer");
@@ -198,7 +188,6 @@ public class CustomersSceneController extends GIMSController implements Initiali
         confirmCustomer.setVisible(true);
         confirmCustomer.setText("Save Changes");
     }
-
     private void deleteCustomer() {
         Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
         if(Objects.nonNull(selectedCustomer)) {
@@ -214,6 +203,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
         populateCustomerList();
     }
 
+    //Util Methods - Customer Form
     private void populateRoomComboBox() {
         customerRoomComboBox.getItems().clear();
         ObservableList<Room> rooms = FXCollections.observableArrayList();
@@ -222,7 +212,6 @@ public class CustomersSceneController extends GIMSController implements Initiali
         }
         customerRoomComboBox.getItems().addAll(rooms);
     }
-
     private void populateCustomerList() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
 
@@ -238,7 +227,6 @@ public class CustomersSceneController extends GIMSController implements Initiali
         }
         customerListView.setItems(customers.sorted());
     }
-
     private void resetCustomerForm() {
         customerOperationLabel.setText("Add Customer");
         customerRoomComboBox.getSelectionModel().clearSelection();

@@ -21,7 +21,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -88,15 +87,12 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     private void addEmployee() {
         User selectedUser = userComboBox.getSelectionModel().getSelectedItem();
 
-        System.out.println(selectedUser.isEmployee());
         if(selectedUser.isEmployee()) {
             userHelpLabel.setTextFill(Color.web("#F73331"));
             userHelpLabel.setText("User already assigned an employee");
             userHelpLabel.setVisible(true);
             return;
         }
-
-        System.out.println("adding employee");
 
         String name = nameTextField.getText();
         String phone = phoneTextField.getText();
@@ -217,20 +213,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             employeeList.addAll(employeeRepo.findAll());
         }
         employeeListView.setItems(employeeList.sorted());
-    }
-    private boolean validateEmail(String email) {
-        EmailValidator emailValidator = EmailValidator.getInstance();
-        return emailValidator.isValid(email);
-    }
-    private boolean validateName(String name) {
-        Pattern pattern = Pattern.compile("^[a-zA-Z\\s]+");
-        Matcher matcher = pattern.matcher(name);
-        return matcher.matches();
-    }
-    private boolean validatePhone(String phone) {
-        Pattern pattern = Pattern.compile("^(\\d{3}[-]?){2}\\d{4}$");
-        Matcher matcher = pattern.matcher(phone);
-        return matcher.matches();
     }
     private void resetEmployeeForm() {
         populateComboBox();
