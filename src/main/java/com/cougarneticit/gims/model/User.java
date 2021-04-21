@@ -41,7 +41,7 @@ public class User {
         this.employee = employee;
     }
 
-    public UUID getUser_id() {
+    public UUID getUserId() {
         return user_id;
     }
     public String getUsername() {

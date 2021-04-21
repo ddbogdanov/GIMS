@@ -1,14 +1,9 @@
 package com.cougarneticit.gims.model;
 
-import org.hibernate.Hibernate;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -19,13 +14,13 @@ public class Employee {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="employee_id", length=36) //VarChar(36)
-    private UUID employee_id;
+    private UUID employeeId;
     @Column(name="employee_name", length=50) //VarChar(50)
-    private String employee_name;
+    private String employeeName;
     @Column(name="employee_phone", length=45) //VarChar(45)
-    private String employee_phone;
+    private String employeePhone;
     @Column(name="employee_email", length=320) //VarChar(320)
-    private String employee_email;
+    private String employeeEmail;
 
     @OneToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id")
@@ -38,41 +33,41 @@ public class Employee {
     private Set<Shift> shifts;
 
     public Employee() {
-        employee_id = UUID.randomUUID();
+        employeeId = UUID.randomUUID();
         user = null;
-        employee_name = null;
-        employee_phone = null;
-        employee_email = null;
+        employeeName = null;
+        employeePhone = null;
+        employeeEmail = null;
     }
-    public Employee(UUID employee_id, User user, String employee_name, String employee_phone, String employee_email) {
-        this.employee_id = employee_id;
+    public Employee(UUID employeeId, User user, String employee_name, String employeePhone, String employeeEmail) {
+        this.employeeId = employeeId;
         this.user = user;
-        this.employee_name = employee_name;
-        this.employee_phone = employee_phone;
-        this.employee_email = employee_email;
+        this.employeeName = employee_name;
+        this.employeePhone = employeePhone;
+        this.employeeEmail = employeeEmail;
     }
 
     public void setUser(User user) {
         this.user = user;
     }
 
-    public UUID getEmployee_id() {
-        return employee_id;
+    public UUID getEmployeeId() {
+        return employeeId;
     }
     public User getUser() {
         return user;
     }
-    public UUID getUser_id() {
-        return user.getUser_id();
+    public UUID getUserId() {
+        return user.getUserId();
     }
     public String getName() {
-        return employee_name;
+        return employeeName;
     }
     public String getPhone() {
-        return employee_phone;
+        return employeePhone;
     }
     public String getEmail() {
-        return employee_email;
+        return employeeEmail;
     }
     public Set<Task> getTasks() {
         return tasks;
@@ -82,9 +77,9 @@ public class Employee {
     }
 
     public String toString() {
-        return this.employee_name;
+        return this.employeeName;
     }
     public String toStringFull() {
-        return this.employee_id.toString() + " " + this.user.getUser_id().toString() + " " + this.employee_name + " " + this.employee_phone + " " + this.employee_email;
+        return this.employeeId.toString() + " " + this.user.getUserId().toString() + " " + this.employeeName + " " + this.employeePhone + " " + this.employeeEmail;
     }
 }

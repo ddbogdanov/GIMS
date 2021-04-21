@@ -3,14 +3,13 @@ package com.cougarneticit.gims.controller.admin;
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Employee;
 import com.cougarneticit.gims.model.Shift;
+import com.cougarneticit.gims.model.Task;
 import com.cougarneticit.gims.model.User;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
 import com.cougarneticit.gims.model.repos.ShiftRepo;
+import com.cougarneticit.gims.model.repos.TaskRepo;
 import com.cougarneticit.gims.model.repos.UserRepo;
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXListView;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,13 +24,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Component
 @FxmlView("/EmployeeSceneController.fxml")
 public class EmployeeSceneController extends GIMSController implements Initializable {
+
+    //TODO: Move UserHelpLabel in line with the combobox.
+    //TODO: Add help label to shifts form
 
     private Stage stage;
 
@@ -40,14 +41,29 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     @Autowired
     private EmployeeRepo employeeRepo;
     @Autowired
+    private TaskRepo taskRepo;
+    @Autowired
     private ShiftRepo shiftRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<User> userComboBox;
+    @FXML private JFXComboBox<Employee> employeeComboBox;
     @FXML private JFXListView<Employee> employeeListView;
+    @FXML private JFXListView<Shift> shiftListView;
+    @FXML private JFXListView<Task> taskListView;
+    @FXML private JFXDatePicker shiftStartDatePicker, shiftEndDatePicker;
+    @FXML private JFXTimePicker shiftStartTimePicker, shiftEndTimePicker;
     @FXML private JFXTextField nameTextField, phoneTextField, emailTextField;
-    @FXML private Label userHelpLabel, nameHelpLabel, phoneHelpLabel, emailHelpLabel, employeeFormLabel;
-    @FXML private JFXButton addEmployeeButton, viewEmployeeButton, editEmployeeButton, deleteEmployeeButton, cancelButton;
+
+    @FXML private Label
+            userHelpLabel, nameHelpLabel, phoneHelpLabel, emailHelpLabel,
+            employeeFormLabel, shiftListLabel, shiftFormLabel, shiftFormHelpLabel,
+            taskListLabel, activeTasksLabel, completedTasksLabel, emailLabel,
+            phoneLabel, daysScheduledLabel, hoursScheduledLabel;
+
+    @FXML private JFXButton
+            viewEmployeeButton, editEmployeeButton, deleteEmployeeButton, employeeFormSubmitButton,  employeeFormCancelButton,
+            shiftEditButton, shiftDeleteButton, shiftFormSubmitButton, shiftFormCancelButton;
 
     public EmployeeSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -58,13 +74,16 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         this.stage = new Stage();
         initStage(stage, pane, null, null, null, null, true);
 
-        populateComboBox();
+        populateUserComboBox();
+        populateEmployeeComboBox();
         populateEmployeeListView();
+        employeeListView.getSelectionModel().select(0);
+        populateShiftListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
 
-        addEmployeeButton.setOnAction(e -> {
-            addEmployee();
+        employeeFormSubmitButton.setOnAction(e -> {
+            submitEmployee();
         });
-        cancelButton.setOnAction(e -> {
+        employeeFormCancelButton.setOnAction(e -> {
             resetEmployeeForm();
         });
         viewEmployeeButton.setOnAction(e -> {
@@ -77,14 +96,62 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             deleteEmployee();
         });
 
-        //Focus listeners for text fields. Show/Hide on focus/un-focus
+        shiftFormSubmitButton.setOnAction(e -> {
+            submitShift();
+        });
+        shiftFormCancelButton.setOnAction(e -> {
+            resetShiftForm();
+        });
+        shiftEditButton.setOnAction(e -> {
+            editShift();
+        });
+        shiftDeleteButton.setOnAction(e -> {
+            deleteShift();
+        });
+
+        //Focus Listeners - Employee form
+        employeeListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                employeeListView.getSelectionModel().select(oldVal);
+            }
+            else {
+                populateShiftListView(newVal.getEmployeeId(), newVal.getName());
+                populateTaskListView(newVal.getEmployeeId(), newVal.getName());
+                setInfoLabels(newVal);
+            }
+        });
         nameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> nameHelpLabel.setVisible(newVal));
         phoneTextField.focusedProperty().addListener((obs, oldVal, newVal) -> phoneHelpLabel.setVisible(newVal));
         emailTextField.focusedProperty().addListener((obs, oldVal, newVal) -> emailHelpLabel.setVisible(newVal));
+        //Focus Listeners - Shifts form
+        shiftStartDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                shiftStartDatePicker.getEditor().setText(shiftStartDatePicker.getConverter().toString(shiftStartDatePicker.getValue()));
+            }
+        });
+        shiftStartTimePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                shiftStartTimePicker.getEditor().setText(shiftStartTimePicker.getConverter().toString(shiftStartTimePicker.getValue()));
+            }
+        });
+        shiftEndDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                shiftEndDatePicker.getEditor().setText(shiftEndDatePicker.getConverter().toString(shiftEndDatePicker.getValue()));
+            }
+        });
+        shiftEndTimePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                shiftEndTimePicker.getEditor().setText(shiftEndTimePicker.getConverter().toString(shiftEndTimePicker.getValue()));
+            }
+        });
     }
 
     //Button Actions - Employee form
-    private void addEmployee() {
+    private void submitEmployee() {
         User selectedUser = userComboBox.getSelectionModel().getSelectedItem();
 
         if(selectedUser.isEmployee()) {
@@ -98,33 +165,12 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         String phone = phoneTextField.getText();
         String email = emailTextField.getText();
 
-        boolean isNameValid = validateName(name);
-        boolean isPhoneValid = validatePhone(phone);
-        boolean isEmailValid = validateEmail(email);
-
-        if (isNameValid && isPhoneValid && isEmailValid) {
+        if(validateEmployeeForm(name, phone, email)) {
             Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email);
             employeeRepo.save(emp);
 
             populateEmployeeListView();
             resetEmployeeForm();
-        }
-        else {
-            if(!isNameValid) {
-                nameHelpLabel.setTextFill(Color.web("#F73331"));
-                nameHelpLabel.setText("Invalid format: First Last");
-                nameHelpLabel.setVisible(true);
-            }
-            else if(!isPhoneValid) {
-                phoneHelpLabel.setTextFill(Color.web("#F73331"));
-                phoneHelpLabel.setText("Invalid format: xxx-xxx-xxxx");
-                phoneHelpLabel.setVisible(true);
-            }
-            else {
-                emailHelpLabel.setTextFill(Color.web("#F73331"));
-                emailHelpLabel.setText("Invalid format: email@domain.com");
-                emailHelpLabel.setVisible(true);
-            }
         }
     }
     private void viewEmployee() {
@@ -133,48 +179,53 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         nameTextField.setDisable(true);
         phoneTextField.setDisable(true);
         emailTextField.setDisable(true);
-        addEmployeeButton.setDisable(true);
+        employeeFormSubmitButton.setDisable(true);
 
-        cancelButton.setText("Reset");
+        employeeFormCancelButton.setText("Reset");
         employeeFormLabel.setText("View an Employee");
 
-        populateForm();
+        populateEmployeeForm();
     }
     private void editEmployee() {
         resetEmployeeForm();
         try {
-            addEmployeeButton.setOnAction(e -> {
+            employeeFormSubmitButton.setOnAction(e -> {
                 submitEmployeeEdits();
             });
 
-            populateForm();
+            populateEmployeeForm();
             employeeFormLabel.setText("Edit an Employee");
-            addEmployeeButton.setText("Submit Edits");
+            employeeFormSubmitButton.setText("Submit Edits");
         }
         catch(NullPointerException ex) {
             //Revert to original event handler
-            addEmployeeButton.setOnAction(e -> {
-                addEmployee();
+            employeeFormSubmitButton.setOnAction(e -> {
+                submitEmployee();
             });
-            System.err.println("Nothing selected");
-            //TODO
+            System.err.println("Nothing selected in employee list");
         }
     }
     private void submitEmployeeEdits() {
-        Employee updatedEmployee = new Employee(
-                employeeListView.getSelectionModel().getSelectedItem().getEmployee_id(),
-                employeeListView.getSelectionModel().getSelectedItem().getUser(),
-                nameTextField.getText(), phoneTextField.getText(), emailTextField.getText());
-        employeeRepo.save(updatedEmployee);
+        String name = nameTextField.getText();
+        String phone = phoneTextField.getText();
+        String email = emailTextField.getText();
 
-        populateEmployeeListView();
-        resetEmployeeForm();
+        if(validateEmployeeForm(name, phone, email)) {
+            Employee updatedEmployee = new Employee(
+                    employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(),
+                    employeeListView.getSelectionModel().getSelectedItem().getUser(),
+                    name, phone, email);
+            employeeRepo.save(updatedEmployee);
+
+            populateEmployeeListView();
+            resetEmployeeForm();
+        }
     }
     private void deleteEmployee() {
         //TODO add confirmation popup
         try {
             Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
-            employeeRepo.deleteById(selectedEmployee.getEmployee_id());
+            employeeRepo.deleteById(selectedEmployee.getEmployeeId());
 
             populateEmployeeListView();
             resetEmployeeForm();
@@ -183,46 +234,15 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             System.err.println("Nothing selected in employee list");
         }
     }
-    //Util Methods - Employee form
-    private void populateForm() {
-        Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
-
-        for (User user : userComboBox.getItems()) {
-            if (selectedEmployee.getUser_id().equals(user.getUser_id())) {
-                userComboBox.getSelectionModel().select(user);
-                userComboBox.setDisable(true);
-                break;
-            }
-        }
-        nameTextField.setText(selectedEmployee.getName());
-        phoneTextField.setText(selectedEmployee.getPhone());
-        emailTextField.setText(selectedEmployee.getEmail());
-    }
-    private void populateComboBox() {
-        userComboBox.getItems().clear();
-        ObservableList<User> userList = FXCollections.observableArrayList();
-        if(userRepo.count() != 0) {
-            userList.addAll(userRepo.findAll());
-        }
-        userComboBox.getItems().addAll(userList);
-    }
-    private void populateEmployeeListView() {
-        ObservableList<Employee> employeeList = FXCollections.observableArrayList();
-
-        if(employeeRepo.count() != 0) {
-            employeeList.addAll(employeeRepo.findAll());
-        }
-        employeeListView.setItems(employeeList.sorted());
-    }
     private void resetEmployeeForm() {
-        populateComboBox();
+        populateUserComboBox();
         userComboBox.getSelectionModel().clearSelection();
         userComboBox.setDisable(false);
 
         //Reset buttons
-        addEmployeeButton.setText("Add Employee");
-        addEmployeeButton.setDisable(false);
-        cancelButton.setText("Cancel");
+        employeeFormSubmitButton.setText("Add Employee");
+        employeeFormSubmitButton.setDisable(false);
+        employeeFormCancelButton.setText("Cancel");
 
         //Reset text fields
         nameTextField.clear();
@@ -248,9 +268,234 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         emailHelpLabel.setVisible(false);
 
         //Reset event handlers
-        addEmployeeButton.setOnAction(ee -> {
-            addEmployee();
+        employeeFormSubmitButton.setOnAction(ee -> {
+            submitEmployee();
         });
+    }
+    //Util Methods - Employee form
+    private void populateEmployeeForm() {
+        Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
+
+        for (User user : userComboBox.getItems()) {
+            if (selectedEmployee.getUserId().equals(user.getUserId())) {
+                userComboBox.getSelectionModel().select(user);
+                userComboBox.setDisable(true);
+                break;
+            }
+        }
+        nameTextField.setText(selectedEmployee.getName());
+        phoneTextField.setText(selectedEmployee.getPhone());
+        emailTextField.setText(selectedEmployee.getEmail());
+    }
+    private void populateUserComboBox() {
+        userComboBox.getItems().clear();
+        ObservableList<User> userList = FXCollections.observableArrayList();
+
+        if(userRepo.count() != 0) {
+            userList.addAll(userRepo.findAll());
+        }
+        userComboBox.setItems(userList);
+    }
+    private void populateEmployeeListView() {
+        ObservableList<Employee> employeeList = FXCollections.observableArrayList();
+
+        if(employeeRepo.count() != 0) {
+            employeeList.addAll(employeeRepo.findAll());
+        }
+        employeeListView.setItems(employeeList.sorted());
+    }
+    private boolean validateEmployeeForm(String name, String phone, String email) {
+        boolean isNameValid = validateName(name);
+        boolean isPhoneValid = validatePhone(phone);
+        boolean isEmailValid = validateEmail(email);
+
+        if(!isNameValid) {
+            nameHelpLabel.setTextFill(Color.web("#F73331"));
+            nameHelpLabel.setText("Invalid format: First Last");
+            nameHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(!isPhoneValid) {
+            phoneHelpLabel.setTextFill(Color.web("#F73331"));
+            phoneHelpLabel.setText("Invalid format: xxx-xxx-xxxx");
+            phoneHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(!isEmailValid){
+            emailHelpLabel.setTextFill(Color.web("#F73331"));
+            emailHelpLabel.setText("Invalid format: email@domain.com");
+            emailHelpLabel.setVisible(true);
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+
+    //Button Actions - Shift form
+    private void submitShift() {
+        if(validateShiftForm()) {
+            LocalDateTime startDateTime = LocalDateTime.of(shiftStartDatePicker.getValue(), shiftStartTimePicker.getValue());
+            LocalDateTime endDateTime = LocalDateTime.of(shiftEndDatePicker.getValue(), shiftEndTimePicker.getValue());
+
+            Shift shift = new Shift(
+                    UUID.randomUUID(),
+                    employeeComboBox.getValue(),
+                    startDateTime,
+                    endDateTime);
+            shiftRepo.save(shift);
+
+            populateShiftListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), shiftListView.getSelectionModel().getSelectedItem().getEmployee().getName());
+            resetShiftForm();
+        }
+    }
+    private void resetShiftForm() {
+        employeeComboBox.getSelectionModel().clearSelection();
+        employeeComboBox.setDisable(false);
+
+        shiftStartDatePicker.getEditor().clear();
+        shiftStartDatePicker.setDisable(false);
+        shiftStartTimePicker.getEditor().clear();
+        shiftStartTimePicker.setDisable(false);
+        shiftEndDatePicker.getEditor().clear();
+        shiftEndDatePicker.setDisable(false);
+        shiftEndTimePicker.getEditor().clear();
+        shiftEndTimePicker.setDisable(false);
+
+        shiftFormSubmitButton.setText("Schedule");
+
+        shiftFormLabel.setText("Schedule an Employee");
+        shiftFormHelpLabel.setVisible(false);
+
+        shiftFormSubmitButton.setOnAction(e -> {
+            submitShift();
+        });
+    }
+    private void editShift() {
+        resetShiftForm();
+
+        try {
+            shiftFormSubmitButton.setOnAction(e -> {
+                submitShiftEdits();
+            });
+
+            populateShiftForm();
+            shiftFormLabel.setText("Edit a Shift");
+            shiftFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            shiftFormSubmitButton.setOnAction(e -> {
+                submitShift();
+            });
+            System.err.println("Nothing selected in shift list");
+        }
+    }
+    private void submitShiftEdits() {
+        if(validateShiftForm()) {
+            LocalDateTime startDateTime = LocalDateTime.of(shiftStartDatePicker.getValue(), shiftStartTimePicker.getValue());
+            LocalDateTime endDateTime = LocalDateTime.of(shiftEndDatePicker.getValue(), shiftEndTimePicker.getValue());
+
+            Shift updatedShift = new Shift(
+                    shiftListView.getSelectionModel().getSelectedItem().getShiftId(),
+                    employeeComboBox.getValue(),
+                    startDateTime,
+                    endDateTime);
+            shiftRepo.save(updatedShift);
+
+            populateShiftListView(shiftListView.getSelectionModel().getSelectedItem().getEmployeeId(), shiftListView.getSelectionModel().getSelectedItem().getEmployee().getName());
+            resetShiftForm();
+        }
+    }
+    private void deleteShift() {
+        try {
+            Shift selectedShift = shiftListView.getSelectionModel().getSelectedItem();
+            shiftRepo.deleteById(selectedShift.getShiftId());
+
+            populateShiftListView(shiftListView.getSelectionModel().getSelectedItem().getEmployeeId(), shiftListView.getSelectionModel().getSelectedItem().getEmployee().getName());
+            resetShiftForm();
+        }
+        catch(Exception ex) {
+            System.err.println("Nothing selected in shift list");
+        }
+    }
+    //Util Methods - Shift form
+    private void populateShiftForm() {
+        Shift selectedShift = shiftListView.getSelectionModel().getSelectedItem();
+
+        for (Employee employee : employeeComboBox.getItems()) {
+            if (selectedShift.getEmployeeId().equals(employee.getEmployeeId())) {
+                employeeComboBox.getSelectionModel().select(employee);
+                employeeComboBox.setDisable(true);
+                break;
+            }
+        }
+
+        LocalDateTime startDateTime = selectedShift.getStartDateTime();
+        LocalDateTime endDateTime = selectedShift.getEndDateTime();
+
+        shiftStartDatePicker.setValue(startDateTime.toLocalDate());
+        shiftStartTimePicker.setValue(startDateTime.toLocalTime());
+        shiftEndDatePicker.setValue(endDateTime.toLocalDate());
+        shiftEndTimePicker.setValue(endDateTime.toLocalTime());
+    }
+    private void populateEmployeeComboBox() {
+        employeeComboBox.getItems().clear();
+        ObservableList<Employee> employeeList = FXCollections.observableArrayList();
+        if(employeeRepo.count() != 0) {
+            employeeList.addAll(employeeRepo.findAll());
+        }
+        employeeComboBox.getItems().addAll(employeeList);
+    }
+    private void populateShiftListView(UUID employeeId, String employeeName) {
+        shiftListLabel.setText("Shift List - " + employeeName);
+        ObservableList<Shift> shiftList = FXCollections.observableArrayList();
+
+        if(shiftRepo.count() != 0) {
+            shiftList.addAll(shiftRepo.findAllByEmployee_EmployeeId(employeeId));
+        }
+        shiftListView.setItems(shiftList.sorted());
+    }
+    private boolean validateShiftForm() {
+        if(employeeComboBox.getSelectionModel().isEmpty()) {
+            shiftFormHelpLabel.setVisible(true);
+            //return false;
+        }
+        else if(shiftStartDatePicker.getValue() == null) {
+            shiftFormHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(shiftStartTimePicker.getValue() == null) {
+            shiftFormHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(shiftEndDatePicker.getValue() == null) {
+            shiftFormHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(shiftEndTimePicker.getValue() == null) {
+            shiftFormHelpLabel.setVisible(true);
+            return false;
+        }
+        else {
+            return true;
+        }
+        return true;
+    }
+
+    //Util Methods - Extra
+    private void populateTaskListView(UUID employeeId, String employeeName) {
+        taskListLabel.setText("Task List - " + employeeName);
+        ObservableList<Task> taskList = FXCollections.observableArrayList();
+
+        if(taskRepo.count() != 0) {
+            taskList.addAll(taskRepo.findAllByEmployee_EmployeeId(employeeId));
+        }
+        taskListView.setItems(taskList.sorted());
+    }
+    private void setInfoLabels(Employee employee) {
+        //TODO: count tasks, days and hours scheduled
+        emailLabel.setText(employee.getEmail());
+        phoneLabel.setText(employee.getPhone());
     }
 
     public AnchorPane getScene() { return pane; }
