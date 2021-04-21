@@ -32,7 +32,7 @@ import java.util.UUID;
 public class LoginController extends GIMSController implements Initializable {
 
     public static HomeController homeController; //TODO remove static references
-    public static EmpHomeController empHomeController;
+//    public static EmpHomeController empHomeController;
 
     @Autowired
     private UserRepo userRepo;
@@ -91,12 +91,12 @@ public class LoginController extends GIMSController implements Initializable {
 
                 setActiveUser(user);
 
-                if(user.isAdmin()) {
+//                if(user.isAdmin()) {
                     loadAdminView();
-                }
-                else {
-                    loadNonAdminView();
-                }
+//                }
+//                else {
+//                    loadNonAdminView();
+//                }
 
                 loginButton.getScene().getWindow().hide();
 
@@ -123,12 +123,13 @@ public class LoginController extends GIMSController implements Initializable {
         homeController = fxWeaver.loadController(hc.getClass());
         homeController.show();
     }
-    private void loadNonAdminView() {
-        EmpHomeController ehc = new EmpHomeController((fxWeaver));
-        empHomeController = fxWeaver.loadController(ehc.getClass());
-        empHomeController.show();
-
-    }
+    // merged both admin and non admin view together
+//    private void loadNonAdminView() {
+//        EmpHomeController ehc = new EmpHomeController((fxWeaver));
+//        empHomeController = fxWeaver.loadController(ehc.getClass());
+//        empHomeController.show();
+//
+//    }
 
     public AnchorPane getScene() {
         return pane;

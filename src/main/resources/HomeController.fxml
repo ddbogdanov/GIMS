@@ -47,33 +47,7 @@
                         <Insets left="60.0" />
                      </HBox.margin>
                   </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <JFXButton fx:id="employeeTab" layoutX="21.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Employees" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="GROUP" size="16" />
-                           </graphic>
-                        </JFXButton>
-                     </children>
-                     <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <JFXButton fx:id="customerTab" layoutX="14.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Customers" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="MONEY" size="16" />
-                           </graphic>
-                        </JFXButton>
-                     </children>
-                  </AnchorPane>
+
                   <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
                      <children>
                         <JFXButton fx:id="roomTab" layoutX="14.0" prefHeight="60.0" prefWidth="110.0" ripplerFill="#5bddc7" text="Rooms" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -106,6 +80,33 @@
                            </font>
                            <graphic>
                               <FontAwesomeIconView fill="WHITE" glyphName="GEAR" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="employeebuttonpane" prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="employeeTab" layoutX="21.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Employees" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="GROUP" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                  </AnchorPane>
+                  <AnchorPane fx:id="customerbuttonpane" prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="customerTab" layoutX="14.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Customers" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="MONEY" size="16" />
                            </graphic>
                         </JFXButton>
                      </children>
