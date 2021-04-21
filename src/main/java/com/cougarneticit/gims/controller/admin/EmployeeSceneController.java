@@ -79,6 +79,8 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         populateEmployeeListView();
         employeeListView.getSelectionModel().select(0);
         populateShiftListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
+        populateTaskListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
+        setInfoLabels(employeeListView.getSelectionModel().getSelectedItem());
 
         employeeFormSubmitButton.setOnAction(e -> {
             submitEmployee();
