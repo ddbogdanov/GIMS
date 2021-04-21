@@ -9,5 +9,6 @@ import java.util.UUID;
 public interface TaskRepo extends CrudRepository<Task, UUID> {
     List<Task> findAll();
     List<Task> findAllByRoom_RoomId(Character roomId);
+    List<Task> findAllByEmployee_EmployeeId(UUID employeeId);
     int countAllByRoom_RoomId(Character roomId);
 }

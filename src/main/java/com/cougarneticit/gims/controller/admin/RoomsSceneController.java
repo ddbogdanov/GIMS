@@ -38,6 +38,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
     private Stage stage;
 
+    //TODO: Automatically add rooms into DB if empty
+
     @Autowired
     TaskRepo taskRepo;
     @Autowired
@@ -130,7 +132,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             deleteTask();
         });
 
-        //Event Listeners - Room form
+        //Focus Listeners - Room form
         roomIdTextField.focusedProperty().addListener((obs, oldVal, newVal) -> roomIdHelpLabel.setVisible(newVal));
         roomNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> roomNameHelpLabel.setVisible(newVal));
         taskNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> taskNameHelpLabel.setVisible(newVal));
@@ -152,7 +154,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
                 roomIdTextField.setText(oldVal);
             }
         });
-        //Event Listeners - Task form
+        //Focus Listeners - Task form
         taskNameTextField.focusedProperty().addListener((obs, oldVal, newVal) -> taskNameHelpLabel.setVisible(newVal));
         taskDescriptionTextArea.focusedProperty().addListener((obs, oldVal, newVal) -> taskDescriptionHelpLabel.setVisible(newVal));
         dueDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
@@ -231,6 +233,32 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             System.err.println("Nothing selected in list");
         }
     }
+    private void resetRoomForm() {
+        roomStatusComboBox.getSelectionModel().clearSelection();
+
+        editToggleButton.selectedProperty().setValue(false);
+        roomFormSubmitButton.setText("Add Room");
+
+        roomIdTextField.clear();
+        roomIdTextField.setDisable(false);
+        roomNameTextField.clear();
+
+        roomFormLabel.setText("Add a Room");
+        roomIdHelpLabel.setText("Single Character");
+        roomIdHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        roomIdHelpLabel.setVisible(false);
+        roomNameHelpLabel.setText("120 Character Max");
+        roomNameHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        roomNameHelpLabel.setVisible(false);
+        roomStatusHelpLabel.setText("Room Status");
+        roomStatusHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        roomStatusHelpLabel.setVisible(false);
+
+        //Reset event handler
+        roomFormSubmitButton.setOnAction(e -> {
+            submitRoom();
+        });
+    }
     //Util Methods - Room form
     private void populateRoomListView() {
         ObservableList<Room> roomList = FXCollections.observableArrayList();
@@ -270,32 +298,6 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             return true;
         }
     }
-    private void resetRoomForm() {
-        roomStatusComboBox.getSelectionModel().clearSelection();
-
-        editToggleButton.selectedProperty().setValue(false);
-        roomFormSubmitButton.setText("Add Room");
-
-        roomIdTextField.clear();
-        roomIdTextField.setDisable(false);
-        roomNameTextField.clear();
-
-        roomFormLabel.setText("Add a Room");
-        roomIdHelpLabel.setText("Single Character");
-        roomIdHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        roomIdHelpLabel.setVisible(false);
-        roomNameHelpLabel.setText("120 Character Max");
-        roomNameHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        roomNameHelpLabel.setVisible(false);
-        roomStatusHelpLabel.setText("Room Status");
-        roomStatusHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        roomStatusHelpLabel.setVisible(false);
-
-        //Reset event handler
-        roomFormSubmitButton.setOnAction(e -> {
-            submitRoom();
-        });
-    }
 
     //Button Actions - Task form
     private void submitTask() {
@@ -322,6 +324,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         employeeComboBox.getSelectionModel().clearSelection();
         priorityComboBox.setDisable(false);
         priorityComboBox.getSelectionModel().clearSelection();
+
         dueDatePicker.setDisable(false);
         dueDatePicker.getEditor().clear();
 
@@ -389,7 +392,6 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
             resetTaskForm();
             refreshTaskForm();
-
         }
     }
     private void viewTask() {

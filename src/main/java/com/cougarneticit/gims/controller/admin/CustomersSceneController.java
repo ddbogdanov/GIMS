@@ -103,14 +103,12 @@ public class CustomersSceneController extends GIMSController implements Initiali
                 Room room = roomRepo.findById(customer.getRoomId()).orElse(null);
 
                 if(Objects.nonNull(room)) {
-                    room.setCustomer(null);
                     room.setStatus(RoomStatus.VACANT);
                 }
             } else {
                 customer = new Customer(UUID.randomUUID(), name, phone, email, extraInformation, start, end);
             }
             customer.setRoom(selectedRoom.getRoomId());
-            selectedRoom.setCustomer(customerRepo.save(customer));
             selectedRoom.setStatus(RoomStatus.OCCUPIED);
             roomRepo.save(selectedRoom);
 
@@ -193,7 +191,6 @@ public class CustomersSceneController extends GIMSController implements Initiali
         if(Objects.nonNull(selectedCustomer)) {
             Room room = roomRepo.findById(selectedCustomer.getRoomId()).orElse(null);
             if(Objects.nonNull(room)) {
-                room.setCustomer(null);
                 room.setStatus(RoomStatus.VACANT);
                 roomRepo.save(room);
             }

@@ -4,6 +4,11 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
 import java.util.UUID;
 
 @Entity
@@ -16,9 +21,9 @@ public class Shift {
     @Column(name="shift_id", length=36) //VarChar(36)
     private UUID shiftId;
     @Column(name="start_datetime", length=28) //VarChar(28)
-    private String startDateTime;
+    private LocalDateTime startDateTime;
     @Column(name="end_datetime", length=28)
-    private String endDateTime;
+    private LocalDateTime endDateTime;
 
     @ManyToOne
     @JoinColumn(name="employee_id")
@@ -30,7 +35,7 @@ public class Shift {
         this.endDateTime = null;
         this.employee = null;
     }
-    public Shift(UUID shiftId, Employee employee, String startDateTime, String endDateTime) {
+    public Shift(UUID shiftId, Employee employee, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.shiftId = shiftId;
         this.employee = employee;
         this.startDateTime = startDateTime;
@@ -43,20 +48,23 @@ public class Shift {
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
-    public void setStartDateTime(String startDateTime) {
+    public void setStartDateTime(LocalDateTime startDateTime) {
         this.startDateTime = startDateTime;
     }
-    public void setEndDateTime(String endDateTime) {
+    public void setEndDateTime(LocalDateTime endDateTime) {
         this.endDateTime = endDateTime;
     }
 
     public UUID getShiftId() {
         return shiftId;
     }
-    public String getStartDateTime() {
+    public UUID getEmployeeId() {
+        return employee.getEmployeeId();
+    }
+    public LocalDateTime getStartDateTime() {
         return startDateTime;
     }
-    public String getEndDateTime() {
+    public LocalDateTime getEndDateTime() {
         return endDateTime;
     }
     public Employee getEmployee() {
@@ -65,6 +73,9 @@ public class Shift {
 
     @Override
     public String toString() {
-        return employee.getName() + " | " + startDateTime + " -> " + endDateTime;
+        return
+                startDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.US).withZone(ZoneId.of("Etc/UTC")))
+                + " To " +
+                endDateTime.format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT).withLocale(Locale.US).withZone(ZoneId.of("Etc/UTC")));
     }
 }
