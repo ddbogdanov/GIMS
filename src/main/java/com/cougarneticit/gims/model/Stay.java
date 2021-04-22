@@ -4,6 +4,11 @@ import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
+import java.util.Locale;
+import java.util.UUID;
 
 @Entity
 @Component
@@ -31,7 +36,16 @@ public class Stay {
         startDate = null;
         endDate = null;
     }
-    public Stay(LocalDate startDate, LocalDate endDate) {
+    public Stay(Customer customer, Room room, LocalDate startDate, LocalDate endDate) {
+        this.customer = customer;
+        this.room = room;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+    public Stay(int stayId, Customer customer, Room room, LocalDate startDate, LocalDate endDate) {
+        this.stayId = stayId;
+        this.customer = customer;
+        this.room = room;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -43,6 +57,19 @@ public class Stay {
         this.endDate = endDate;
     }
 
+    public int getStayId() {
+        return stayId;
+    }
+    public UUID getCustomerId() {
+        return customer.getCustomerId();
+    }
+    public String getCustomerName() {
+        return customer.getCustomerName();
+    }
+    public char getRoomId() {
+        return room.getRoomId();
+    }
+
     public LocalDate getStartDate() {
         return startDate;
     }
@@ -52,6 +79,11 @@ public class Stay {
 
     @Override
     public String toString() {
-        return startDate + " " + endDate;
+        return
+                "Suite " + room.getRoomId() + " | " +
+                        startDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(Locale.US).withZone(ZoneId.of("Etc/UTC"))) +
+                        " to " +
+                        endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(Locale.US).withZone(ZoneId.of("Etc/UTC"))) +
+                " | " + customer.getCustomerName();
     }
 }

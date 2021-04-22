@@ -467,7 +467,7 @@
                               <Insets left="15.0" right="15.0" top="10.0" />
                            </VBox.margin>
                         </HBox>
-                        <Label fx:id="scheduleFormLabel1" text="Start Shift" textFill="WHITE">
+                        <Label text="Start Shift" textFill="WHITE">
                            <font>
                               <Font name="Roboto Regular" size="14.0" />
                            </font>
@@ -497,7 +497,7 @@
                               </JFXTimePicker>
                            </children>
                         </HBox>
-                        <Label fx:id="scheduleFormLabel11" text="End Shift" textFill="WHITE">
+                        <Label text="End Shift" textFill="WHITE">
                            <font>
                               <Font name="Roboto Regular" size="14.0" />
                            </font>
