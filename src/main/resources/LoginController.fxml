@@ -58,7 +58,7 @@
                         <FontAwesomeIconView fill="#007b68" glyphName="CLOSE" size="16" />
                      </graphic>
                   </JFXButton>
-                  <JFXButton fx:id="databaseButton" focusTraversable="false" layoutX="8.0" layoutY="3.0" ripplerFill="#5bddc7" text="" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0">
+                  <JFXButton fx:id="databaseButton" disable="true" focusTraversable="false" layoutX="8.0" layoutY="3.0" ripplerFill="#5bddc7" text="" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="6.0">
                      <graphic>
                         <FontAwesomeIconView fill="#007b68" glyphName="DATABASE" selectionStart="1" size="16" />
                      </graphic>
@@ -89,7 +89,7 @@
                               <Font name="Roboto Regular" size="14.0" />
                            </font>
                         </JFXPasswordField>
-                        <JFXButton focusTraversable="false" ripplerFill="#5bddc7" text="Forgot password?" textFill="WHITE" VBox.vgrow="ALWAYS">
+                        <JFXButton focusTraversable="false" ripplerFill="#5bddc7" text="Forgot password?" textFill="WHITE" visible="false" VBox.vgrow="ALWAYS">
                            <font>
                               <Font name="Roboto Regular" size="10.0" />
                            </font>

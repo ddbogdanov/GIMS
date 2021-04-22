@@ -4,10 +4,11 @@ import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Customer;
 import com.cougarneticit.gims.model.Event;
 import com.cougarneticit.gims.model.Room;
-import com.cougarneticit.gims.model.common.RoomStatus;
+import com.cougarneticit.gims.model.Stay;
 import com.cougarneticit.gims.model.repos.CustomerRepo;
 import com.cougarneticit.gims.model.repos.EventRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
+import com.cougarneticit.gims.model.repos.StayRepo;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,8 +25,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.net.URL;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+
 import java.util.*;
 
 @Component
@@ -34,20 +34,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
     private Stage stage;
 
-    @Autowired private CustomerRepo customerRepo;
-    @Autowired private RoomRepo roomRepo;
-    @Autowired private EventRepo eventRepo;
 
-    @FXML private AnchorPane pane;
-    @FXML private JFXButton confirmCustomer, cancelCustomerBooking, viewCustomerButton, editCustomerButton, deleteCustomerButton, customerRefresh, eventReg, cancelEventReg;
-    @FXML private JFXListView<Customer> customerListView;
-    @FXML private JFXComboBox<Room> customerRoomComboBox;
-    @FXML private JFXComboBox<Event> eventRegComboBox;
-    @FXML private JFXTextField customerName, customerPhone, customerEmail;
-    @FXML private JFXTextArea extraInfo;
-    @FXML private JFXDatePicker startDate, endDate;
-    @FXML private Label customerNameHelpLabel, customerPhoneHelpLabel, customerEmailHelpLabel,
-            customerListViewLabel, customerOperationLabel, dateRangeHelpLabel;
 
     public CustomersSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -57,12 +44,19 @@ public class CustomersSceneController extends GIMSController implements Initiali
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
         initStage(stage, pane, null, null, null, null, true);
+        populateCustomerListView();
+        customerListView.getSelectionModel().select(0);
+        populateStayListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+        populateCustomerComboBox();
         populateRoomComboBox();
-        populateCustomerList();
-        populateEventList();
 
-        confirmCustomer.setOnAction(e -> {
-            addCustomer();
+
+        //Customer form
+        customerFormSubmitButton.setOnAction(e -> {
+            submitCustomer();
+        });
+        customerFormCancelButton.setOnAction(e -> {
+            resetCustomerForm();
         });
         viewCustomerButton.setOnAction(e -> {
             viewCustomer();
@@ -73,8 +67,43 @@ public class CustomersSceneController extends GIMSController implements Initiali
         deleteCustomerButton.setOnAction(e -> {
             deleteCustomer();
         });
-        cancelCustomerBooking.setOnAction(e -> {
-            resetCustomerForm();
+        //Stay form
+        stayFormSubmitButton.setOnAction(e -> {
+            submitStay();
+        });
+        stayFormCancelButton.setOnAction(e -> {
+            resetStayForm();
+        });
+        editStayButton.setOnAction(e -> {
+            editStay();
+        });
+        viewStayButton.setOnAction(e -> {
+            viewStay();
+        });
+        deleteStayButton.setOnAction(e -> {
+            deleteStay();
+        });
+
+        customerListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                customerListView.getSelectionModel().select(oldVal);
+            }
+            else {
+                populateStayListView(newVal.getCustomerId(), newVal.getCustomerName());
+                customerNameLabel.setText(newVal.getCustomerName());
+            }
+        });
+        stayStartDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                stayStartDatePicker.getEditor().setText(stayStartDatePicker.getConverter().toString(stayStartDatePicker.getValue()));
+            }
+        });
+        stayEndDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                stayEndDatePicker.getEditor().setText(stayEndDatePicker.getConverter().toString(stayEndDatePicker.getValue()));
+            }
         });
         customerRefresh.setOnAction(e -> {
             populateRoomComboBox();
@@ -90,223 +119,74 @@ public class CustomersSceneController extends GIMSController implements Initiali
         eventRegComboBox.setItems(FXCollections.observableList(eventRepo.findAll()));
     }
     //Button Actions - Customer Form
-    private void addCustomer() {
-        Room selectedRoom = customerRoomComboBox.getSelectionModel().getSelectedItem();
-        String name = customerName.getText();
-        String phone = customerPhone.getText();
-        String email = customerEmail.getText();
-        String extraInformation = extraInfo.getText();
 
-        boolean isNameValid = validateName(name);
-        boolean isPhoneValid =validatePhone(phone);
-        boolean isEmailValid = validateEmail(email);
-        boolean isStartDateNotNull = Objects.nonNull(startDate.getValue());
-        boolean isEndDateNotNull = Objects.nonNull(endDate.getValue());
-        boolean isDateRangeValid =
-                isStartDateNotNull
-                        && isEndDateNotNull
-                        && startDate.getValue().compareTo(endDate.getValue()) <= 0;
-
-        if (isNameValid && isPhoneValid && isEmailValid && isStartDateNotNull && isEndDateNotNull && isDateRangeValid) {
-            Date start = Date.from(startDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
-            Date end = Date.from(endDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
-            Customer customer;
-            if(confirmCustomer.getText().equals("Save Changes")) {
-                customer = customerListView.getSelectionModel().getSelectedItem();
-                customer.setCustomerEmail(email);
-                customer.setCustomerName(name);
-                customer.setCustomerPhone(phone);
-                customer.setExtraInfo(extraInformation);
-                customer.setStartDate(start);
-                customer.setEndDate(end);
-
-                Room room = roomRepo.findById(customer.getRoomId()).orElse(null);
-
-                if(Objects.nonNull(room)) {
-                    room.setCustomer(null);
-                    room.setStatus(RoomStatus.VACANT);
-                }
-            } else {
-                customer = new Customer(UUID.randomUUID(), name, phone, email, extraInformation, start, end);
-            }
-            customer.setRoom(selectedRoom.getRoomId());
-            selectedRoom.setCustomer(customerRepo.save(customer));
-            selectedRoom.setStatus(RoomStatus.OCCUPIED);
-            roomRepo.save(selectedRoom);
-
-
-            populateCustomerList();
-            populateRoomComboBox();
+            populateCustomerListView();
             resetCustomerForm();
         }
-        else {
-            if(!isNameValid) {
-                customerNameHelpLabel.setTextFill(Color.web("#F73331"));
-                customerNameHelpLabel.setText("Invalid format: First Last");
-                customerNameHelpLabel.setVisible(true);
-            } else {
-                customerNameHelpLabel.setVisible(false);
-            }
-            if(!isPhoneValid) {
-                customerPhoneHelpLabel.setTextFill(Color.web("#F73331"));
-                customerPhoneHelpLabel.setText("Invalid format: xxx-xxx-xxxx");
-                customerPhoneHelpLabel.setVisible(true);
-            } else {
-                customerPhoneHelpLabel.setVisible(false);
-            }
-            if(!isEmailValid) {
-                customerEmailHelpLabel.setTextFill(Color.web("#F73331"));
-                customerEmailHelpLabel.setText("Invalid format: email@domain.com");
-                customerEmailHelpLabel.setVisible(true);
-            } else {
-                customerPhoneHelpLabel.setVisible(false);
-            }
-            if(!isStartDateNotNull) {
-                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
-                dateRangeHelpLabel.setText("From Date cannot be null");
-                dateRangeHelpLabel.setVisible(true);
-            } else if(!isEndDateNotNull) {
-                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
-                dateRangeHelpLabel.setText("To date cannot be null");
-                dateRangeHelpLabel.setVisible(true);
-            } else if(!isDateRangeValid) {
-                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
-                dateRangeHelpLabel.setText("From date cannot be after To date");
-                dateRangeHelpLabel.setVisible(true);
-            }
-        }
+
     }
     private void viewCustomer() {
-        customerOperationLabel.setText("Viewing Customer");
+        customerFormLabel.setText("View a Customer");
         Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
 
-        for (Room room : customerRoomComboBox.getItems()) {
-            if (room.getRoomId() == selectedCustomer.getRoomId()) {
-                customerRoomComboBox.getSelectionModel().select(room);
-                break;
-            }
-        }
-        customerRoomComboBox.setEditable(false);
-        customerName.setText(selectedCustomer.getCustomerName());
-        customerName.setEditable(false);
-        customerPhone.setText(selectedCustomer.getCustomerPhone());
-        customerPhone.setEditable(false);
-        customerEmail.setText(selectedCustomer.getCustomerEmail());
-        customerEmail.setEditable(false);
-        extraInfo.setText(selectedCustomer.getExtraInfo());
-        extraInfo.setEditable(false);
-        startDate.setValue(selectedCustomer.getStartDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
-        startDate.setDisable(true);
-        endDate.setValue(selectedCustomer.getEndDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
-        endDate.setDisable(true);
-        confirmCustomer.setVisible(false);
+
     }
     private void editCustomer() {
         resetCustomerForm();
-        customerOperationLabel.setText("Edit Customer");
-        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+        try {
+            customerFormSubmitButton.setOnAction(e -> {
+                submitCustomerEdits();
+            });
 
-        for (Room room : customerRoomComboBox.getItems()) {
-            if (room.getRoomId() == selectedCustomer.getRoomId()) {
-                customerRoomComboBox.getSelectionModel().select(room);
-                break;
-            }
+            populateCustomerForm();
+            customerFormLabel.setText("Edit a Customer");
+            customerFormSubmitButton.setText("Submit Edits");
         }
-        customerName.setText(selectedCustomer.getCustomerName());
-        customerPhone.setText(selectedCustomer.getCustomerPhone());
-        customerEmail.setText(selectedCustomer.getCustomerEmail());
-        extraInfo.setText(selectedCustomer.getExtraInfo());
-        startDate.setValue(selectedCustomer.getStartDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
-        endDate.setValue(selectedCustomer.getEndDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
-        confirmCustomer.setVisible(true);
-        confirmCustomer.setText("Save Changes");
+        catch(NullPointerException ex) {
+            customerFormSubmitButton.setOnAction(e -> {
+                submitCustomer();
+            });
+            System.err.println("Nothing selected in customer list");
+        }
+    }
+    private void submitCustomerEdits() {
+        String name = customerNameTextField.getText();
+        String phone = customerPhoneTextField.getText();
+        String email = customerEmailTextField.getText();
+
+        if(validateCustomerForm(name, phone, email)) {
+            Customer updatedCustomer = new Customer(
+                    customerListView.getSelectionModel().getSelectedItem().getCustomerId(),
+                    name, phone, email);
+            customerRepo.save(updatedCustomer);
+
+            populateCustomerListView();
+            populateCustomerComboBox();
+            resetCustomerForm();
+        }
+
     }
     private void deleteCustomer() {
         Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
-        if(Objects.nonNull(selectedCustomer)) {
-            Room room = roomRepo.findById(selectedCustomer.getRoomId()).orElse(null);
-            if(Objects.nonNull(room)) {
-                room.setCustomer(null);
-                room.setStatus(RoomStatus.VACANT);
-                roomRepo.save(room);
-            }
-            customerRepo.delete(selectedCustomer);
-        }
+
+        customerRepo.delete(selectedCustomer);
+
         resetCustomerForm();
-        populateCustomerList();
 
     }
 
     //Util Methods - Customer Form
-    private void populateRoomComboBox() {
-        customerRoomComboBox.getItems().clear();
-        ObservableList<Room> rooms = FXCollections.observableArrayList();
-        if(roomRepo.count() != 0) {
-            rooms.addAll(roomRepo.findAll());
-        }
-        customerRoomComboBox.getItems().addAll(rooms);
-    }
-    private void populateCustomerList() {
+    private void populateCustomerListView() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
 
         if(customerRepo.count() != 0) {
             customers.addAll(customerRepo.findAll());
-            customerListViewLabel.setText("");
-            customerListViewLabel.setDisable(true);
-        } else {
-            customerListViewLabel.setDisable(false);
+
         }
         customerListView.setItems(customers.sorted());
     }
-    private void resetCustomerForm() {
-        customerOperationLabel.setText("Add Customer");
-        customerRoomComboBox.getSelectionModel().clearSelection();
-        customerRoomComboBox.setDisable(false);
-
-        //Reset buttons
-        confirmCustomer.setText("Add Customer");
-        confirmCustomer.setDisable(false);
-        cancelCustomerBooking.setText("Cancel");
-        //Reset text fields
-        customerName.clear();
-        customerName.setDisable(false);
-        customerName.setEditable(true);
-        customerPhone.clear();
-        customerPhone.setDisable(false);
-        customerPhone.setEditable(true);
-        customerEmail.clear();
-        customerEmail.setDisable(false);
-        customerEmail.setEditable(true);
-        extraInfo.clear();
-        extraInfo.setDisable(false);
-        extraInfo.setEditable(true);
-        startDate.setValue(null);
-        startDate.setDisable(false);
-        endDate.setValue(null);
-        endDate.setDisable(false);
-        //Reset labels
-        customerNameHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        customerNameHelpLabel.setText("First Last");
-        customerNameHelpLabel.setVisible(false);
-        customerPhoneHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        customerPhoneHelpLabel.setText("xxx-xxx-xxxx");
-        customerPhoneHelpLabel.setVisible(false);
-        customerEmailHelpLabel.setTextFill(Color.web("#5BDDC7"));
-        customerEmailHelpLabel.setText("email@domain.com");
-        customerEmailHelpLabel.setVisible(false);
-
-    }
-
-    private void registerEvent() {
-        Event event = eventRegComboBox.getSelectionModel().getSelectedItem();
-            Customer customer = customerListView.getSelectionModel().getSelectedItem();
-            customer.setEvent(event);
-            customerRepo.save(customer);
-    }
-
-    private void cancelEventRegistration() {
-        eventRegComboBox.getSelectionModel().clearSelection();
-    }
+    private void populateCustomerForm() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
 
     public AnchorPane getScene() {
         return pane;

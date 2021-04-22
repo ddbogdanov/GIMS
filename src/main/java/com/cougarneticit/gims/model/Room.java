@@ -4,7 +4,7 @@ import com.cougarneticit.gims.model.common.RoomStatus;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Component
@@ -19,11 +19,11 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="room")
-    private List<Task> tasks;
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE, orphanRemoval=true)
+    private Set<Task> tasks;
 
-    @ManyToOne
-    private Customer customer;
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE, orphanRemoval=true)
+    private Set<Stay> stays;
 
     public Room() {
         roomId = 0;
@@ -51,21 +51,17 @@ public class Room {
     public RoomStatus getStatus() {
         return status;
     }
-    public List<Task> getTasks() {
+    public Set<Task> getTasks() {
         return tasks;
+    }
+    public Set<Stay> getStays() {
+        return stays;
     }
 
     public void setStatus(RoomStatus status) {
         this.status = status;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
 
     public String toString() {
         return roomId + ": " + roomName;

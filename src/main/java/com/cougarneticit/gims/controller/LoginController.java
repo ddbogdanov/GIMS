@@ -26,8 +26,6 @@ import org.springframework.stereotype.Component;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Component
 @FxmlView("/LoginController.fxml")
@@ -83,7 +81,7 @@ public class LoginController extends GIMSController implements Initializable {
             if(passwordEncoder.matches(password, userRepo.findByUsername(username).get(0).getPassword())) {
 
                 String hashedPassword = userRepo.findByUsername(username).get(0).getPassword();
-                userId = userRepo.findByUsername(username).get(0).getUser_id();
+                userId = userRepo.findByUsername(username).get(0).getUserId();
                 isAdmin = userRepo.findByUsername(username).get(0).isAdmin();
                 User user = new User(userId, username, hashedPassword, isAdmin);
 
