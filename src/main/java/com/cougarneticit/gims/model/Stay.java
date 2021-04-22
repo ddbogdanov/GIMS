@@ -83,7 +83,6 @@ public class Stay {
                 "Suite " + room.getRoomId() + " | " +
                         startDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(Locale.US).withZone(ZoneId.of("Etc/UTC"))) +
                         " to " +
-                        endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(Locale.US).withZone(ZoneId.of("Etc/UTC"))) +
-                " | " + customer.getCustomerName();
+                        endDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT).withLocale(Locale.US).withZone(ZoneId.of("Etc/UTC")));
     }
 }

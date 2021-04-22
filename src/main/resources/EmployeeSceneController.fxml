@@ -196,11 +196,11 @@
                   </VBox>
                </children>
             </VBox>
-            <AnchorPane prefHeight="700.0" prefWidth="520.0" HBox.hgrow="ALWAYS">
+            <AnchorPane prefHeight="700.0" prefWidth="450.0" HBox.hgrow="ALWAYS">
                <children>
                   <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="15.0" />
                   <Separator layoutX="10.0" layoutY="10.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0" />
-                  <VBox alignment="TOP_CENTER" layoutX="169.0" layoutY="181.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox alignment="TOP_CENTER" layoutX="169.0" layoutY="181.0" prefHeight="700.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <Label fx:id="employeeNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Employee Name" textFill="WHITE">
                            <font>
@@ -384,7 +384,7 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="285.0">
+            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="355.0">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Shifts" textFill="WHITE">
                      <font>
@@ -485,12 +485,12 @@
                               <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                            <children>
-                              <JFXDatePicker fx:id="shiftStartDatePicker" defaultColor="#007b68" editable="false" maxWidth="128.0" prefHeight="28.0" promptText="Start Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                              <JFXDatePicker fx:id="shiftStartDatePicker" defaultColor="#007b68" editable="false" maxWidth="150.0" prefHeight="32.0" promptText="Start Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
                                  <HBox.margin>
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </JFXDatePicker>
-                              <JFXTimePicker fx:id="shiftStartTimePicker" defaultColor="#007b68" editable="true" maxWidth="128.0" prefHeight="32.0" promptText="Start Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                              <JFXTimePicker fx:id="shiftStartTimePicker" defaultColor="#007b68" editable="true" maxWidth="150.0" prefHeight="32.0" promptText="Start Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>
@@ -512,12 +512,12 @@
                         </Separator>
                         <HBox alignment="CENTER" prefHeight="28.0" VBox.vgrow="NEVER">
                            <children>
-                              <JFXDatePicker fx:id="shiftEndDatePicker" defaultColor="#007b68" editable="false" maxWidth="128.0" prefHeight="28.0" promptText="End Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                              <JFXDatePicker fx:id="shiftEndDatePicker" defaultColor="#007b68" editable="false" maxWidth="150.0" prefHeight="28.0" promptText="End Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
                                  <HBox.margin>
                                     <Insets right="5.0" />
                                  </HBox.margin>
                               </JFXDatePicker>
-                              <JFXTimePicker fx:id="shiftEndTimePicker" defaultColor="#007b68" editable="true" maxWidth="128.0" prefHeight="32.0" promptText="End Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                              <JFXTimePicker fx:id="shiftEndTimePicker" defaultColor="#007b68" editable="true" maxWidth="150.0" prefHeight="32.0" promptText="End Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
                                  <HBox.margin>
                                     <Insets left="5.0" />
                                  </HBox.margin>

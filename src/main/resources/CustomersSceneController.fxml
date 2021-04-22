@@ -277,7 +277,7 @@
                         <HBox alignment="CENTER" prefHeight="28.0" prefWidth="339.0" spacing="20.0">
                            <children>
                               <JFXComboBox fx:id="customerComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="124.0" promptText="Choose Customer" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
-                              <JFXComboBox fx:id="roomComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="124.0" promptText="Choose Room" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                              <JFXComboBox fx:id="roomComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="124.0" promptText="Choose Customer" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
                            </children>
                            <VBox.margin>
                               <Insets top="15.0" />

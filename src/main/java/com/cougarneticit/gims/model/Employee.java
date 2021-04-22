@@ -21,12 +21,9 @@ public class Employee {
     private String employeePhone;
     @Column(name="employee_email", length=320) //VarChar(320)
     private String employeeEmail;
-
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
-
-    //TODO: Switch FetchType to LAZY and use Lists instead of Sets. Possible future performance degradation due to EAGER fetching
     @OneToMany(fetch = FetchType.EAGER, mappedBy="employee", cascade=CascadeType.REMOVE)
     private Set<Task> tasks;
     @OneToMany(fetch = FetchType.EAGER, mappedBy="employee", cascade=CascadeType.REMOVE)
