@@ -21,7 +21,7 @@ public class User {
     @Column(name="isadmin") //tinyint(1)
     private boolean isadmin;
 
-    @OneToOne(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    @OneToOne(mappedBy="user", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
     private Employee employee;
 
     public User() {

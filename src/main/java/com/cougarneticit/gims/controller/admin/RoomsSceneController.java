@@ -413,6 +413,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
             taskRepo.deleteById(selectedTask.getTaskId());
 
+
             populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
             resetTaskForm();
         }

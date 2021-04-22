@@ -19,7 +19,7 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="room")
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE, orphanRemoval=true)
     private List<Task> tasks;
 
     public Room() {
