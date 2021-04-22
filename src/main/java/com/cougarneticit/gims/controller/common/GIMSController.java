@@ -10,8 +10,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.rgielen.fxweaver.core.FxWeaver;
+import org.apache.commons.validator.routines.EmailValidator;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class GIMSController {
 
@@ -53,5 +56,20 @@ public class GIMSController {
                 b.setStyle(INACTIVE_BUTTON);
             }
         }
+    }
+
+    protected boolean validateEmail(String email) {
+        EmailValidator emailValidator = EmailValidator.getInstance();
+        return emailValidator.isValid(email);
+    }
+    protected boolean validateName(String name) {
+        Pattern pattern = Pattern.compile("^[a-zA-Z\\s]+");
+        Matcher matcher = pattern.matcher(name);
+        return matcher.matches();
+    }
+    protected boolean validatePhone(String phone) {
+        Pattern pattern = Pattern.compile("^(\\d{3}[-]?){2}\\d{4}$");
+        Matcher matcher = pattern.matcher(phone);
+        return matcher.matches();
     }
 }

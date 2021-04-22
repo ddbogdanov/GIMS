@@ -1,18 +1,17 @@
+/*@font-face {
+    src: url("/static/fonts/RobotoMono-VariableFont_wght.ttf") format("ttf");
+}*/
+/*TODO: remove comments for deployment. SceneBuilder doesnt like this line for some reason.*/
+
 .jfx-text-field, .jfx-password-field {
     -fx-prompt-text-fill: WHITE;
     -fx-text-fill: WHITE;
 }
-
-.jfx-hamburger-icon StackPane {
-    -fx-background-color: WHITE;
-}
-
 .separator *.line {
     -fx-border-style: solid;
+    -fx-border-width: 1px;
     -fx-border-color: #5D5C67;
 }
-
-
 .jfx-combo-box {
     -fx-text-inner-color: WHITE;
     -fx-prompt-text-fill: WHITE;
@@ -20,13 +19,68 @@
 .jfx-combo-box .cell {
     -fx-text-fill: WHITE;
 }
-
 .jfx-date-picker .text-field {
     -fx-pompt-text-fill: WHITE;
     -fx-text-fill: WHITE;
 }
-
 .jfx-text-area {
     -fx-prompt-text-fill: WHITE;
     -fx-text-fill: WHITE;
+}
+
+/*List view styling*/
+.list-cell {
+    /*-fx-font-family: "Roboto Mono Regular";*/
+    -fx-font-size: 12px;
+}
+.list-view {
+    -fx-background-color: #3E3E4A;
+}
+.list-view .list-cell:even:hover {
+    -fx-background-color: #585869;
+
+}
+.list-view .list-cell:odd:hover {
+    -fx-background-color: #545463;
+
+}
+.list-view .list-cell:even:selected:hover {
+    -fx-background-color: #009982;
+}
+.list-view .list-cell:odd:selected:hover {
+    -fx-background-color: #009982;
+}
+.list-view .list-cell:selected {
+    -fx-background-color: #007B68;
+}
+.list-view .list-cell {
+    -fx-background-color: #3E3E4A;
+    -fx-text-fill: white;
+}
+.list-view .list-cell:odd {
+    -fx-background-color: #494957;
+}
+.list-view .list-cell:odd:selected {
+    -fx-background-color: #007B68;
+}
+.list-view .label {
+    -fx-text-fill: white;
+}
+.list-view .scroll-bar:vertical {
+    -fx-background-color: #3E3E4A;
+}
+.list-view .increment-button , .list-view .decrement-button {
+    -fx-background-color:transparent;
+    -fx-border-color: #5D5C67;
+    -fx-border-radius: 2;
+}
+.list-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #5D5C67;
+}
+.list-view .scroll-bar .thumb:hover,
+.list-view .scroll-bar .thumb:pressed{
+    -fx-background-color: #007B68;
+}
+.list-view .increment-button:hover ,.list-view .decrement-button:hover {
+    -fx-background-color:#007B68;
 }
