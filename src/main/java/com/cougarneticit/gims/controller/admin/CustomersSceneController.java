@@ -2,9 +2,11 @@ package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Customer;
+import com.cougarneticit.gims.model.Event;
 import com.cougarneticit.gims.model.Room;
 import com.cougarneticit.gims.model.common.RoomStatus;
 import com.cougarneticit.gims.model.repos.CustomerRepo;
+import com.cougarneticit.gims.model.repos.EventRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
@@ -19,13 +21,12 @@ import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Component
 @FxmlView("/CustomersSceneController.fxml")
@@ -33,19 +34,20 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
     private Stage stage;
 
-    @Autowired
-    private CustomerRepo customerRepo;
-    @Autowired
-    private RoomRepo roomRepo;
+    @Autowired private CustomerRepo customerRepo;
+    @Autowired private RoomRepo roomRepo;
+    @Autowired private EventRepo eventRepo;
 
     @FXML private AnchorPane pane;
-    @FXML JFXButton confirmCustomer, cancelCustomerBooking, viewCustomerButton, editCustomerButton, deleteCustomerButton;
+    @FXML private JFXButton confirmCustomer, cancelCustomerBooking, viewCustomerButton, editCustomerButton, deleteCustomerButton, customerRefresh, eventReg, cancelEventReg;
     @FXML private JFXListView<Customer> customerListView;
     @FXML private JFXComboBox<Room> customerRoomComboBox;
+    @FXML private JFXComboBox<Event> eventRegComboBox;
     @FXML private JFXTextField customerName, customerPhone, customerEmail;
     @FXML private JFXTextArea extraInfo;
     @FXML private JFXDatePicker startDate, endDate;
-    @FXML private Label customerNameHelpLabel, customerPhoneHelpLabel, customerEmailHelpLabel, customerListViewLabel1, customerListViewLabel2, customerOperationLabel;
+    @FXML private Label customerNameHelpLabel, customerPhoneHelpLabel, customerEmailHelpLabel,
+            customerListViewLabel, customerOperationLabel, dateRangeHelpLabel;
 
     public CustomersSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -57,6 +59,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
         initStage(stage, pane, null, null, null, null, true);
         populateRoomComboBox();
         populateCustomerList();
+        populateEventList();
 
         confirmCustomer.setOnAction(e -> {
             addCustomer();
@@ -73,8 +76,19 @@ public class CustomersSceneController extends GIMSController implements Initiali
         cancelCustomerBooking.setOnAction(e -> {
             resetCustomerForm();
         });
+        customerRefresh.setOnAction(e -> {
+            populateRoomComboBox();
+            populateCustomerList();
+            resetCustomerForm();
+            populateEventList();
+        });
+        eventReg.setOnAction(e -> registerEvent());
+        cancelEventReg.setOnAction(e -> cancelEventRegistration());
     }
 
+    private void populateEventList() {
+        eventRegComboBox.setItems(FXCollections.observableList(eventRepo.findAll()));
+    }
     //Button Actions - Customer Form
     private void addCustomer() {
         Room selectedRoom = customerRoomComboBox.getSelectionModel().getSelectedItem();
@@ -82,14 +96,20 @@ public class CustomersSceneController extends GIMSController implements Initiali
         String phone = customerPhone.getText();
         String email = customerEmail.getText();
         String extraInformation = extraInfo.getText();
-        Date start = Date.from(startDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
-        Date end = Date.from(endDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
 
         boolean isNameValid = validateName(name);
         boolean isPhoneValid =validatePhone(phone);
         boolean isEmailValid = validateEmail(email);
+        boolean isStartDateNotNull = Objects.nonNull(startDate.getValue());
+        boolean isEndDateNotNull = Objects.nonNull(endDate.getValue());
+        boolean isDateRangeValid =
+                isStartDateNotNull
+                        && isEndDateNotNull
+                        && startDate.getValue().compareTo(endDate.getValue()) <= 0;
 
-        if (isNameValid && isPhoneValid && isEmailValid) {
+        if (isNameValid && isPhoneValid && isEmailValid && isStartDateNotNull && isEndDateNotNull && isDateRangeValid) {
+            Date start = Date.from(startDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
+            Date end = Date.from(endDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
             Customer customer;
             if(confirmCustomer.getText().equals("Save Changes")) {
                 customer = customerListView.getSelectionModel().getSelectedItem();
@@ -141,6 +161,19 @@ public class CustomersSceneController extends GIMSController implements Initiali
             } else {
                 customerPhoneHelpLabel.setVisible(false);
             }
+            if(!isStartDateNotNull) {
+                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
+                dateRangeHelpLabel.setText("From Date cannot be null");
+                dateRangeHelpLabel.setVisible(true);
+            } else if(!isEndDateNotNull) {
+                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
+                dateRangeHelpLabel.setText("To date cannot be null");
+                dateRangeHelpLabel.setVisible(true);
+            } else if(!isDateRangeValid) {
+                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
+                dateRangeHelpLabel.setText("From date cannot be after To date");
+                dateRangeHelpLabel.setVisible(true);
+            }
         }
     }
     private void viewCustomer() {
@@ -162,10 +195,10 @@ public class CustomersSceneController extends GIMSController implements Initiali
         customerEmail.setEditable(false);
         extraInfo.setText(selectedCustomer.getExtraInfo());
         extraInfo.setEditable(false);
-        startDate.setValue(selectedCustomer.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        startDate.setDisable(false);
-        endDate.setValue(selectedCustomer.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        endDate.setDisable(false);
+        startDate.setValue(selectedCustomer.getStartDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
+        startDate.setDisable(true);
+        endDate.setValue(selectedCustomer.getEndDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
+        endDate.setDisable(true);
         confirmCustomer.setVisible(false);
     }
     private void editCustomer() {
@@ -183,8 +216,8 @@ public class CustomersSceneController extends GIMSController implements Initiali
         customerPhone.setText(selectedCustomer.getCustomerPhone());
         customerEmail.setText(selectedCustomer.getCustomerEmail());
         extraInfo.setText(selectedCustomer.getExtraInfo());
-        startDate.setValue(selectedCustomer.getStartDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        endDate.setValue(selectedCustomer.getEndDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+        startDate.setValue(selectedCustomer.getStartDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
+        endDate.setValue(selectedCustomer.getEndDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
         confirmCustomer.setVisible(true);
         confirmCustomer.setText("Save Changes");
     }
@@ -201,6 +234,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
         }
         resetCustomerForm();
         populateCustomerList();
+
     }
 
     //Util Methods - Customer Form
@@ -217,13 +251,10 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
         if(customerRepo.count() != 0) {
             customers.addAll(customerRepo.findAll());
-            customerListViewLabel1.setText("");
-            customerListViewLabel2.setText("");
-            customerListViewLabel1.setDisable(true);
-            customerListViewLabel2.setDisable(true);
+            customerListViewLabel.setText("");
+            customerListViewLabel.setDisable(true);
         } else {
-            customerListViewLabel1.setDisable(false);
-            customerListViewLabel2.setDisable(false);
+            customerListViewLabel.setDisable(false);
         }
         customerListView.setItems(customers.sorted());
     }
@@ -233,7 +264,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
         customerRoomComboBox.setDisable(false);
 
         //Reset buttons
-        confirmCustomer.setText("Add Employee");
+        confirmCustomer.setText("Add Customer");
         confirmCustomer.setDisable(false);
         cancelCustomerBooking.setText("Cancel");
         //Reset text fields
@@ -249,9 +280,9 @@ public class CustomersSceneController extends GIMSController implements Initiali
         extraInfo.clear();
         extraInfo.setDisable(false);
         extraInfo.setEditable(true);
-        startDate.setValue(LocalDate.now());
+        startDate.setValue(null);
         startDate.setDisable(false);
-        endDate.setValue(LocalDate.now());
+        endDate.setValue(null);
         endDate.setDisable(false);
         //Reset labels
         customerNameHelpLabel.setTextFill(Color.web("#5BDDC7"));
@@ -264,6 +295,17 @@ public class CustomersSceneController extends GIMSController implements Initiali
         customerEmailHelpLabel.setText("email@domain.com");
         customerEmailHelpLabel.setVisible(false);
 
+    }
+
+    private void registerEvent() {
+        Event event = eventRegComboBox.getSelectionModel().getSelectedItem();
+            Customer customer = customerListView.getSelectionModel().getSelectedItem();
+            customer.setEvent(event);
+            customerRepo.save(customer);
+    }
+
+    private void cancelEventRegistration() {
+        eventRegComboBox.getSelectionModel().clearSelection();
     }
 
     public AnchorPane getScene() {
