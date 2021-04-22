@@ -4,14 +4,12 @@ import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.Employee;
 import com.cougarneticit.gims.model.Room;
 import com.cougarneticit.gims.model.Task;
-import com.cougarneticit.gims.model.User;
 import com.cougarneticit.gims.model.common.Priority;
 import com.cougarneticit.gims.model.common.RoomStatus;
 import com.cougarneticit.gims.model.repos.EmployeeRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
 import com.cougarneticit.gims.model.repos.TaskRepo;
 import com.jfoenix.controls.*;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -486,7 +484,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         //Loop through rooms in the roomComboBox
         for(Room room : roomComboBox.getItems()) {
             //Fetch list of tasks for each room in the roomComboBox
-            List<Task> taskIds = room.getTasks();
+            Set<Task> taskIds = room.getTasks();
             //Loop through each task from above list
             for(Task task : taskIds) {
                 //If selected task ID in taskListView equals task a ID from the list of tasks - select it
