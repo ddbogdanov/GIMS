@@ -98,7 +98,7 @@
                         </JFXButton>
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                  <AnchorPane prefHeight="60.0" prefWidth="90.0" visible="false" HBox.hgrow="ALWAYS">
                      <children>
                         <JFXButton fx:id="settingsTab" layoutX="94.0" layoutY="-4.0" prefHeight="60.0" prefWidth="90.0" ripplerFill="#5bddc7" text="Settings" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
