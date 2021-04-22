@@ -19,10 +19,10 @@ public class Room {
     @Enumerated(EnumType.STRING)
     private RoomStatus status;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE, orphanRemoval=true)
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<Task> tasks;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE, orphanRemoval=true)
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<Stay> stays;
 
     public Room() {
