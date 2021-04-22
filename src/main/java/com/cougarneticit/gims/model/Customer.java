@@ -4,8 +4,9 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -22,20 +23,20 @@ public class Customer {
     private String customerPhone;
     @Column(name="customer_email", length=320) //VarChar(320)
     private String customerEmail;
-    @Column(name="extra_info", length=320) //VarChar(320)
-    private String extraInfo;
-    @Column(name="start_date") //VarChar(28)
-    private Date startDate;
-    @Column(name = "end_date")
-    private Date endDate;
 
-    //TODO: One to One
-    @Column(name = "room_id")
-    private char roomId;
+    @OneToMany(fetch = FetchType.EAGER, mappedBy="customer", cascade=CascadeType.REMOVE, orphanRemoval=true)
+    private Set<Stay> stays;
 
-    public String getExtraInfo() {
-        return extraInfo;
+    public Customer() {
+
     }
+    public Customer(UUID customerId, String customerName, String customerPhone, String customerEmail) {
+        this.customerId = customerId;
+        this.customerName = customerName;
+        this.customerPhone = customerPhone;
+        this.customerEmail = customerEmail;
+    }
+
     public UUID getCustomerId() {
         return customerId;
     }
@@ -48,19 +49,10 @@ public class Customer {
     public String getCustomerEmail() {
         return customerEmail;
     }
-    public char getRoomId() {
-        return roomId;
-    }
-    public Date getStartDate() {
-        return startDate;
-    }
-    public Date getEndDate() {
-        return endDate;
+    public Set<Stay> getStays() {
+        return stays;
     }
 
-    public void setExtraInfo(String extraInfo) {
-        this.extraInfo = extraInfo;
-    }
     public void setCustomerId(UUID customerId) {
         this.customerId = customerId;
     }
@@ -72,28 +64,6 @@ public class Customer {
     }
     public void setCustomerEmail(String customerEmail) {
         this.customerEmail = customerEmail;
-    }
-    public void setRoom(char roomId) {
-        this.roomId = roomId;
-    }
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Customer() {
-
-    }
-    public Customer(UUID customerId, String customerName, String customerPhone, String customerEmail, String extraInfo, Date startDate, Date endDate) {
-        this.customerId = customerId;
-        this.customerName = customerName;
-        this.customerPhone = customerPhone;
-        this.customerEmail = customerEmail;
-        this.extraInfo = extraInfo;
-        this.startDate = startDate;
-        this.endDate = endDate;
     }
 
     @Override

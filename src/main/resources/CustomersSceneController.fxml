@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="547.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.CustomersSceneController">
+<AnchorPane fx:id="pane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="547.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.CustomersSceneController">
    <children>
       <JFXButton fx:id="viewCustomerButton" layoutX="41.0" layoutY="8.0" prefHeight="32.0" prefWidth="130.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View Customer" textFill="WHITE">
          <font>
@@ -68,7 +74,7 @@
                   <Font name="Roboto Regular" size="14.0" />
                </font>
             </JFXButton>
-            <JFXTextField fx:id="customerName" focusColor="#11ab97" labelFloat="true" layoutX="14.0" layoutY="41.0" prefHeight="30.0" prefWidth="258.0" promptText="Customer Name" style="-fx-background-color: #33333d;" styleClass="jfx-text-field" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+            <JFXTextField fx:id="customerNameTextField" focusColor="#11ab97" labelFloat="true" layoutX="14.0" layoutY="41.0" prefHeight="30.0" prefWidth="258.0" promptText="Customer Name" style="-fx-background-color: #33333d;" styleClass="jfx-text-field" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
                <font>
                   <Font name="Roboto Regular" size="14.0" />
                </font>
@@ -85,7 +91,7 @@
                   <Insets left="15.0" right="15.0" top="5.0" />
                </VBox.margin>
             </AnchorPane>
-            <JFXTextField fx:id="customerPhone" focusColor="#11ab97" labelFloat="true" layoutX="14.0" layoutY="102.0" prefHeight="30.0" prefWidth="258.0" promptText="Customer Phone" style="-fx-background-color: #33333d;" styleClass="jfx-text-field" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+            <JFXTextField fx:id="customerPhoneTextField" focusColor="#11ab97" labelFloat="true" layoutX="14.0" layoutY="102.0" prefHeight="30.0" prefWidth="258.0" promptText="Customer Phone" style="-fx-background-color: #33333d;" styleClass="jfx-text-field" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
                <font>
                   <Font name="Roboto Regular" size="14.0" />
                </font>
@@ -102,7 +108,7 @@
                   <Insets left="15.0" right="15.0" top="5.0" />
                </VBox.margin>
             </AnchorPane>
-            <JFXTextField fx:id="customerEmail" focusColor="#11ab97" labelFloat="true" layoutX="14.0" layoutY="162.0" prefHeight="30.0" prefWidth="258.0" promptText="Customer Email" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+            <JFXTextField fx:id="customerEmailTextField" focusColor="#11ab97" labelFloat="true" layoutX="14.0" layoutY="162.0" prefHeight="30.0" prefWidth="258.0" promptText="Customer Email" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
                <font>
                   <Font name="Roboto Regular" size="14.0" />
                </font>
@@ -119,14 +125,14 @@
                   <Insets left="15.0" right="15.0" top="5.0" />
                </VBox.margin>
             </AnchorPane>
-            <JFXComboBox fx:id="customerRoomComboBox" focusColor="#11ab97" labelFloat="true" layoutX="10.0" layoutY="232.0" prefHeight="28.0" prefWidth="75.0" promptText="Room" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
+            <JFXComboBox fx:id="roomComboBox" focusColor="#11ab97" labelFloat="true" layoutX="10.0" layoutY="232.0" prefHeight="28.0" prefWidth="75.0" promptText="Room" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>
             </JFXComboBox>
-            <JFXDatePicker fx:id="startDate" defaultColor="#007b68" layoutX="88.0" layoutY="232.0" prefHeight="28.0" prefWidth="90.0" promptText="From " style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" />
-            <JFXDatePicker fx:id="endDate" defaultColor="#007b68" layoutX="181.0" layoutY="232.0" prefHeight="28.0" prefWidth="90.0" promptText="To " style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" />
-            <JFXTextArea fx:id="extraInfo" focusColor="#11ab97" labelFloat="true" layoutX="12.0" layoutY="280.0" prefHeight="122.0" prefWidth="224.0" promptText="Extra Info" style="-fx-background-color: #33333d; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" />
+            <JFXDatePicker fx:id="customerStartDatePicker" defaultColor="#007b68" layoutX="88.0" layoutY="232.0" prefHeight="28.0" prefWidth="90.0" promptText="From " style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" />
+            <JFXDatePicker fx:id="customerEndDatePicker" defaultColor="#007b68" layoutX="181.0" layoutY="232.0" prefHeight="28.0" prefWidth="90.0" promptText="To " style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" />
+            <JFXTextArea fx:id="extraInfoTextArea" focusColor="#11ab97" labelFloat="true" layoutX="12.0" layoutY="280.0" prefHeight="122.0" prefWidth="224.0" promptText="Extra Info" style="-fx-background-color: #33333d; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="871.0" layoutY="40.0" prefHeight="165.0" prefWidth="172.0" style="-fx-background-color: #3E3E4A;" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="40.0">
