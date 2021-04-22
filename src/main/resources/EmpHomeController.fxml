@@ -24,7 +24,7 @@
                <children>
                   <ImageView fitHeight="60.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@static/Logo1png.png" />
+                        <Image url="@static/img/Logo1png.png" />
                      </image>
                   </ImageView>
                   <Label alignment="CENTER" text="GIMS" textFill="WHITE">

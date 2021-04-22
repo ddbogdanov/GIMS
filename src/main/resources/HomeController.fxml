@@ -13,18 +13,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="606.0" prefWidth="1090.0" style="-fx-background-color: #33333D;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.HomeController">
+<AnchorPane fx:id="pane" prefHeight="760.0" prefWidth="1090.0" style="-fx-background-color: #33333D;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.HomeController">
    <children>
       <AnchorPane layoutY="7.0" prefHeight="60.0" prefWidth="1090.0" style="-fx-background-color: #007b68;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <effect>
             <DropShadow color="#464651" height="40.0" radius="14.75" />
          </effect>
          <children>
-            <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="1104.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox alignment="CENTER_LEFT" prefHeight="60.0" prefWidth="1090.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <ImageView fitHeight="60.0" fitWidth="80.0" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@static/Logo1png.png" />
+                        <Image url="@static/img/Logo1png.png" />
                      </image>
                   </ImageView>
                   <Label alignment="CENTER" text="GIMS" textFill="WHITE">

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #33333d; -fx-border-color: #5d5c67; -fx-border-radius: 18; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.AddUserController">
+<AnchorPane fx:id="pane" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #33333d; -fx-border-color: #5d5c67; -fx-border-radius: 18; -fx-background-radius: 20;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.AddUserController">
    <children>
       <VBox alignment="TOP_CENTER" layoutX="92.0" layoutY="87.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -80,7 +80,7 @@
                   <Insets right="145.0" top="10.0" />
                </VBox.margin>
             </JFXCheckBox>
-            <HBox prefHeight="80.0" prefWidth="258.0" spacing="10.0">
+            <HBox prefHeight="80.0" prefWidth="259.0" spacing="10.0">
                <children>
                   <JFXButton fx:id="submitButton" prefHeight="32.0" prefWidth="125.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Submit" textFill="WHITE">
                      <font>
@@ -100,7 +100,7 @@
                   </JFXButton>
                </children>
                <VBox.margin>
-                  <Insets />
+                  <Insets bottom="15.0" />
                </VBox.margin>
             </HBox>
          </children>
