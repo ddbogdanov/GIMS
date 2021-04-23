@@ -36,66 +36,9 @@ public class Event {
     //@OneToMany(fetch = FetchType.EAGER, mappedBy = "event", orphanRemoval = false)
     //private Set<Customer> customers;
 
-    public UUID getEventId() {
-        return eventId;
+    public Event() {
+
     }
-
-    public String getEventName() {
-        return eventName;
-    }
-
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
-
-    public String getEventInfo() {
-        return eventInfo;
-    }
-
-    public void setEventInfo(String eventInfo) {
-        this.eventInfo = eventInfo;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public EventStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(EventStatus status) {
-        this.status = status;
-    }
-
-    /*public Set<Customer> getCustomers() {
-        return customers;
-    }
-
-    public void setCustomers(Set<Customer> customers) {
-        this.customers = customers;
-    }*/
-
     public Event(String eventName, String eventInfo, Date startDate, Date endDate, Location location) {
         this.eventName = eventName;
         this.eventInfo = eventInfo;
@@ -104,7 +47,56 @@ public class Event {
         this.location = location;
     }
 
-    public Event() {}
+    public UUID getEventId() {
+        return eventId;
+    }
+    public String getEventName() {
+        return eventName;
+    }
+    public String getEventInfo() {
+        return eventInfo;
+    }
+    public Date getStartDate() {
+        return startDate;
+    }
+    public Date getEndDate() {
+        return endDate;
+    }
+    public Location getLocation() {
+        return location;
+    }
+    public EventStatus getStatus() {
+        return status;
+    }
+
+    /*public Set<Customer> getCustomers() {
+        return customers;
+    }*/
+
+
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+    public void setEventInfo(String eventInfo) {
+        this.eventInfo = eventInfo;
+    }
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+    public void setStatus(EventStatus status) {
+        this.status = status;
+    }
+
+    /*public void setCustomers(Set<Customer> customers) {
+        this.customers = customers;
+    }*/
 
     @Override
     public String toString() {
