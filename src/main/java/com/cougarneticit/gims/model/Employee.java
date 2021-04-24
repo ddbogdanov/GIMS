@@ -21,6 +21,7 @@ public class Employee {
     private String employeePhone;
     @Column(name="employee_email", length=320) //VarChar(320)
     private String employeeEmail;
+
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;

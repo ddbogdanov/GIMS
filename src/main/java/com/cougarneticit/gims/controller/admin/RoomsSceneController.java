@@ -75,11 +75,15 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         this.stage = new Stage();
         initStage(stage, pane, null, null, null, null, true);
 
-        populateRoomListView();
-        roomListView.getSelectionModel().select(0);
-        setInfoLabels();
-        populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
-
+        try {
+            populateRoomListView();
+            roomListView.getSelectionModel().select(0);
+            setInfoLabels();
+            populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
+        }
+        catch(NullPointerException ex) {
+            System.err.println("No rooms");
+        }
         //Initialize ComboBoxes
         priorityComboBox.getItems().addAll(Priority.values());
         roomStatusComboBox.getItems().addAll(RoomStatus.values());

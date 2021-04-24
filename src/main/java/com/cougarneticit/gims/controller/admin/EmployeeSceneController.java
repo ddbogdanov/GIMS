@@ -78,8 +78,13 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         populateEmployeeComboBox();
         populateEmployeeListView();
         employeeListView.getSelectionModel().select(0);
-        populateShiftListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
-        populateTaskListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
+        try {
+            populateShiftListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
+            populateTaskListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
+        }
+        catch(NullPointerException ex) {
+            System.err.println("No employees");
+        }
         setInfoLabels();
 
         employeeFormSubmitButton.setOnAction(e -> {
@@ -507,36 +512,41 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         taskListView.setItems(taskList.sorted());
     }
     private void setInfoLabels() {
-        Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
-        List<Shift> employeeShifts = shiftRepo.findAllByEmployee_EmployeeId(selectedEmployee.getEmployeeId());
+        try {
+            Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
+            List<Shift> employeeShifts = shiftRepo.findAllByEmployee_EmployeeId(selectedEmployee.getEmployeeId());
 
-        int activeTasks, completedTasks;
-        long daysScheduled = 0, hoursScheduled = 0;
+            int activeTasks, completedTasks;
+            long daysScheduled = 0, hoursScheduled = 0;
 
-        employeeNameLabel.setText(selectedEmployee.getName());
-        emailLabel.setText(selectedEmployee.getEmail());
-        phoneLabel.setText(selectedEmployee.getPhone());
+            employeeNameLabel.setText(selectedEmployee.getName());
+            emailLabel.setText(selectedEmployee.getEmail());
+            phoneLabel.setText(selectedEmployee.getPhone());
 
-        activeTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), false);
-        completedTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), true);
+            activeTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), false);
+            completedTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), true);
 
-        activeTasksLabel.setText(String.valueOf(activeTasks));
-        completedTasksLabel.setText(String.valueOf(completedTasks));
+            activeTasksLabel.setText(String.valueOf(activeTasks));
+            completedTasksLabel.setText(String.valueOf(completedTasks));
 
-        for(Shift shift : employeeShifts) {
-            LocalDateTime startDateTime = shift.getStartDateTime();
-            LocalDateTime endDateTime = shift.getEndDateTime();
-            long tempDays;
+            for (Shift shift : employeeShifts) {
+                LocalDateTime startDateTime = shift.getStartDateTime();
+                LocalDateTime endDateTime = shift.getEndDateTime();
+                long tempDays;
 
-           tempDays = Math.abs(startDateTime.until(endDateTime, ChronoUnit.DAYS));
-           if(tempDays == 0) {
-               tempDays = 1;
-           }
-           daysScheduled += tempDays;
-           hoursScheduled += Math.abs(startDateTime.until(endDateTime, ChronoUnit.HOURS));
+                tempDays = Math.abs(startDateTime.until(endDateTime, ChronoUnit.DAYS));
+                if (tempDays == 0) {
+                    tempDays = 1;
+                }
+                daysScheduled += tempDays;
+                hoursScheduled += Math.abs(startDateTime.until(endDateTime, ChronoUnit.HOURS));
+            }
+            daysScheduledLabel.setText(String.valueOf(daysScheduled));
+            hoursScheduledLabel.setText(String.valueOf(hoursScheduled));
         }
-        daysScheduledLabel.setText(String.valueOf(daysScheduled));
-        hoursScheduledLabel.setText(String.valueOf(hoursScheduled));
+        catch(NullPointerException ex) {
+            System.err.println("No employees");
+        }
     }
 
     public AnchorPane getScene() { return pane; }

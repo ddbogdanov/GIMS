@@ -64,9 +64,14 @@ public class CustomersSceneController extends GIMSController implements Initiali
         initStage(stage, pane, null, null, null, null, true);
         populateCustomerListView();
         customerListView.getSelectionModel().select(0);
-        populateStayListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
-        populateCustomerComboBox();
-        populateRoomComboBox();
+        try {
+            populateStayListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateCustomerComboBox();
+            populateRoomComboBox();
+        }
+        catch(NullPointerException ex) {
+            System.err.println("No customers");
+        }
 
         //Customer form
         customerFormSubmitButton.setOnAction(e -> {
@@ -123,7 +128,8 @@ public class CustomersSceneController extends GIMSController implements Initiali
             }
         });
     }
-
+    //TODO: Refresh customer ComboBoxes
+    //TODO: Update labels after delete customer
     //Button Actions - Customer Form
     private void submitCustomer() {
         String name = customerNameTextField.getText();
