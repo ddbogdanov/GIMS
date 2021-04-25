@@ -84,3 +84,29 @@
 .list-view .increment-button:hover ,.list-view .decrement-button:hover {
     -fx-background-color:#007B68;
 }
+
+/*Context Menu Styling*/
+.context-menu {
+    -fx-background-color: #C8CFD7;
+    -fx-border-color: #BBC2CC;
+    -fx-text-fill: white;
+}
+.menu-item .label {
+    -fx-fill:red;
+    -fx-font-family:tahoma;
+    -fx-font-size: 12px;;
+    -fx-stroke:#C8CFD7;
+    -fx-strok-width:.25;
+}
+.menu-item:focused .label {
+    -fx-text-fill: white;
+}
+.menu-item{
+    -fx-border-color: #DDDEE2 transparent #B9C0C8 transparent;
+    -fx-border-width:0.50px;
+}
+.menu-item:focused {
+    -fx-background: -fx-accent;
+    -fx-background-color: #7092BE;
+    -fx-text-fill: -fx-selection-bar-text;
+}

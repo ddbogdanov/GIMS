@@ -17,13 +17,14 @@ public class Room {
 
     @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<Task> tasks;
-
     @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<Stay> stays;
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
+    private Set<RoomReport> roomReports;
 
     @ManyToOne
     @JoinColumn(name="room_status_id")
-    private RoomStatus eventStatus;
+    private RoomStatus roomStatus;
 
     public Room() {
         roomId = 0;
@@ -32,7 +33,7 @@ public class Room {
     public Room(char room_id, String room_name, RoomStatus eventStatus) {
         this.roomId = room_id;
         this.roomName = room_name;
-        this.eventStatus = eventStatus;
+        this.roomStatus = eventStatus;
     }
 
     public void setRoomId(char room_id) {
@@ -49,10 +50,10 @@ public class Room {
         return roomName;
     }
     public RoomStatus getRoomStatus() {
-        return eventStatus;
+        return roomStatus;
     }
     public int getRoomStatusId() {
-        return eventStatus.getRoomStatusId();
+        return roomStatus.getRoomStatusId();
     }
     public Set<Task> getTasks() {
         return tasks;
@@ -61,8 +62,8 @@ public class Room {
         return stays;
     }
 
-    public void setEventStatus(RoomStatus status) {
-        this.eventStatus = status;
+    public void setRoomStatus(RoomStatus status) {
+        this.roomStatus = status;
     }
 
 

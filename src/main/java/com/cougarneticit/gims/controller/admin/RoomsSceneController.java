@@ -3,6 +3,10 @@ package com.cougarneticit.gims.controller.admin;
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.*;
 import com.cougarneticit.gims.model.repos.*;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -18,6 +24,8 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -62,7 +70,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
     @FXML private JFXButton
             roomFormSubmitButton, roomFormCancelButton, roomFormDeleteButton, refreshTaskFormButton,
-            taskEditButton, taskViewButton, taskDeleteButton, taskFormSubmitButton, taskFormCancelButton;
+            taskEditButton, taskViewButton, taskDeleteButton, taskFormSubmitButton, taskFormCancelButton, roomReportButton;
 
     public RoomsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -110,6 +118,9 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         });
         roomFormDeleteButton.setOnAction(e -> {
             deleteRoom();
+        });
+        roomReportButton.setOnAction(e -> {
+            generateRoomReport();
         });
 
         //Task Form Actions
@@ -259,6 +270,72 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             submitRoom();
         });
     }
+    private void generateRoomReport() {
+        final Font headingFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+        final Font subHeadingFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
+        final Font bodyFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+
+        Room selectedRoom = roomListView.getSelectionModel().getSelectedItem();
+        LocalDate date = LocalDate.now();
+
+        try {
+            Document doc = new Document();
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialFileName("RoomReport" + "_Suite_" + selectedRoom.getRoomId() + "_" + date.toString());
+
+            FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("PDF Files (*.pdf)", "*.pdf");
+            fileChooser.getExtensionFilters().add(extensionFilter);
+            File file = fileChooser.showSaveDialog(stage);
+            PdfWriter.getInstance(doc, new FileOutputStream(file));
+
+            doc.open();
+
+            //Create a title table for PDF
+            Paragraph title = new Paragraph();
+            title.add(new Paragraph("Suite: " + selectedRoom.getRoomId() + " Room Report - Generated on: " + date.toString(), headingFont));
+            title.setAlignment(Element.ALIGN_LEFT);
+            Image gimsLogo = Image.getInstance("src/main/resources/static/img/Logo1png.png");
+            gimsLogo.scaleToFit(50, 50);
+            gimsLogo.setAlignment(Element.ALIGN_RIGHT);
+            PdfPCell leftTitleCell = new PdfPCell();
+            PdfPCell rightTitleCell = new PdfPCell();
+            rightTitleCell.setBorder(Rectangle.NO_BORDER);
+            leftTitleCell.setBorder(Rectangle.NO_BORDER);
+            PdfPTable titleTable = new PdfPTable(2);
+            titleTable.setWidthPercentage(100f);
+            leftTitleCell.addElement(title);
+            rightTitleCell.addElement(gimsLogo);
+            titleTable.addCell(leftTitleCell);
+            titleTable.addCell(rightTitleCell);
+
+            //Create a task count table for PDF
+            int activeTasks = taskRepo.countAllByRoom_RoomIdAndCompleted(selectedRoom.getRoomId(), false);
+            int completedTasks = taskRepo.countAllByRoom_RoomIdAndCompleted(selectedRoom.getRoomId(), true);
+            PdfPTable taskCountTable = new PdfPTable(2);
+            taskCountTable.setWidthPercentage(100f);
+            taskCountTable.setSpacingBefore(30f);
+            taskCountTable.setSpacingAfter(30f);
+            taskCountTable.addCell(new PdfPCell(new Paragraph("Active Tasks", subHeadingFont)));
+            taskCountTable.addCell(new PdfPCell(new Paragraph("Completed Tasks", subHeadingFont)));
+            taskCountTable.addCell(new PdfPCell(Phrase.getInstance(String.valueOf(activeTasks))));
+            taskCountTable.addCell(new PdfPCell(Phrase.getInstance(String.valueOf(completedTasks))));
+
+            //TODO: Add more stuff
+
+            doc.addTitle("Suite: " + selectedRoom.getRoomId() + " Room Report - Generated:  " + date.toString());
+            doc.addCreationDate();
+            doc.add(titleTable);
+            doc.add(taskCountTable);
+
+            doc.close();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            System.err.println("FileChooser closed without selecting path, or File Not Found");
+        }
+    }
+
     //Util Methods - Room form
     private void populateRoomListView() {
         ObservableList<Room> roomList = FXCollections.observableArrayList();

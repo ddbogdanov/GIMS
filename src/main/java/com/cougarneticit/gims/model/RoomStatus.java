@@ -16,7 +16,7 @@ public class RoomStatus {
     @Column(name="status", length=8)
     private String eventStatus;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy= "eventStatus", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.EAGER, mappedBy= "roomStatus", cascade=CascadeType.REMOVE)
     private Set<Room> rooms;
 
     public RoomStatus() {
