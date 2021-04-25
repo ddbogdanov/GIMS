@@ -93,17 +93,17 @@
                               <Insets top="5.0" />
                            </VBox.margin>
                         </Label>
-                        <HBox alignment="CENTER_RIGHT" prefHeight="28.0" prefWidth="285.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="285.0">
                            <children>
+                              <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="128.0" promptText="Choose User" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
                               <Label fx:id="userHelpLabel" prefHeight="13.0" text="User" textFill="#5bddc7" visible="false">
                                  <font>
                                     <Font name="Roboto Regular" size="10.0" />
                                  </font>
                                  <HBox.margin>
-                                    <Insets right="10.0" />
+                                    <Insets left="10.0" />
                                  </HBox.margin>
                               </Label>
-                              <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="128.0" promptText="Choose User" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
                            </children>
                            <VBox.margin>
                               <Insets left="15.0" right="15.0" top="10.0" />
@@ -237,7 +237,7 @@
                               <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                            </VBox.margin>
                            <children>
-                              <HBox alignment="CENTER" prefHeight="32.0" prefWidth="245.0">
+                              <HBox alignment="CENTER" prefHeight="32.0" prefWidth="245.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label text="Active Tasks:" textFill="WHITE">
                                        <font>
@@ -259,7 +259,7 @@
                                     <Insets />
                                  </HBox.margin>
                               </Separator>
-                              <HBox alignment="CENTER" prefHeight="32.0" prefWidth="245.0">
+                              <HBox alignment="CENTER" prefHeight="32.0" prefWidth="245.0" HBox.hgrow="ALWAYS">
                                  <children>
                                     <Label text="Completed Tasks:" textFill="WHITE">
                                        <font>
@@ -480,19 +480,19 @@
                               <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                         </Separator>
-                        <HBox alignment="CENTER" prefHeight="28.0" VBox.vgrow="NEVER">
+                        <HBox alignment="CENTER" prefHeight="28.0" spacing="10.0" VBox.vgrow="NEVER">
                            <VBox.margin>
                               <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                            <children>
-                              <JFXDatePicker fx:id="shiftStartDatePicker" defaultColor="#007b68" editable="false" maxWidth="150.0" prefHeight="32.0" promptText="Start Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                              <JFXDatePicker fx:id="shiftStartDatePicker" defaultColor="#007b68" editable="false" maxWidth="158.0" prefHeight="32.0" promptText="Start Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
                                  <HBox.margin>
-                                    <Insets right="5.0" />
+                                    <Insets />
                                  </HBox.margin>
                               </JFXDatePicker>
-                              <JFXTimePicker fx:id="shiftStartTimePicker" defaultColor="#007b68" editable="true" maxWidth="150.0" prefHeight="32.0" promptText="Start Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                              <JFXTimePicker fx:id="shiftStartTimePicker" defaultColor="#007b68" editable="true" maxWidth="158.0" prefHeight="32.0" promptText="Start Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
                                  <HBox.margin>
-                                    <Insets left="5.0" />
+                                    <Insets />
                                  </HBox.margin>
                               </JFXTimePicker>
                            </children>
@@ -510,16 +510,16 @@
                               <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                         </Separator>
-                        <HBox alignment="CENTER" prefHeight="28.0" VBox.vgrow="NEVER">
+                        <HBox alignment="CENTER" prefHeight="28.0" spacing="10.0" VBox.vgrow="NEVER">
                            <children>
-                              <JFXDatePicker fx:id="shiftEndDatePicker" defaultColor="#007b68" editable="false" maxWidth="150.0" prefHeight="28.0" promptText="End Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                              <JFXDatePicker fx:id="shiftEndDatePicker" defaultColor="#007b68" editable="false" maxWidth="158.0" prefHeight="32.0" promptText="End Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
                                  <HBox.margin>
-                                    <Insets right="5.0" />
+                                    <Insets />
                                  </HBox.margin>
                               </JFXDatePicker>
-                              <JFXTimePicker fx:id="shiftEndTimePicker" defaultColor="#007b68" editable="true" maxWidth="150.0" prefHeight="32.0" promptText="End Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                              <JFXTimePicker fx:id="shiftEndTimePicker" defaultColor="#007b68" editable="true" maxWidth="158.0" prefHeight="32.0" promptText="End Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
                                  <HBox.margin>
-                                    <Insets left="5.0" />
+                                    <Insets />
                                  </HBox.margin>
                               </JFXTimePicker>
                            </children>
@@ -527,9 +527,9 @@
                               <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                         </HBox>
-                        <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="256.0" VBox.vgrow="ALWAYS">
+                        <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="326.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <JFXButton fx:id="shiftFormSubmitButton" prefHeight="32.0" prefWidth="158.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Schedule" textFill="WHITE">
+                              <JFXButton fx:id="shiftFormSubmitButton" prefHeight="32.0" prefWidth="224.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Schedule" textFill="WHITE">
                                  <font>
                                     <Font name="Roboto Regular" size="14.0" />
                                  </font>

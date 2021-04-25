@@ -82,7 +82,6 @@ public class EventsSceneController extends GIMSController implements Initializab
 
     //Button Actions
     private void addEvents() {
-
         Location location = locationComboBox.getSelectionModel().getSelectedItem();
         String name = eventNameTextField.getText();
         LocalDate startDate = eventStartDate.getValue();

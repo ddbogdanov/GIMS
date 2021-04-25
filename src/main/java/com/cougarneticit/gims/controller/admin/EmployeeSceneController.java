@@ -334,7 +334,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         }
         else if(userComboBox.getSelectionModel().isEmpty()) {
             userHelpLabel.setTextFill(Color.web("#F73331"));
-            userHelpLabel.setText("Select Employee:");
+            userHelpLabel.setText("Select a User");
             userHelpLabel.setVisible(true);
             return false;
         }

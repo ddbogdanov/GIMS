@@ -1,12 +1,10 @@
 package com.cougarneticit.gims.model;
 
-import com.cougarneticit.gims.model.common.EventStatus;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -25,9 +23,6 @@ public class Event {
     private Date startDate;
     @Column(name="end_date")
     private Date endDate;
-    @Column(name="status")
-    @Enumerated(EnumType.STRING)
-    private EventStatus status;
 
     @OneToOne
     @JoinColumn(name="location_id")
@@ -35,6 +30,10 @@ public class Event {
 
     //@OneToMany(fetch = FetchType.EAGER, mappedBy = "event", orphanRemoval = false)
     //private Set<Customer> customers;
+
+    @ManyToOne
+    @JoinColumn(name="event_status_id")
+    EventStatus eventStatus;
 
     public Event() {
 
@@ -65,8 +64,11 @@ public class Event {
     public Location getLocation() {
         return location;
     }
-    public EventStatus getStatus() {
-        return status;
+    public int getEventStatusId() {
+        return eventStatus.getEventStatusId();
+    }
+    public EventStatus getEventStatus() {
+        return eventStatus;
     }
 
     /*public Set<Customer> getCustomers() {
@@ -90,8 +92,8 @@ public class Event {
     public void setLocation(Location location) {
         this.location = location;
     }
-    public void setStatus(EventStatus status) {
-        this.status = status;
+    public void setStatus(EventStatus eventStatus) {
+        this.eventStatus = eventStatus;
     }
 
     /*public void setCustomers(Set<Customer> customers) {

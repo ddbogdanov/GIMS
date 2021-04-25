@@ -64,6 +64,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
         initStage(stage, pane, null, null, null, null, true);
         populateCustomerListView();
         customerListView.getSelectionModel().select(0);
+
         try {
             populateStayListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
             populateCustomerComboBox();

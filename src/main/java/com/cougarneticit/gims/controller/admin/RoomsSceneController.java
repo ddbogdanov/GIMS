@@ -1,14 +1,8 @@
 package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
-import com.cougarneticit.gims.model.Employee;
-import com.cougarneticit.gims.model.Room;
-import com.cougarneticit.gims.model.Task;
-import com.cougarneticit.gims.model.common.Priority;
-import com.cougarneticit.gims.model.common.RoomStatus;
-import com.cougarneticit.gims.model.repos.EmployeeRepo;
-import com.cougarneticit.gims.model.repos.RoomRepo;
-import com.cougarneticit.gims.model.repos.TaskRepo;
+import com.cougarneticit.gims.model.*;
+import com.cougarneticit.gims.model.repos.*;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -44,6 +38,10 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     RoomRepo roomRepo;
     @Autowired
     EmployeeRepo employeeRepo;
+    @Autowired
+    PriorityRepo priorityRepo;
+    @Autowired
+    RoomStatusRepo roomStatusRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<Priority> priorityComboBox;
@@ -85,8 +83,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             System.err.println("No rooms");
         }
         //Initialize ComboBoxes
-        priorityComboBox.getItems().addAll(Priority.values());
-        roomStatusComboBox.getItems().addAll(RoomStatus.values());
+        priorityComboBox.getItems().addAll(priorityRepo.findAll());
+        roomStatusComboBox.getItems().addAll(roomStatusRepo.findAll());
         roomComboBox.getItems().addAll(roomRepo.findAll());
         roomComboBox.setConverter(new StringConverter<>() {
             @Override
@@ -275,7 +273,13 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
         roomIdTextField.setText(String.valueOf(selectedRoom.getRoomId()));
         roomNameTextField.setText(selectedRoom.getRoomName());
-        roomStatusComboBox.getSelectionModel().select(selectedRoom.getStatus());
+
+        for (RoomStatus status : roomStatusComboBox.getItems()) {
+            if (selectedRoom.getRoomStatusId() == status.getRoomStatusId()) {
+                roomStatusComboBox.getSelectionModel().select(status);
+                break;
+            }
+        }
     }
     private boolean validateRoomForm() {
         if(roomIdTextField.getText().isBlank()) {
@@ -480,7 +484,14 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         populateTaskFormRoomComboBox(selectedTask);
         populateTaskFormEmployeeComboBox(selectedTask);
         taskNameTextField.setText(selectedTask.getName());
-        priorityComboBox.getSelectionModel().select(selectedTask.getPriority());
+
+        for (Priority priority : priorityComboBox.getItems()) {
+            if (selectedTask.getPriorityId() == priority.getPriorityId()) {
+                priorityComboBox.getSelectionModel().select(priority);
+                break;
+            }
+        }
+
         dueDatePicker.setValue(LocalDate.parse(selectedTask.getDueDate(), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
         taskDescriptionTextArea.setText(selectedTask.getDescription());
     }
@@ -515,17 +526,19 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
         roomNameLabel.setText(selectedRoom.getRoomId() + ": " + selectedRoom.getRoomName());
         activeTasksLabel.setText(String.valueOf(taskRepo.countAllByRoom_RoomId(selectedRoom.getRoomId())));
-        statusLabel.setText(String.valueOf(selectedRoom.getStatus()));
-        switch(selectedRoom.getStatus()) {
-            case OCCUPIED:
+        statusLabel.setText(String.valueOf(selectedRoom.getRoomStatus()));
+        switch(selectedRoom.getRoomStatus().getEventStatus()) {
+            case "OCCUPIED":
                 statusLabel.setTextFill(Color.web("#F73331"));
                 break;
-            case SERVICE:
+            case "SERVICE":
                 statusLabel.setTextFill(Color.web("#F7F74A"));
                 break;
-            case VACANT:
+            case "VACANT":
                 statusLabel.setTextFill(Color.web("#58AB33"));
                 break;
+            default:
+                statusLabel.setTextFill(Color.web("#5D5C67"));
         }
     }
 

@@ -1,6 +1,5 @@
 package com.cougarneticit.gims.model;
 
-import com.cougarneticit.gims.model.common.RoomStatus;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -15,9 +14,6 @@ public class Room {
     private Character roomId;
     @Column(name="room_name", length=120)
     private String roomName;
-    @Column(name="status", length=8)
-    @Enumerated(EnumType.STRING)
-    private RoomStatus status;
 
     @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<Task> tasks;
@@ -25,14 +21,18 @@ public class Room {
     @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<Stay> stays;
 
+    @ManyToOne
+    @JoinColumn(name="room_status_id")
+    private RoomStatus eventStatus;
+
     public Room() {
         roomId = 0;
         roomName = null;
     }
-    public Room(char room_id, String room_name, RoomStatus status) {
+    public Room(char room_id, String room_name, RoomStatus eventStatus) {
         this.roomId = room_id;
         this.roomName = room_name;
-        this.status = status;
+        this.eventStatus = eventStatus;
     }
 
     public void setRoomId(char room_id) {
@@ -48,8 +48,11 @@ public class Room {
     public String getRoomName() {
         return roomName;
     }
-    public RoomStatus getStatus() {
-        return status;
+    public RoomStatus getRoomStatus() {
+        return eventStatus;
+    }
+    public int getRoomStatusId() {
+        return eventStatus.getRoomStatusId();
     }
     public Set<Task> getTasks() {
         return tasks;
@@ -58,8 +61,8 @@ public class Room {
         return stays;
     }
 
-    public void setStatus(RoomStatus status) {
-        this.status = status;
+    public void setEventStatus(RoomStatus status) {
+        this.eventStatus = status;
     }
 
 

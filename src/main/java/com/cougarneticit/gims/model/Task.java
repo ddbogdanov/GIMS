@@ -1,6 +1,5 @@
 package com.cougarneticit.gims.model;
 
-import com.cougarneticit.gims.model.common.Priority;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
@@ -18,15 +17,16 @@ public class Task {
     private UUID taskId;
     @Column(name="name")
     private String name;
-    @Column(name="priority", length=6)
-    @Enumerated(EnumType.STRING)
-    private Priority priority;
     @Column(name="due_date", length=20)
     private String dueDate;
     @Column(name="description", length=256)
     private String description;
     @Column(name="completed", length=1)
     private boolean completed;
+
+    @ManyToOne
+    @JoinColumn(name="priority_id")
+    private Priority priority;
 
     @ManyToOne
     @JoinColumn(name="employee_id")
@@ -67,6 +67,9 @@ public class Task {
     public Priority getPriority() {
         return priority;
     }
+    public int getPriorityId() {
+        return priority.getPriorityId();
+    }
     public String getDueDate() {
         return dueDate;
     }
@@ -77,6 +80,9 @@ public class Task {
         return completed;
     }
 
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
@@ -87,6 +93,6 @@ public class Task {
     @Override
     public String toString() {
         String c = completed ? "Yes" : "No ";
-        return "Priority: " + String.format("%1$-6s", priority) + " | Completed?: " + c + " | " + name;
+        return "Priority: " + String.format("%1$-6s", priority.toString()) + " | Completed?: " + c + " | " + name;
     }
 }
