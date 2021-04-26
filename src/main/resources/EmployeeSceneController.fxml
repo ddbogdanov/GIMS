@@ -436,7 +436,7 @@
                   </JFXListView>
                   <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="256.0">
                      <children>
-                        <JFXButton fx:id="shiftEditButton" prefHeight="30.0" prefWidth="181.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit" textFill="WHITE" HBox.hgrow="ALWAYS">
+                        <JFXButton fx:id="shiftEditButton" prefHeight="30.0" prefWidth="252.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit" textFill="WHITE" HBox.hgrow="ALWAYS">
                            <font>
                               <Font name="Roboto Regular" size="14.0" />
                            </font>

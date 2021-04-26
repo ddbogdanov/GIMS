@@ -24,6 +24,8 @@ public class Customer {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy="customer", cascade=CascadeType.REMOVE, orphanRemoval=true)
     private Set<Stay> stays;
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="customer", cascade=CascadeType.REMOVE)
+    private Set<Order> orders;
 
     public Customer() {
 
