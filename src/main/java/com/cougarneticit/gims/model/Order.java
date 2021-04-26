@@ -14,7 +14,7 @@ import java.util.UUID;
 public class Order {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(name="order_id", length=36) //VarChar(36)
+    @Column(name="order_id", length=36) //VarChar(36) //TODO change to int
     private UUID orderId;
     @Column(name="total")
     private BigDecimal total;

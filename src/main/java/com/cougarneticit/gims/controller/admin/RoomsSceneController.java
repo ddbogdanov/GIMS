@@ -177,7 +177,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     }
 
     //Button Actions - Room form
-    //TODO: Allow creation of Rate objects from roomRateComboBox
+    //TODO: Allow creation of RoomRate objects from roomRateComboBox
     private void editToggle() {
         if(editToggleButton.isSelected()) {
             try {
@@ -208,7 +208,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
                     roomIdTextField.getText().charAt(0),
                     roomNameTextField.getText(),
                     roomStatusComboBox.getValue(),
-                    null);
+                    null); //TODO assign rate
             roomRepo.save(updatedRoom);
 
             populateRoomListView();
@@ -222,7 +222,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     private void submitRoom() {
         if(validateRoomForm()) {
             if (!roomRepo.existsById(roomIdTextField.getText().charAt(0))) {
-                Room room = new Room(roomIdTextField.getText().charAt(0), roomNameTextField.getText(), roomStatusComboBox.getValue(), null);
+                Room room = new Room(roomIdTextField.getText().charAt(0), roomNameTextField.getText(), roomStatusComboBox.getValue(), null); //TODO assign rate
                 roomRepo.save(room);
 
                 populateRoomListView();

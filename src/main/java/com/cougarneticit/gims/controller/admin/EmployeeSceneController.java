@@ -54,6 +54,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<User> userComboBox;
     @FXML private JFXComboBox<Employee> employeeComboBox;
+    @FXML private JFXComboBox<EmployeeRate> employeeRateComboBox;
     @FXML private JFXListView<Employee> employeeListView;
     @FXML private JFXListView<Shift> shiftListView;
     @FXML private JFXListView<Task> taskListView;
@@ -167,6 +168,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     }
 
     //Button Actions - Employee form
+    //TODO create EmployeeRate objects from employeeRateComboBox
     private void submitEmployee() {
         User selectedUser = userComboBox.getSelectionModel().getSelectedItem();
         String name = nameTextField.getText();
@@ -174,7 +176,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         String email = emailTextField.getText();
 
         if(validateEmployeeForm(selectedUser, name, phone, email, false)) {
-            Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email);
+            Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email, null); //TODO: set EmployeeRate
             employeeRepo.save(emp);
 
             populateEmployeeListView();
@@ -225,7 +227,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             Employee updatedEmployee = new Employee(
                     employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(),
                     employeeListView.getSelectionModel().getSelectedItem().getUser(),
-                    name, phone, email);
+                    name, phone, email, null); //TODO set EmployeeRate
             employeeRepo.save(updatedEmployee);
 
             populateEmployeeListView();

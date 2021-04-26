@@ -111,28 +111,12 @@
                               <Insets top="5.0" />
                            </VBox.margin>
                         </HBox>
-                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="285.0">
-                           <children>
-                              <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="128.0" promptText="Choose User" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
-                              <Label fx:id="userHelpLabel" prefHeight="13.0" text="User" textFill="#5bddc7" visible="false">
-                                 <font>
-                                    <Font name="Roboto Regular" size="10.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="10.0" />
-                                 </HBox.margin>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="10.0" />
-                           </VBox.margin>
-                        </HBox>
                         <JFXTextField fx:id="nameTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
                            <font>
                               <Font name="Roboto Regular" size="14.0" />
                            </font>
                            <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="15.0" />
+                              <Insets left="15.0" right="15.0" top="10.0" />
                            </VBox.margin>
                         </JFXTextField>
                         <AnchorPane prefHeight="12.0" prefWidth="243.0">
@@ -152,7 +136,7 @@
                               <Font name="Roboto Regular" size="14.0" />
                            </font>
                            <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="15.0" />
+                              <Insets left="15.0" right="15.0" top="10.0" />
                            </VBox.margin>
                         </JFXTextField>
                         <AnchorPane prefHeight="12.0" prefWidth="243.0">
@@ -172,12 +156,38 @@
                               <Font name="Roboto Regular" size="14.0" />
                            </font>
                            <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="15.0" />
+                              <Insets left="15.0" right="15.0" top="10.0" />
                            </VBox.margin>
                         </JFXTextField>
                         <AnchorPane prefHeight="12.0" prefWidth="243.0">
                            <children>
                               <Label fx:id="emailHelpLabel" prefHeight="15.0" prefWidth="243.0" text="email@domain.xxx" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="Roboto Regular" size="10.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets left="15.0" right="15.0" top="5.0" />
+                           </VBox.margin>
+                        </AnchorPane>
+                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="255.0" spacing="10.0">
+                           <children>
+                              <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="122.0" promptText="Choose User" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                              <JFXComboBox fx:id="employeeRateComboBox" editable="true" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="122.0" promptText="Employee Rate" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="15.0" right="15.0" top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                           <children>
+                              <Label fx:id="userHelpLabel" layoutX="72.0" layoutY="-4.0" prefHeight="13.0" text="User" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="Roboto Regular" size="10.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="employeeRateHelpLabel" layoutX="133.0" layoutY="2.0" prefHeight="13.0" prefWidth="122.0" text="Employee Rate - ##.##" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
                                     <Font name="Roboto Regular" size="10.0" />
                                  </font>

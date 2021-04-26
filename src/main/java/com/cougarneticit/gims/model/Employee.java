@@ -44,12 +44,13 @@ public class Employee {
         employeePhone = null;
         employeeEmail = null;
     }
-    public Employee(UUID employeeId, User user, String employee_name, String employeePhone, String employeeEmail) {
+    public Employee(UUID employeeId, User user, String employee_name, String employeePhone, String employeeEmail, EmployeeRate employeeRate) {
         this.employeeId = employeeId;
         this.user = user;
         this.employeeName = employee_name;
         this.employeePhone = employeePhone;
         this.employeeEmail = employeeEmail;
+        this.employeeRate = employeeRate;
     }
 
     public void setUser(User user) {
