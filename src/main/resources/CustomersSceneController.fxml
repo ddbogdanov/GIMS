@@ -44,7 +44,7 @@
                         <Insets left="15.0" right="15.0" top="5.0" />
                      </VBox.margin>
                   </AnchorPane>
-                  <JFXListView fx:id="customerListView" prefHeight="245.0" prefWidth="321.0" style="-fx-background-color: #3E3E4A;">
+                  <JFXListView fx:id="customerListView" prefHeight="245.0" prefWidth="321.0" style="-fx-background-color: #3E3E4A;" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets left="15.0" right="15.0" />
                      </VBox.margin>
@@ -226,7 +226,7 @@
                         <Insets left="15.0" right="15.0" top="5.0" />
                      </VBox.margin>
                   </AnchorPane>
-                  <JFXListView fx:id="stayListView" prefHeight="245.0" prefWidth="321.0" style="-fx-background-color: #3E3E4A;">
+                  <JFXListView fx:id="stayListView" prefHeight="245.0" prefWidth="321.0" style="-fx-background-color: #3E3E4A;" VBox.vgrow="ALWAYS">
                      <VBox.margin>
                         <Insets left="15.0" right="15.0" />
                      </VBox.margin>

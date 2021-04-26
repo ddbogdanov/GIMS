@@ -25,10 +25,13 @@ public class Employee {
     @OneToOne(fetch=FetchType.EAGER)
     @JoinColumn(name="user_id")
     private User user;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy="employee", cascade=CascadeType.REMOVE)
     private Set<Task> tasks;
     @OneToMany(fetch = FetchType.EAGER, mappedBy="employee", cascade=CascadeType.REMOVE)
     private Set<Shift> shifts;
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="employee", cascade=CascadeType.REMOVE)
+    private Set<EmployeeReport> employeeReports;
 
     public Employee() {
         employeeId = UUID.randomUUID();

@@ -38,8 +38,6 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
     private Stage stage;
 
-    //TODO: Automatically add rooms into DB if empty
-
     @Autowired
     TaskRepo taskRepo;
     @Autowired
@@ -50,6 +48,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     PriorityRepo priorityRepo;
     @Autowired
     RoomStatusRepo roomStatusRepo;
+    @Autowired
+    RoomReportRepo roomReportRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<Priority> priorityComboBox;
@@ -327,6 +327,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             doc.addCreationDate();
             doc.add(titleTable);
             doc.add(taskCountTable);
+
+            roomReportRepo.save(new RoomReport(UUID.randomUUID(), selectedRoom, date));
 
             doc.close();
         }

@@ -6,9 +6,11 @@
 <?import com.jfoenix.controls.JFXListView?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import com.jfoenix.controls.JFXTimePicker?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -85,14 +87,30 @@
                   </Separator>
                   <VBox alignment="TOP_CENTER" prefHeight="325.0" prefWidth="285.0">
                      <children>
-                        <Label fx:id="employeeFormLabel" text="Add an Employee" textFill="WHITE" VBox.vgrow="ALWAYS">
-                           <font>
-                              <Font name="Roboto Regular" size="20.0" />
-                           </font>
+                        <HBox alignment="CENTER" prefHeight="25.0" prefWidth="285.0">
+                           <children>
+                              <Label fx:id="employeeFormLabel" text="Add an Employee" textFill="WHITE" translateX="15.0">
+                                 <font>
+                                    <Font name="Roboto Regular" size="20.0" />
+                                 </font>
+                              </Label>
+                              <JFXButton fx:id="employeeReportButton" focusTraversable="false" ripplerFill="#5bddc7" text="" translateX="36.0">
+                                 <graphic>
+                                    <FontAwesomeIconView fill="WHITE" glyphName="FILE_TEXT_ALT" size="14" />
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip hideOnEscape="false" opacity="0.8" text="Generate a PDF report for selected employee">
+                                       <font>
+                                          <Font name="Roboto Regular" size="12.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                              </JFXButton>
+                           </children>
                            <VBox.margin>
                               <Insets top="5.0" />
                            </VBox.margin>
-                        </Label>
+                        </HBox>
                         <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="285.0">
                            <children>
                               <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="128.0" promptText="Choose User" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />

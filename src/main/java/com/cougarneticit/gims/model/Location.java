@@ -21,40 +21,36 @@ public class Location {
     @Column(name="audienceCapacity")
     private int capacity;
 
-    public Location() {}
+    public Location() {
 
+    }
     public Location(String locationName, String locationInfo, int capacity) {
         this.locationName = locationName;
         this.locationInfo = locationInfo;
         this.capacity = capacity;
     }
 
-    public UUID getLocationId() {
-        return locationId;
-    }
-
-    public String getLocationName() {
-        return locationName;
-    }
-
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
-
-    public String getLocationInfo() {
-        return locationInfo;
-    }
-
     public void setLocationInfo(String locationInfo) {
         this.locationInfo = locationInfo;
     }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
     public void setCapacity(int capacity) {
         this.capacity = capacity;
+    }
+
+    public UUID getLocationId() {
+        return locationId;
+    }
+    public String getLocationName() {
+        return locationName;
+    }
+    public String getLocationInfo() {
+        return locationInfo;
+    }
+    public int getCapacity() {
+        return capacity;
     }
 
     @Override

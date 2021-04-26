@@ -77,7 +77,6 @@ public class EventsSceneController extends GIMSController implements Initializab
         viewLocationButton.setOnAction(e -> viewLocation());
         deleteLocationButton.setOnAction(e -> deleteLocation());
         cancelLocationButton.setOnAction(e -> resetLocationForm());
-
     }
 
     //Button Actions
