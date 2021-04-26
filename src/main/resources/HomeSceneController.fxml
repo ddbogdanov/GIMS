@@ -84,7 +84,7 @@
                         </VBox>
                         <VBox alignment="TOP_CENTER" prefHeight="208.0" prefWidth="544.0" VBox.vgrow="ALWAYS">
                            <children>
-                              <Label text="Active Taks - All Employees" textFill="WHITE">
+                              <Label text="Active Tasks - All Employees" textFill="WHITE">
                                  <font>
                                     <Font name="Roboto Regular" size="20.0" />
                                  </font>
