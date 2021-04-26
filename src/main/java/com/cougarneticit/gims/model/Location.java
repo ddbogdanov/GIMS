@@ -13,12 +13,12 @@ public class Location {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="location_id", length=36)
-    private final UUID locationId = UUID.randomUUID();;
-    @Column(name="name", length=16)
+    private UUID locationId;
+    @Column(name="name", length=255)
     private String locationName;
-    @Column(name="info", length=255)
+    @Column(name="info")
     private String locationInfo;
-    @Column(name="audienceCapacity")
+    @Column(name="capacity")
     private int capacity;
 
     public Location() {
@@ -28,7 +28,7 @@ public class Location {
         this.locationName = locationName;
         this.locationInfo = locationInfo;
         this.capacity = capacity;
-    }
+    } //TODO this constructor isn't correct. Needs to assign UUID
 
     public void setLocationName(String locationName) {
         this.locationName = locationName;

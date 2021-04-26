@@ -25,15 +25,19 @@ public class Room {
     @ManyToOne
     @JoinColumn(name="room_status_id")
     private RoomStatus roomStatus;
+    @ManyToOne
+    @JoinColumn(name="room_rate_id")
+    private RoomRate roomRate;
 
     public Room() {
         roomId = 0;
         roomName = null;
     }
-    public Room(char room_id, String room_name, RoomStatus eventStatus) {
+    public Room(char room_id, String room_name, RoomStatus roomStatus, RoomRate rate) {
         this.roomId = room_id;
         this.roomName = room_name;
-        this.roomStatus = eventStatus;
+        this.roomStatus = roomStatus;
+        this.roomRate = rate;
     }
 
     public void setRoomId(char room_id) {

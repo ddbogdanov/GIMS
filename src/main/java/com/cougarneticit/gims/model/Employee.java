@@ -33,6 +33,10 @@ public class Employee {
     @OneToMany(fetch=FetchType.EAGER, mappedBy="employee", cascade=CascadeType.REMOVE)
     private Set<EmployeeReport> employeeReports;
 
+    @ManyToOne
+    @JoinColumn(name="employee_rate_id")
+    private EmployeeRate employeeRate;
+
     public Employee() {
         employeeId = UUID.randomUUID();
         user = null;

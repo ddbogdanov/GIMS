@@ -3,6 +3,7 @@ package com.cougarneticit.gims.model;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @Entity
@@ -16,7 +17,7 @@ public class AdditionalCharge {
     @Column(name="description")
     private String description;
     @Column(name="charge")
-    private BigInteger charge;
+    private BigDecimal charge;
 
     @ManyToOne
     @JoinColumn(name="order_id")
@@ -25,7 +26,7 @@ public class AdditionalCharge {
     public AdditionalCharge() {
 
     }
-    public AdditionalCharge(Order order, String description, BigInteger charge) {
+    public AdditionalCharge(Order order, String description, BigDecimal charge) {
         this.order = order;
         this.description = description;
         this.charge = charge;

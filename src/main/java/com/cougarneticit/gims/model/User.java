@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -23,6 +24,9 @@ public class User {
 
     @OneToOne(mappedBy="user", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE, orphanRemoval=true)
     private Employee employee;
+
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="user", cascade=CascadeType.REMOVE)
+    Set<Reminder> reminders;
 
     public User() {
         user_id = UUID.randomUUID();

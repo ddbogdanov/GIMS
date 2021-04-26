@@ -15,7 +15,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.StringConverter;
@@ -54,6 +53,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<Priority> priorityComboBox;
     @FXML private JFXComboBox<RoomStatus> roomStatusComboBox;
+    @FXML private JFXComboBox<RoomRate> roomRateComboBox;
     @FXML private JFXComboBox<Room> roomComboBox;
     @FXML private JFXComboBox<Employee> employeeComboBox;
     @FXML private JFXDatePicker dueDatePicker;
@@ -177,6 +177,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     }
 
     //Button Actions - Room form
+    //TODO: Allow creation of Rate objects from roomRateComboBox
     private void editToggle() {
         if(editToggleButton.isSelected()) {
             try {
@@ -206,7 +207,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             Room updatedRoom = new Room(
                     roomIdTextField.getText().charAt(0),
                     roomNameTextField.getText(),
-                    roomStatusComboBox.getValue());
+                    roomStatusComboBox.getValue(),
+                    null);
             roomRepo.save(updatedRoom);
 
             populateRoomListView();
@@ -220,7 +222,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     private void submitRoom() {
         if(validateRoomForm()) {
             if (!roomRepo.existsById(roomIdTextField.getText().charAt(0))) {
-                Room room = new Room(roomIdTextField.getText().charAt(0), roomNameTextField.getText(), roomStatusComboBox.getValue());
+                Room room = new Room(roomIdTextField.getText().charAt(0), roomNameTextField.getText(), roomStatusComboBox.getValue(), null);
                 roomRepo.save(room);
 
                 populateRoomListView();

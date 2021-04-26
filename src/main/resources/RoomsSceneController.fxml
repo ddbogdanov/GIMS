@@ -136,14 +136,23 @@
                                     <Insets left="15.0" right="15.0" top="5.0" />
                                  </VBox.margin>
                               </AnchorPane>
-                              <JFXComboBox fx:id="roomStatusComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="128.0" promptText="Room Status" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
-                                 <VBox.margin>
-                                    <Insets right="125.0" top="15.0" />
-                                 </VBox.margin>
-                              </JFXComboBox>
-                              <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                              <HBox prefHeight="28.0" prefWidth="285.0" spacing="10.0">
                                  <children>
-                                    <Label fx:id="roomStatusHelpLabel" prefHeight="15.0" prefWidth="243.0" text="Room Status" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <JFXComboBox fx:id="roomStatusComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="122.0" promptText="Room Status" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                                    <JFXComboBox fx:id="roomRateComboBox" editable="true" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="122.0" promptText="Room Rate" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="15.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <AnchorPane prefHeight="12.0" prefWidth="180.0">
+                                 <children>
+                                    <Label fx:id="roomStatusHelpLabel" prefHeight="13.0" prefWidth="122.0" text="Room Status" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="Roboto Regular" size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="roomRateHelpLabel" layoutX="128.0" layoutY="5.0" prefHeight="13.0" prefWidth="122.0" text="Room Rate - ##.##" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <font>
                                           <Font name="Roboto Regular" size="10.0" />
                                        </font>
