@@ -24,6 +24,9 @@ public class Stay {
     @Column(name="end_date")
     private LocalDate endDate;
 
+    @OneToOne(mappedBy="stay", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
+    private Order order;
+
     @ManyToOne
     @JoinColumn(name="room_id")
     private Room room;
@@ -66,10 +69,12 @@ public class Stay {
     public String getCustomerName() {
         return customer.getCustomerName();
     }
+    public Room getRoom() {
+        return room;
+    }
     public char getRoomId() {
         return room.getRoomId();
     }
-
     public LocalDate getStartDate() {
         return startDate;
     }

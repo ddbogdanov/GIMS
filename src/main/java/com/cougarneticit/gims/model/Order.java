@@ -19,6 +19,10 @@ public class Order {
     @Column(name="total")
     private BigDecimal total;
 
+    @OneToOne(fetch=FetchType.EAGER)
+    @JoinColumn(name="stay_id")
+    private Stay stay;
+
     @OneToMany(fetch=FetchType.EAGER, mappedBy="order", cascade=CascadeType.REMOVE)
     Set<AdditionalCharge> additionalCharges;
 
@@ -32,14 +36,31 @@ public class Order {
         customer = null;
         total = null;
     }
-    public Order(UUID orderId, Customer customer, BigDecimal total) {
+    public Order(UUID orderId, Customer customer, Stay stay, BigDecimal total) {
         this.orderId = orderId;
         this.customer = customer;
+        this.stay = stay;
         this.total = total;
+    }
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+    public Customer getCustomer() {
+        return customer;
+    }
+    public Stay getStay() {
+        return stay;
+    }
+    public int getStayId() {
+        return stay.getStayId();
+    }
+    public BigDecimal getTotal() {
+        return total;
     }
 
     @Override
     public String toString() {
-        return customer.getCustomerName() + " | " + total.toString();
+        return customer.getCustomerName() + " | $" + total.toString();
     }
 }

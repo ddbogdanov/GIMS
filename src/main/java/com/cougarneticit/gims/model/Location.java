@@ -24,7 +24,7 @@ public class Location {
     public Location() {
 
     }
-    public Location(String locationName, String locationInfo, int capacity) {
+    public Location(UUID locationId, String locationName, String locationInfo, int capacity) {
         this.locationName = locationName;
         this.locationInfo = locationInfo;
         this.capacity = capacity;

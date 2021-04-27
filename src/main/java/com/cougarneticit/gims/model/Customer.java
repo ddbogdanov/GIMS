@@ -27,6 +27,8 @@ public class Customer {
     @OneToMany(fetch=FetchType.EAGER, mappedBy="customer", cascade=CascadeType.REMOVE)
     private Set<Order> orders;
 
+    //OneToMany with state and country
+
     public Customer() {
 
     }

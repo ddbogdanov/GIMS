@@ -156,7 +156,7 @@ public class EventsSceneController extends GIMSController implements Initializab
 
         if(isAudienceCapacityValid && isNameValid) {
             if ("Add".equals(addLocationButton.getText())) {
-                locationRepo.save(new Location(name, extraInfo, Integer.parseInt(audienceCapacity)));
+                locationRepo.save(new Location(UUID.randomUUID(), name, extraInfo, Integer.parseInt(audienceCapacity)));
             }
             else {
                 Location location = locationListView.getSelectionModel().getSelectedItem();

@@ -1,10 +1,9 @@
 package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
-import com.cougarneticit.gims.model.Customer;
-import com.cougarneticit.gims.model.Room;
-import com.cougarneticit.gims.model.Stay;
+import com.cougarneticit.gims.model.*;
 import com.cougarneticit.gims.model.repos.CustomerRepo;
+import com.cougarneticit.gims.model.repos.OrderRepo;
 import com.cougarneticit.gims.model.repos.RoomRepo;
 import com.cougarneticit.gims.model.repos.StayRepo;
 import com.jfoenix.controls.*;
@@ -21,8 +20,11 @@ import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.net.URL;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -37,22 +39,31 @@ public class CustomersSceneController extends GIMSController implements Initiali
     private RoomRepo roomRepo;
     @Autowired
     private StayRepo stayRepo;
+    @Autowired
+    private OrderRepo orderRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<Customer> customerComboBox;
     @FXML private JFXComboBox<Room> roomComboBox;
+    @FXML private JFXComboBox<Stay> stayComboBox;
     @FXML private JFXListView<Customer> customerListView;
     @FXML private JFXListView<Stay> stayListView;
+    @FXML private JFXListView<Order> orderListView;
+    @FXML private JFXListView<AdditionalCharge> chargeListView;
     @FXML private JFXDatePicker stayStartDatePicker, stayEndDatePicker;
-    @FXML private JFXTextField customerNameTextField, customerPhoneTextField, customerEmailTextField;
+    @FXML private JFXTextField customerNameTextField, customerPhoneTextField, customerEmailTextField, chargeAmountTextField;
+    @FXML private JFXTextArea chargeDescriptionTextArea;
 
     @FXML private Label
             customerNameHelpLabel, customerPhoneHelpLabel, customerEmailHelpLabel, customerFormLabel,
-            stayListLabel, stayFormLabel, customerNameLabel;
+            stayListLabel, stayFormLabel, customerNameLabel, orderListLabel, chargeListLabel, orderTotalLabel,
+            orderFormCustomerNameLabel, orderFormLabel;
 
     @FXML private JFXButton
             customerFormSubmitButton, customerFormCancelButton, viewCustomerButton, editCustomerButton, deleteCustomerButton,
-            stayFormSubmitButton, stayFormCancelButton, editStayButton, viewStayButton, deleteStayButton;
+            stayFormSubmitButton, stayFormCancelButton, editStayButton, viewStayButton, deleteStayButton, deleteOrderButton,
+            deleteChargeButton, orderFormSubmitButton, orderFormCancelButton, chargeFormSubmitButton, chargeFormCancelButton,
+            editOrderButton, editChargeButton;
 
     public CustomersSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -64,11 +75,16 @@ public class CustomersSceneController extends GIMSController implements Initiali
         initStage(stage, pane, null, null, null, null, true);
         populateCustomerListView();
         customerListView.getSelectionModel().select(0);
-
         try {
             populateStayListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateStayComboBox(customerListView.getSelectionModel().getSelectedItem().getCustomerId());
             populateCustomerComboBox();
             populateRoomComboBox();
+
+            orderListLabel.setText("Orders - " + customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            customerNameLabel.setText(customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            orderFormCustomerNameLabel.setText(customerListView.getSelectionModel().getSelectedItem().getCustomerName());
         }
         catch(NullPointerException ex) {
             System.err.println("No customers");
@@ -90,6 +106,35 @@ public class CustomersSceneController extends GIMSController implements Initiali
         deleteCustomerButton.setOnAction(e -> {
             deleteCustomer();
         });
+
+        //Order form
+        orderFormSubmitButton.setOnAction(e -> {
+            submitOrder();
+        });
+        orderFormCancelButton.setOnAction(e -> {
+            resetOrderForm();
+        });
+        editOrderButton.setOnAction(e -> {
+            editOrder();
+        });
+        deleteOrderButton.setOnAction(e -> {
+            deleteOrder();
+        });
+
+        //Charge form
+        chargeFormSubmitButton.setOnAction(e -> {
+
+        });
+        chargeFormCancelButton.setOnAction(e -> {
+
+        });
+        editChargeButton.setOnAction(e -> {
+
+        });
+        deleteChargeButton.setOnAction(e -> {
+
+        });
+
         //Stay form
         stayFormSubmitButton.setOnAction(e -> {
             submitStay();
@@ -113,7 +158,21 @@ public class CustomersSceneController extends GIMSController implements Initiali
             }
             else {
                 populateStayListView(newVal.getCustomerId(), newVal.getCustomerName());
+                populateStayComboBox(newVal.getCustomerId());
+                populateOrderListView(newVal.getCustomerId(), newVal.getCustomerName());
+
+                resetOrderForm();
                 customerNameLabel.setText(newVal.getCustomerName());
+                orderFormCustomerNameLabel.setText(newVal.getCustomerName());
+            }
+        });
+        orderListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                orderListView.getSelectionModel().select(oldVal);
+            }
+            else {
+                resetOrderForm();
+                orderTotalLabel.setText("$" + newVal.getTotal().toString());
             }
         });
         stayStartDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
@@ -129,7 +188,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
             }
         });
     }
-    //TODO: Refresh customer ComboBoxes
+
     //TODO: Update labels after delete customer
     //Button Actions - Customer Form
     private void submitCustomer() {
@@ -233,7 +292,6 @@ public class CustomersSceneController extends GIMSController implements Initiali
         resetCustomerForm();
         populateCustomerListView();
     }
-
     //Util Methods - Customer Form
     private void populateCustomerListView() {
         ObservableList<Customer> customers = FXCollections.observableArrayList();
@@ -279,6 +337,114 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
     }
 
+    //Button Actions - Order Form
+    private void submitOrder() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+
+        Order order = createOrder(UUID.randomUUID(), selectedCustomer);
+        orderRepo.save(order);
+
+        populateOrderListView(selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName());
+        resetOrderForm();
+    }
+    private void resetOrderForm() {
+        stayComboBox.setDisable(false);
+        stayComboBox.getSelectionModel().clearSelection();
+
+        orderTotalLabel.setText("-");
+
+        orderFormSubmitButton.setText("Create");
+
+        orderFormSubmitButton.setOnAction(e -> {
+            submitOrder();
+        });
+    }
+    private void editOrder() {
+        resetOrderForm();
+        try {
+            orderFormSubmitButton.setOnAction(e -> {
+                submitOrderEdits();
+            });
+
+            populateOrderForm();
+            orderFormLabel.setText("Edit Order");
+            orderFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            orderFormSubmitButton.setOnAction(e -> {
+                submitOrder();
+            });
+            ex.printStackTrace();
+            System.err.println("Nothing selected order list");
+        }
+    }
+    private void submitOrderEdits() {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+        Order editedOrder = createOrder(selectedOrder.getOrderId(), selectedOrder.getCustomer());
+        orderRepo.save(editedOrder);
+
+        populateOrderListView(selectedOrder.getCustomer().getCustomerId(), selectedOrder.getCustomer().getCustomerName());
+        resetOrderForm();
+    }
+    private void deleteOrder() {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+
+        orderRepo.delete(selectedOrder);
+
+        populateOrderListView(selectedOrder.getCustomer().getCustomerId(), selectedOrder.getCustomer().getCustomerName());
+        resetOrderForm();
+    }
+    //Util Methods - Order Form
+    private void populateOrderListView(UUID customerId, String customerName) {
+        orderListLabel.setText("Orders: " + customerName);
+        ObservableList<Order> orders = FXCollections.observableArrayList();
+
+        if(orderRepo.count() != 0) {
+            orders.addAll(orderRepo.findAllByCustomer_CustomerId(customerId));
+        }
+        orderListView.setItems(orders.sorted());
+    }
+    private void populateStayComboBox(UUID customerId) {
+        stayComboBox.getItems().clear();
+        ObservableList<Stay> stayList = FXCollections.observableArrayList();
+        if(stayRepo.count() != 0) {
+            stayList.addAll(stayRepo.findAllByCustomer_CustomerId(customerId));
+        }
+        stayComboBox.setItems(stayList);
+    }
+    private void populateOrderForm() {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+
+        try {
+            for (Stay stay : stayComboBox.getItems()) {
+                if (selectedOrder.getStayId() == stay.getStayId()) {
+                    stayComboBox.getSelectionModel().select(stay);
+                    break;
+                }
+            }
+        }
+        catch(NullPointerException ex) {
+            System.err.println("Selected order does not have a stay assigned");
+        }
+        orderTotalLabel.setText("$" + selectedOrder.getTotal().toString());
+    }
+    private Order createOrder(UUID orderId, Customer customer) {
+        Stay selectedStay;
+        BigDecimal orderTotal;
+
+        try {
+            selectedStay = stayComboBox.getValue();
+            long daysDuration = ChronoUnit.DAYS.between(selectedStay.getStartDate(), selectedStay.getEndDate());
+            orderTotal = selectedStay.getRoom().getRate().multiply(new BigDecimal(daysDuration));
+        }
+        catch(NullPointerException ex) {
+            selectedStay = null;
+            orderTotal = new BigDecimal(0);
+        }
+
+        return new Order(orderId, customer, selectedStay, orderTotal);
+    }
+
     //Button Actions - Stay Form
     private void submitStay() {
         if(validateStayForm()) {
@@ -292,6 +458,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
             stayRepo.save(stay);
 
             populateStayListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateStayComboBox(customerListView.getSelectionModel().getSelectedItem().getCustomerId());
             resetStayForm();
         }
     }
@@ -344,6 +511,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
             stayRepo.save(stay);
 
             populateStayListView(stayListView.getSelectionModel().getSelectedItem().getCustomerId(), stayListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateStayComboBox(customerListView.getSelectionModel().getSelectedItem().getCustomerId());
             resetStayForm();
         }
     }

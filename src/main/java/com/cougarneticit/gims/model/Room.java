@@ -3,6 +3,7 @@ package com.cougarneticit.gims.model;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Set;
 
 @Entity
@@ -58,6 +59,12 @@ public class Room {
     }
     public int getRoomStatusId() {
         return roomStatus.getRoomStatusId();
+    }
+    public RoomRate getRoomRate() {
+        return roomRate;
+    }
+    public BigDecimal getRate() {
+        return roomRate.getRoomRate();
     }
     public Set<Task> getTasks() {
         return tasks;
