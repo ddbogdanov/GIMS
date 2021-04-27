@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface AdditionalChargeRepo extends CrudRepository<AdditionalCharge, Integer> {
     List<AdditionalCharge> findAll();
+    List<AdditionalCharge> findAllByOrder_OrderId(int orderId);
 }

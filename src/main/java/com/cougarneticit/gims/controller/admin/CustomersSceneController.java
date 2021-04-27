@@ -2,10 +2,7 @@ package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
 import com.cougarneticit.gims.model.*;
-import com.cougarneticit.gims.model.repos.CustomerRepo;
-import com.cougarneticit.gims.model.repos.OrderRepo;
-import com.cougarneticit.gims.model.repos.RoomRepo;
-import com.cougarneticit.gims.model.repos.StayRepo;
+import com.cougarneticit.gims.model.repos.*;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -41,6 +38,8 @@ public class CustomersSceneController extends GIMSController implements Initiali
     private StayRepo stayRepo;
     @Autowired
     private OrderRepo orderRepo;
+    @Autowired
+    private AdditionalChargeRepo additionalChargeRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<Customer> customerComboBox;
@@ -57,7 +56,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
     @FXML private Label
             customerNameHelpLabel, customerPhoneHelpLabel, customerEmailHelpLabel, customerFormLabel,
             stayListLabel, stayFormLabel, customerNameLabel, orderListLabel, chargeListLabel, orderTotalLabel,
-            orderFormCustomerNameLabel, orderFormLabel;
+            orderFormCustomerNameLabel, orderFormLabel, chargeAmountHelpLabel, chargeFormLabel, chargeFormOrderIdLabel;
 
     @FXML private JFXButton
             customerFormSubmitButton, customerFormCancelButton, viewCustomerButton, editCustomerButton, deleteCustomerButton,
@@ -123,16 +122,16 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
         //Charge form
         chargeFormSubmitButton.setOnAction(e -> {
-
+            submitCharge();
         });
         chargeFormCancelButton.setOnAction(e -> {
-
+            resetChargeForm();
         });
         editChargeButton.setOnAction(e -> {
-
+            editCharge();
         });
         deleteChargeButton.setOnAction(e -> {
-
+            deleteCharge();
         });
 
         //Stay form
@@ -152,6 +151,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
             deleteStay();
         });
 
+        chargeAmountTextField.focusedProperty().addListener((obs, oldVal, newVal) -> chargeAmountHelpLabel.setVisible(newVal));
         customerListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if(newVal == null) {
                 customerListView.getSelectionModel().select(oldVal);
@@ -162,17 +162,35 @@ public class CustomersSceneController extends GIMSController implements Initiali
                 populateOrderListView(newVal.getCustomerId(), newVal.getCustomerName());
 
                 resetOrderForm();
+                resetChargeForm();
                 customerNameLabel.setText(newVal.getCustomerName());
                 orderFormCustomerNameLabel.setText(newVal.getCustomerName());
+                chargeListLabel.setText("Additional Charges - {Order ID}");
+                orderListView.getSelectionModel().clearSelection();
+                chargeListView.getItems().clear();
             }
         });
         orderListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if(newVal == null) {
-                orderListView.getSelectionModel().select(oldVal);
+                //orderListView.getSelectionModel().select(oldVal);
             }
             else {
+                populateChargeListView(newVal.getOrderId());
+
                 resetOrderForm();
+                resetChargeForm();
                 orderTotalLabel.setText("$" + newVal.getTotal().toString());
+                chargeListLabel.setText("Additional Charges - Order #" + newVal.getOrderId());
+                chargeFormOrderIdLabel.setText("Order #" + newVal.getOrderId());
+            }
+        });
+        chargeListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                chargeListView.getSelectionModel().select(oldVal);
+            }
+            else {
+                resetChargeForm();
+                chargeFormOrderIdLabel.setText("Order #" + newVal.getOrderId());
             }
         });
         stayStartDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
@@ -341,7 +359,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
     private void submitOrder() {
         Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
 
-        Order order = createOrder(UUID.randomUUID(), selectedCustomer);
+        Order order = createOrder(selectedCustomer);
         orderRepo.save(order);
 
         populateOrderListView(selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName());
@@ -374,13 +392,12 @@ public class CustomersSceneController extends GIMSController implements Initiali
             orderFormSubmitButton.setOnAction(e -> {
                 submitOrder();
             });
-            ex.printStackTrace();
             System.err.println("Nothing selected order list");
         }
     }
     private void submitOrderEdits() {
         Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
-        Order editedOrder = createOrder(selectedOrder.getOrderId(), selectedOrder.getCustomer());
+        Order editedOrder = createOrder(selectedOrder.getCustomer());
         orderRepo.save(editedOrder);
 
         populateOrderListView(selectedOrder.getCustomer().getCustomerId(), selectedOrder.getCustomer().getCustomerName());
@@ -428,7 +445,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
         }
         orderTotalLabel.setText("$" + selectedOrder.getTotal().toString());
     }
-    private Order createOrder(UUID orderId, Customer customer) {
+    private Order createOrder(Customer customer) {
         Stay selectedStay;
         BigDecimal orderTotal;
 
@@ -442,7 +459,149 @@ public class CustomersSceneController extends GIMSController implements Initiali
             orderTotal = new BigDecimal(0);
         }
 
-        return new Order(orderId, customer, selectedStay, orderTotal);
+        return new Order(customer, selectedStay, orderTotal);
+    }
+
+    //Button Actions - Charge Form
+    private void submitCharge() {
+        if(validateChargeForm()) {
+            Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+            if(selectedOrder != null) {
+                AdditionalCharge charge = new AdditionalCharge(
+                        selectedOrder,
+                        chargeDescriptionTextArea.getText(),
+                        new BigDecimal(chargeAmountTextField.getText()));
+                additionalChargeRepo.save(charge);
+                updateOrderTotal(charge);
+                populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+                populateChargeListView(selectedOrder.getOrderId());
+                resetChargeForm();
+            }
+            else {
+                System.err.println("Nothing selected in order list");
+            }
+        }
+    }
+    private void resetChargeForm() {
+        chargeFormSubmitButton.setText("Add");
+
+        chargeAmountTextField.clear();
+        chargeDescriptionTextArea.clear();
+
+        chargeAmountHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        chargeAmountHelpLabel.setText("####.##");
+        chargeAmountHelpLabel.setVisible(false);
+        chargeFormOrderIdLabel.setText("Order #--");
+        chargeFormLabel.setText("Add Charge");
+
+        chargeFormSubmitButton.setOnAction(e -> {
+            submitCharge();
+        });
+    }
+    private void editCharge() {
+        resetChargeForm();
+        try {
+            chargeFormSubmitButton.setOnAction(e -> {
+                submitChargeEdits();
+            });
+
+            populateChargeForm();
+            chargeFormLabel.setText("Edit a Charge");
+            chargeFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            chargeFormSubmitButton.setOnAction(e -> {
+                submitCharge();
+            });
+            System.err.println("Nothing selected in charges list");
+        }
+    }
+    private void submitChargeEdits() {
+        if (validateChargeForm()) {
+            if(orderListView.getSelectionModel().getSelectedItem() != null) {
+                BigDecimal oldCharge = chargeListView.getSelectionModel().getSelectedItem().getCharge();
+
+                AdditionalCharge charge = new AdditionalCharge(
+                        chargeListView.getSelectionModel().getSelectedItem().getChargeId(),
+                        orderListView.getSelectionModel().getSelectedItem(),
+                        chargeDescriptionTextArea.getText(),
+                        new BigDecimal(chargeAmountTextField.getText()));
+                additionalChargeRepo.save(charge);
+
+                if (charge.getCharge().compareTo(oldCharge) < 0) {
+                    charge.setCharge(oldCharge.subtract(charge.getCharge()).multiply(new BigDecimal(-1)));
+                } else if (charge.getCharge().compareTo(oldCharge) > 0) {
+                    charge.setCharge(charge.getCharge().subtract(oldCharge));
+                }
+
+                updateOrderTotal(charge); //TODO calculate order total in order object
+                populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+                populateChargeListView(chargeListView.getSelectionModel().getSelectedItem().getChargeId());
+                resetChargeForm();
+            }
+            else {
+                System.err.println("Nothing selected in order list to submit edit");
+            }
+        }
+    }
+    private void deleteCharge() {
+        AdditionalCharge selectedCharge = chargeListView.getSelectionModel().getSelectedItem();
+
+        additionalChargeRepo.delete(selectedCharge);
+
+        selectedCharge.setCharge(selectedCharge.getCharge().multiply(new BigDecimal(-1)));
+        updateOrderTotal(selectedCharge);
+
+        populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+        populateChargeListView(selectedCharge.getOrderId());
+        resetChargeForm();
+    }
+    //Util Methods - Charge Form
+    private void populateChargeListView(int orderId) {
+        chargeListLabel.setText("Additional Charges - Order #" + orderId);
+        ObservableList<AdditionalCharge> charges = FXCollections.observableArrayList();
+
+        if(additionalChargeRepo.count() != 0) {
+            charges.addAll(additionalChargeRepo.findAllByOrder_OrderId(orderId));
+        }
+        chargeListView.setItems(charges);
+    }
+    private void populateChargeForm() {
+        AdditionalCharge selectedCharge = chargeListView.getSelectionModel().getSelectedItem();
+
+        chargeAmountTextField.setText(selectedCharge.getCharge().toString());
+        chargeDescriptionTextArea.setText(selectedCharge.getDescription());
+    }
+    private void updateOrderTotal(AdditionalCharge charge) {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+
+        BigDecimal oldTotal = selectedOrder.getTotal();
+        BigDecimal newTotal = oldTotal.add(charge.getCharge());
+
+        Order order = new Order(
+                selectedOrder.getOrderId(),
+                selectedCustomer,
+                selectedOrder.getStay(),
+                newTotal);
+
+        orderRepo.save(order);
+    }
+    private boolean validateChargeForm() {
+        try {
+            BigDecimal d = new BigDecimal(chargeAmountTextField.getText());
+        }
+        catch(NumberFormatException ex) {
+            chargeAmountHelpLabel.setTextFill(Color.web("#F73331"));
+            chargeAmountHelpLabel.setText("Invalid format: ####.##");
+            chargeAmountHelpLabel.setVisible(true);
+            return false;
+        }
+
+        if(chargeDescriptionTextArea.getText().isBlank()) {
+            return false;
+        }
+        return true;
     }
 
     //Button Actions - Stay Form

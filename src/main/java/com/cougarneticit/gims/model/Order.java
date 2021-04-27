@@ -13,9 +13,9 @@ import java.util.UUID;
 @Table(name="orders")
 public class Order {
     @Id
-    @Type(type="org.hibernate.type.UUIDCharType")
-    @Column(name="order_id", length=36) //VarChar(36) //TODO change to int
-    private UUID orderId;
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @Column(name="order_id")
+    private int orderId;
     @Column(name="total")
     private BigDecimal total;
 
@@ -32,18 +32,22 @@ public class Order {
     private Customer customer;
 
     public Order() {
-        orderId = UUID.randomUUID();
         customer = null;
         total = null;
     }
-    public Order(UUID orderId, Customer customer, Stay stay, BigDecimal total) {
+    public Order(Customer customer, Stay stay, BigDecimal total) {
+        this.customer = customer;
+        this.stay = stay;
+        this.total = total;
+    }
+    public Order(int orderId, Customer customer, Stay stay, BigDecimal total) {
         this.orderId = orderId;
         this.customer = customer;
         this.stay = stay;
         this.total = total;
     }
 
-    public UUID getOrderId() {
+    public int getOrderId() {
         return orderId;
     }
     public Customer getCustomer() {
@@ -61,6 +65,6 @@ public class Order {
 
     @Override
     public String toString() {
-        return customer.getCustomerName() + " | $" + total.toString();
+        return "Order #" + orderId + " | $" + total.toString();
     }
 }

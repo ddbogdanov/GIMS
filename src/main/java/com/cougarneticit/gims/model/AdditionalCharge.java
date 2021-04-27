@@ -31,9 +31,35 @@ public class AdditionalCharge {
         this.description = description;
         this.charge = charge;
     }
+    public AdditionalCharge(int chargeId, Order order, String description, BigDecimal charge) {
+        this.chargeId = chargeId;
+        this.order = order;
+        this.description = description;
+        this.charge = charge;
+    }
+
+    public void setCharge(BigDecimal charge) {
+        this.charge = charge;
+    }
+
+    public int getChargeId() {
+        return chargeId;
+    }
+    public Order getOrder() {
+        return order;
+    }
+    public int getOrderId() {
+        return order.getOrderId();
+    }
+    public BigDecimal getCharge() {
+        return charge;
+    }
+    public String getDescription() {
+        return description;
+    }
 
     @Override
     public String toString() {
-        return charge.toString();
+        return "$" + charge.toString();
     }
 }
