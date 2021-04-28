@@ -3,7 +3,6 @@ package com.cougarneticit.gims.controller.nonadmin;
 import com.cougarneticit.gims.controller.common.GIMSController;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
@@ -14,14 +13,14 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 @Component
-@FxmlView("/EmpEventsSceneController.fxml")
-public class EmpEventsSceneController extends GIMSController implements Initializable {
+@FxmlView("/EmpShiftsSceneController.fxml")
+public class EmpShiftsSceneController extends GIMSController implements Initializable {
 
     private Stage stage;
 
     @FXML private AnchorPane pane;
 
-    public EmpEventsSceneController(FxWeaver fxWeaver) {
+    public EmpShiftsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
     }
 

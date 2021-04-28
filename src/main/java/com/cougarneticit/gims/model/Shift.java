@@ -25,6 +25,9 @@ public class Shift {
     @Column(name="end_datetime", length=28)
     private LocalDateTime endDateTime;
 
+    @OneToOne(mappedBy="shift", fetch=FetchType.EAGER, cascade=CascadeType.REMOVE)
+    private Clocking clocking;
+
     @ManyToOne
     @JoinColumn(name="employee_id")
     private Employee employee;

@@ -32,7 +32,7 @@
                         <Font name="Roboto Regular" size="24.0" />
                      </font>
                   </Label>
-                  <AnchorPane maxWidth="250.0" prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                  <AnchorPane maxWidth="250.0" prefHeight="60.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
                         <JFXButton fx:id="homeTab" layoutX="21.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Home" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
@@ -44,10 +44,22 @@
                         </JFXButton>
                      </children>
                      <HBox.margin>
-                        <Insets left="200.0" />
+                        <Insets left="100.0" />
                      </HBox.margin>
                   </AnchorPane>
-                  <AnchorPane maxWidth="250.0" prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                  <AnchorPane maxWidth="250.0" prefHeight="60.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <JFXButton fx:id="shiftTab" layoutX="14.0" prefHeight="60.0" prefWidth="110.0" ripplerFill="#5bddc7" text="Shifts" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <graphic>
+                              <FontAwesomeIconView fill="WHITE" glyphName="USER_CIRCLE" size="16" />
+                           </graphic>
+                        </JFXButton>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane maxWidth="250.0" prefHeight="60.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <children>
                         <JFXButton fx:id="roomTab" layoutX="14.0" prefHeight="60.0" prefWidth="110.0" ripplerFill="#5bddc7" text="Rooms" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
