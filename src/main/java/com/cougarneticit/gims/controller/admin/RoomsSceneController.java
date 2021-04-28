@@ -79,8 +79,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
         populateRoomListView();
         roomListView.getSelectionModel().select(0);
-        setInfoLabels();
-        populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
+        //setInfoLabels();
+        //populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
 
         //Initialize ComboBoxes
         priorityComboBox.getItems().addAll(Priority.values());

@@ -72,4 +72,12 @@ public class GIMSController {
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
     }
+    
+    protected boolean validateState(String state) {
+        return true;
+    }
+    
+    protected boolean validateCountry(String phone) {
+        return true;
+    }
 }

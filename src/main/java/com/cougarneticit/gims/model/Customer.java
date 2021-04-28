@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -32,6 +33,10 @@ public class Customer {
     //TODO: One to One
     @Column(name = "room_id")
     private char roomId;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name="event_id")
+    private Event event;
 
     public String getExtraInfo() {
         return extraInfo;
@@ -61,9 +66,6 @@ public class Customer {
     public void setExtraInfo(String extraInfo) {
         this.extraInfo = extraInfo;
     }
-    public void setCustomerId(UUID customerId) {
-        this.customerId = customerId;
-    }
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
     }
@@ -81,6 +83,14 @@ public class Customer {
     }
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public Event getEvent() {
+        return event;
+    }
+
+    public void setEvent(Event event) {
+        this.event = event;
     }
 
     public Customer() {
