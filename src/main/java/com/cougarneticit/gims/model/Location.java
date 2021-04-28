@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -13,7 +14,7 @@ public class Location {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="location_id", length=36)
-    private final UUID locationId = UUID.randomUUID();;
+    private UUID locationId;
     @Column(name="name", length=16)
     private String locationName;
     @Column(name="info", length=255)
@@ -21,9 +22,17 @@ public class Location {
     @Column(name="audienceCapacity")
     private int capacity;
 
-    public Location() {}
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="location", cascade=CascadeType.REMOVE)
+    private Set<Event> events;
 
-    public Location(String locationName, String locationInfo, int capacity) {
+    public Location() {
+        locationId = UUID.randomUUID();
+        locationName = null;
+        locationInfo = null;
+        capacity = 0;
+    }
+    public Location(UUID locationId, String locationName, String locationInfo, int capacity) {
+        this.locationId = locationId;
         this.locationName = locationName;
         this.locationInfo = locationInfo;
         this.capacity = capacity;
@@ -32,27 +41,22 @@ public class Location {
     public UUID getLocationId() {
         return locationId;
     }
-
     public String getLocationName() {
         return locationName;
+    }
+    public String getLocationInfo() {
+        return locationInfo;
+    }
+    public int getCapacity() {
+        return capacity;
     }
 
     public void setLocationName(String locationName) {
         this.locationName = locationName;
     }
-
-    public String getLocationInfo() {
-        return locationInfo;
-    }
-
     public void setLocationInfo(String locationInfo) {
         this.locationInfo = locationInfo;
     }
-
-    public int getCapacity() {
-        return capacity;
-    }
-
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }

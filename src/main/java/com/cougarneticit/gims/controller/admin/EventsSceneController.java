@@ -1,7 +1,6 @@
 package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
-import com.cougarneticit.gims.model.Customer;
 import com.cougarneticit.gims.model.Event;
 import com.cougarneticit.gims.model.Location;
 import com.cougarneticit.gims.model.repos.EventRepo;
@@ -21,12 +20,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.util.*;
-import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 
 @Component
@@ -35,27 +30,27 @@ public class EventsSceneController extends GIMSController implements Initializab
 
     private Stage stage;
 
+    @Autowired
+    EventRepo eventRepo;
+    @Autowired
+    LocationRepo locationRepo;
+
     @FXML private AnchorPane pane;
     @FXML private JFXListView<Event> eventsListView;
-    @FXML private JFXListView<Customer> eventCustomerListView;
     @FXML private JFXListView<Location> locationListView;
-    @FXML private JFXButton editEventButton, viewEventButton, deleteEventButton, editLocationButton, viewLocationButton, deleteLocationButton;
-    @FXML private Label eventFormLabel, locationFormLabel, eventNameHelpLabel, eventDateRangeHelpLabel;
     @FXML private JFXComboBox<Location> locationComboBox;
+    @FXML private JFXDatePicker eventStartDatePicker, eventEndDatePicker;
+    @FXML private JFXTimePicker eventStartTimePicker, eventEndTimePicker;
     @FXML private JFXTextField eventNameTextField, locationNameField, locationAudienceCapacity;
-    @FXML private JFXDatePicker eventStartDate, eventEndDate;
-    @FXML private JFXTimePicker eventStartTime, eventEndTime;
-    @FXML private JFXButton saveEventButton, cancelEventButton, addLocationButton, cancelLocationButton;
     @FXML private JFXTextArea eventExtraInfo, locationInformation;
-
-    @Autowired EventRepo eventRepo;
-    @Autowired LocationRepo locationRepo;
+    @FXML private Label eventFormLabel, locationFormLabel, eventNameHelpLabel, eventDateRangeHelpLabel;
+    @FXML private JFXButton
+            saveEventButton, cancelEventButton, addLocationButton, cancelLocationButton,
+            editEventButton, viewEventButton, deleteEventButton, editLocationButton, viewLocationButton, deleteLocationButton;
 
     public EventsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
     }
-
-    private BiFunction<LocalDate, LocalTime, LocalDate> dateMaker = (date, time) -> LocalDate.from(date.atTime(time).toInstant(ZoneOffset.UTC));
 
     @FXML
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -64,50 +59,140 @@ public class EventsSceneController extends GIMSController implements Initializab
         populateEvents();
         populateLocations();
 
-        saveEventButton.setOnAction(t -> addEvents());
-        addLocationButton.setOnAction(t -> addLocation());
-        editEventButton.setOnAction(t -> editEvent());
-        viewEventButton.setOnAction(t -> viewEvent());
-        deleteEventButton.setOnAction(t -> deleteEvent());
-        editLocationButton.setOnAction(t -> editLocation());
-        viewLocationButton.setOnAction(t -> viewLocation());
-        deleteLocationButton.setOnAction(t -> deleteLocation());
-        cancelEventButton.setOnAction(t -> resetEventForm());
-        cancelLocationButton.setOnAction(t -> resetLocationForm());
+        //Event Form
+        saveEventButton.setOnAction(e -> {
+            submitEvent();
+        });
+        editEventButton.setOnAction(e -> {
+            editEvent();
+        });
+        cancelEventButton.setOnAction(e -> {
+            resetEventForm();
+        });
+        viewEventButton.setOnAction(e -> {
+            viewEvent();
+        });
+        deleteEventButton.setOnAction(e -> {
+            deleteEvent();
+        });
+        //Location Form
+        addLocationButton.setOnAction(e -> {
+            addLocation();
+        });
+        editLocationButton.setOnAction(e -> {
+            editLocation();
+        });
+        viewLocationButton.setOnAction(e -> {
+            viewLocation();
+        });
+        deleteLocationButton.setOnAction(e -> {
+            deleteLocation();
+        });
+        cancelLocationButton.setOnAction(e -> {
+            resetLocationForm();
+        });
     }
 
-    private void populateEvents() {
-        //TODO ???
-        ObservableList<Event> events = FXCollections.observableArrayList();
-        List<Event> allEvents = eventRepo.findAll();
-
-        if(!allEvents.isEmpty()) {
-            events.addAll(allEvents);
-        }
-        eventsListView.setItems(events);
-
-    }
-    private void populateLocations() {
-
-        ObservableList<Location> locations = FXCollections.observableArrayList();
-
-        if(locationRepo.count() != 0) {
-            locations.addAll(locationRepo.findAll());
-        }
-        locationComboBox.setItems(locations);
-        int i = locationListView.getSelectionModel().getSelectedIndex();
-        locationListView.setItems(locations);
-        locationListView.getSelectionModel().select(i);
-    }
-    private void addEvents() {
-        Location location = locationComboBox.getSelectionModel().getSelectedItem();
+    //Button Actions - Event Form
+    private void submitEvent() {
         String name = eventNameTextField.getText();
-        LocalDate startDate = eventStartDate.getValue();
-        LocalTime startTime = eventStartTime.getValue();
-        LocalDate endDate = eventEndDate.getValue();
-        LocalTime endTime = eventEndTime.getValue();
+        Location location = locationComboBox.getValue();
+
+        LocalDateTime startDateTime = LocalDateTime.of(eventStartDatePicker.getValue(), eventStartTimePicker.getValue());
+        LocalDateTime endDateTime = LocalDateTime.of(eventEndDatePicker.getValue(), eventEndTimePicker.getValue());
+
         String extraInfo = eventExtraInfo.getText();
 
+        if(validateEventForm(name, location, startDateTime, endDateTime)) {
+
+            /*if ("Add Event".equals(saveEventButton.getText())) {
+
+                eventRepo.save(new Event(name, extraInfo,  location));
+
+            }
+            else {
+
+                Event event = eventsListView.getSelectionModel().getSelectedItem();
+                event.setEventName(name);
+                event.setEventInfo(extraInfo);
+                event.setStartDateTime(dateMaker.apply(startDate, startTime));
+                event.setEndDateTime(dateMaker.apply(endDate, endTime));
+                event.setLocation(location);
+                eventRepo.save(event);
+
+            }*/
+        }
+
+        populateEvents();
+    }
+    private void editEvent() {
+        eventFormLabel.setText("Edit Event");
+        Event event = eventsListView.getSelectionModel().getSelectedItem();
+        locationComboBox.getSelectionModel().select(event.getLocation());
+        eventNameTextField.setText(event.getEventName());
+
+        OffsetDateTime offsetDateTime = event.getStartDateTime().now().atStartOfDay().atOffset(ZoneOffset.UTC);
+        eventStartDatePicker.setValue(offsetDateTime.toLocalDate());
+        eventStartTimePicker.setValue(offsetDateTime.toLocalTime());
+        offsetDateTime = event.getEndDateTime().now().atStartOfDay().atOffset(ZoneOffset.UTC);
+        eventEndDatePicker.setValue(offsetDateTime.toLocalDate());
+        eventEndTimePicker.setValue(offsetDateTime.toLocalTime());
+        eventExtraInfo.setText(event.getEventInfo());
+        saveEventButton.setText("Edit Event");
+    }
+    private void viewEvent() {
+        resetEventForm();
+        eventFormLabel.setText("View Event");
+        Event event = eventsListView.getSelectionModel().getSelectedItem();
+        locationComboBox.getSelectionModel().select(event.getLocation());
+        locationComboBox.setDisable(true);
+        eventNameTextField.setText(event.getEventName());
+        eventNameTextField.setEditable(false);
+        OffsetDateTime offsetDateTime = event.getStartDateTime().now().atStartOfDay().atOffset(ZoneOffset.UTC);
+        eventStartDatePicker.setValue(offsetDateTime.toLocalDate());
+        eventStartDatePicker.setDisable(true);
+        eventStartTimePicker.setValue(offsetDateTime.toLocalTime());
+        eventStartTimePicker.setDisable(true);
+        offsetDateTime = event.getEndDateTime().now().atStartOfDay().atOffset(ZoneOffset.UTC);
+        eventEndDatePicker.setValue(offsetDateTime.toLocalDate());
+        eventEndDatePicker.setDisable(true);
+        eventEndTimePicker.setValue(offsetDateTime.toLocalTime());
+        eventEndTimePicker.setDisable(true);
+        eventExtraInfo.setText(event.getEventInfo());
+        eventExtraInfo.setEditable(false);
+        saveEventButton.setVisible(false);
+    }
+    private void deleteEvent() {
+        Event event = eventsListView.getSelectionModel().getSelectedItem();
+        eventRepo.delete(event);
+    }
+
+    //Util Methods - Event Form
+    private void resetEventForm() {
+        eventFormLabel.setText("Add Event");
+        eventNameHelpLabel.setText("");
+        eventNameHelpLabel.setDisable(true);
+        eventDateRangeHelpLabel.setText("");
+        eventDateRangeHelpLabel.setDisable(true);
+        saveEventButton.setVisible(true);
+        saveEventButton.setText("Add Event");
+        locationComboBox.setDisable(false);
+        eventNameTextField.setEditable(true);
+        eventStartDatePicker.setDisable(false);
+        eventStartTimePicker.setDisable(false);
+        eventEndDatePicker.setDisable(false);
+        eventEndTimePicker.setDisable(false);
+        eventExtraInfo.setEditable(true);
+        locationComboBox.getSelectionModel().clearSelection();
+        eventNameTextField.clear();
+        eventStartDatePicker.setValue(null);
+        eventStartTimePicker.setValue(null);
+        eventEndDatePicker.setValue(null);
+        eventEndTimePicker.setValue(null);
+        //eventCustomerListView.getSelectionModel().clearSelection(); always null
+        eventExtraInfo.clear();
+    }
+    private boolean validateEventForm(String name, Location location, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         boolean isNameValid = Objects.nonNull(name);
         boolean isLocationValid = Objects.nonNull(location);
         boolean isStartDateValid = Objects.nonNull(startDate);
@@ -120,61 +205,79 @@ public class EventsSceneController extends GIMSController implements Initializab
                         && ( startDate.compareTo(endDate) == 0
                         ? startTime.compareTo(endTime) < 0
                         : startDate.compareTo(endDate) < 0);
-        if(isNameValid && isLocationValid && isDateRangeValid) {
-            if ("Add Event".equals(saveEventButton.getText())) {
-                eventRepo.save(new Event(name, extraInfo, dateMaker.apply(startDate, startTime), dateMaker.apply(endDate, endTime), location));
-            }
-            else {
-                Event event = eventsListView.getSelectionModel().getSelectedItem();
-                event.setEventName(name);
-                event.setEventInfo(extraInfo);
-                event.setStartDate(dateMaker.apply(startDate, startTime));
-                event.setEndDate(dateMaker.apply(endDate, endTime));
-                event.setLocation(location);
-                eventRepo.save(event);
-            }
-        }
-        else if(!isNameValid) {
+
+        if(!isNameValid) {
             eventNameHelpLabel.setText("Event Name should contain characters");
             eventNameHelpLabel.setDisable(false);
+            return false;
+        }
+        else if(!isLocationValid) {
+            return false;
         }
         else if(!isStartDateValid) {
             eventDateRangeHelpLabel.setText("Start Date cannot be null");
             eventDateRangeHelpLabel.setDisable(false);
+            return false;
         }
         else if(!isStartTimeValid) {
             eventDateRangeHelpLabel.setText("Start Time cannot be null");
             eventDateRangeHelpLabel.setDisable(false);
+            return false;
         }
         else if(!isEndDateValid) {
             eventDateRangeHelpLabel.setText("End Date cannot be null");
             eventDateRangeHelpLabel.setDisable(false);
+            return false;
         }
         else if(!isEndTimeValid) {
             eventDateRangeHelpLabel.setText("End Time cannot be null");
             eventDateRangeHelpLabel.setDisable(false);
+            return false;
         }
         else if(!isDateRangeValid) {
             eventDateRangeHelpLabel.setText("Date Range is invalid (start > end)");
             eventDateRangeHelpLabel.setDisable(false);
+            return false;
         }
-        populateEvents();
+        else {
+            return true;
+        }
+    }
+    private void populateEvents() {
+        //TODO ???
+        ObservableList<Event> events = FXCollections.observableArrayList();
+        List<Event> allEvents = eventRepo.findAll();
+
+        if(!allEvents.isEmpty()) {
+            events.addAll(allEvents);
+        }
+        eventsListView.setItems(events);
+
     }
 
-    private void editEvent() {
-        eventFormLabel.setText("Edit Event");
-        Event event = eventsListView.getSelectionModel().getSelectedItem();
-        locationComboBox.getSelectionModel().select(event.getLocation());
-        eventNameTextField.setText(event.getEventName());
+    //Button Actions - Location Form
+    private void addLocation() {
+        String name = locationNameField.getText();
+        String audienceCapacity = locationAudienceCapacity.getText();
+        String extraInfo = locationInformation.getText();
 
-        OffsetDateTime offsetDateTime = event.getStartDate().now().atStartOfDay().atOffset(ZoneOffset.UTC);
-        eventStartDate.setValue(offsetDateTime.toLocalDate());
-        eventStartTime.setValue(offsetDateTime.toLocalTime());
-        offsetDateTime = event.getEndDate().now().atStartOfDay().atOffset(ZoneOffset.UTC);
-        eventEndDate.setValue(offsetDateTime.toLocalDate());
-        eventEndTime.setValue(offsetDateTime.toLocalTime());
-        eventExtraInfo.setText(event.getEventInfo());
-        saveEventButton.setText("Edit Event");
+        boolean isNameValid = Objects.nonNull(name);
+        boolean isAudienceCapacityValid =
+                StringUtils.hasText(audienceCapacity)
+                        && Pattern.matches("^[1-9]\\d{0,4}", audienceCapacity);
+        if(isAudienceCapacityValid && isNameValid) {
+            if ("Add".equals(addLocationButton.getText())) {
+                locationRepo.save(new Location(UUID.randomUUID(), name, extraInfo, Integer.parseInt(audienceCapacity)));
+            } else {
+                Location location = locationListView.getSelectionModel().getSelectedItem();
+                location.setLocationName(name);
+                location.setCapacity(Integer.parseInt(audienceCapacity));
+                location.setLocationInfo(extraInfo);
+                locationRepo.save(location);
+            }
+        }
+        populateLocations();
+        resetLocationForm();
     }
     private void editLocation() {
         resetLocationForm();
@@ -197,60 +300,24 @@ public class EventsSceneController extends GIMSController implements Initializab
         locationInformation.setEditable(false);
         addLocationButton.setVisible(false);
     }
-    private void viewEvent() {
-        resetEventForm();
-        eventFormLabel.setText("View Event");
-        Event event = eventsListView.getSelectionModel().getSelectedItem();
-        locationComboBox.getSelectionModel().select(event.getLocation());
-        locationComboBox.setDisable(true);
-        eventNameTextField.setText(event.getEventName());
-        eventNameTextField.setEditable(false);
-        OffsetDateTime offsetDateTime = event.getStartDate().now().atStartOfDay().atOffset(ZoneOffset.UTC);
-        eventStartDate.setValue(offsetDateTime.toLocalDate());
-        eventStartDate.setDisable(true);
-        eventStartTime.setValue(offsetDateTime.toLocalTime());
-        eventStartTime.setDisable(true);
-        offsetDateTime = event.getEndDate().now().atStartOfDay().atOffset(ZoneOffset.UTC);
-        eventEndDate.setValue(offsetDateTime.toLocalDate());
-        eventEndDate.setDisable(true);
-        eventEndTime.setValue(offsetDateTime.toLocalTime());
-        eventEndTime.setDisable(true);
-        eventExtraInfo.setText(event.getEventInfo());
-        eventExtraInfo.setEditable(false);
-        saveEventButton.setVisible(false);
-    }
-    private void deleteEvent() {
-        Event event = eventsListView.getSelectionModel().getSelectedItem();
-        eventRepo.delete(event);
-    }
     private void deleteLocation() {
         Location location = locationListView.getSelectionModel().getSelectedItem();
         locationRepo.delete(location);
     }
-    private void addLocation() {
-        String name = locationNameField.getText();
-        String audienceCapacity = locationAudienceCapacity.getText();
-        String extraInfo = locationInformation.getText();
 
-        boolean isNameValid = Objects.nonNull(name);
-        boolean isAudienceCapacityValid =
-                StringUtils.hasText(audienceCapacity)
-                        && Pattern.matches("^[1-9]\\d{0,4}", audienceCapacity);
-        if(isAudienceCapacityValid && isNameValid) {
-            if ("Add".equals(addLocationButton.getText())) {
-                locationRepo.save(new Location(name, extraInfo, Integer.parseInt(audienceCapacity)));
-            } else {
-                Location location = locationListView.getSelectionModel().getSelectedItem();
-                location.setLocationName(name);
-                location.setCapacity(Integer.parseInt(audienceCapacity));
-                location.setLocationInfo(extraInfo);
-                locationRepo.save(location);
-            }
+    //Util Methods - Location Form
+    private void populateLocations() {
+
+        ObservableList<Location> locations = FXCollections.observableArrayList();
+
+        if(locationRepo.count() != 0) {
+            locations.addAll(locationRepo.findAll());
         }
-        populateLocations();
-        resetLocationForm();
+        locationComboBox.setItems(locations);
+        int i = locationListView.getSelectionModel().getSelectedIndex();
+        locationListView.setItems(locations);
+        locationListView.getSelectionModel().select(i);
     }
-
     private void resetLocationForm() {
         locationFormLabel.setText("Add Location");
         locationNameField.setEditable(true);
@@ -262,30 +329,7 @@ public class EventsSceneController extends GIMSController implements Initializab
         locationAudienceCapacity.clear();
         locationInformation.clear();
     }
-    private void resetEventForm() {
-        eventFormLabel.setText("Add Event");
-        eventNameHelpLabel.setText("");
-        eventNameHelpLabel.setDisable(true);
-        eventDateRangeHelpLabel.setText("");
-        eventDateRangeHelpLabel.setDisable(true);
-        saveEventButton.setVisible(true);
-        saveEventButton.setText("Add Event");
-        locationComboBox.setDisable(false);
-        eventNameTextField.setEditable(true);
-        eventStartDate.setDisable(false);
-        eventStartTime.setDisable(false);
-        eventEndDate.setDisable(false);
-        eventEndTime.setDisable(false);
-        eventExtraInfo.setEditable(true);
-        locationComboBox.getSelectionModel().clearSelection();
-        eventNameTextField.clear();
-        eventStartDate.setValue(null);
-        eventStartTime.setValue(null);
-        eventEndDate.setValue(null);
-        eventEndTime.setValue(null);
-        //eventCustomerListView.getSelectionModel().clearSelection(); always null
-        eventExtraInfo.clear();
-    }
+
 
     public AnchorPane getScene() {
         return pane;

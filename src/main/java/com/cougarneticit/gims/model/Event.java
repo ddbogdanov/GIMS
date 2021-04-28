@@ -6,7 +6,7 @@ import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -22,19 +22,29 @@ public class Event {
     @Column(name="info", length=255)
     private String eventInfo;
     @Column(name="start_date")
-    private LocalDate startDate;
+    private LocalDateTime startDateTime;
     @Column(name="end_date")
-    private LocalDate endDate;
+    private LocalDateTime endDateTime;
 
-    @OneToOne //TODO fix relationship
+    @ManyToOne
     @JoinColumn(name="location_id")
     private Location location;
-
     @ManyToOne
     @JoinColumn(name="event_status_id")
     private EventStatus eventStatus;
 
-    //@OneToMany(fetch = FetchType.EAGER, mappedBy = "event", orphanRemoval = false)
+    public Event() {
+
+    }
+    public Event(UUID eventId, Location location, EventStatus eventStatus, String eventName, String eventInfo, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        this.eventId = eventId;
+        this.location = location;
+        this.eventStatus = eventStatus;
+        this.eventName = eventName;
+        this.eventInfo = eventInfo;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
+    }
 
     public UUID getEventId() {
         return eventId;
@@ -42,42 +52,34 @@ public class Event {
     public String getEventName() {
         return eventName;
     }
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
     public String getEventInfo() {
         return eventInfo;
     }
-    public void setEventInfo(String eventInfo) {
-        this.eventInfo = eventInfo;
+    public LocalDateTime getStartDateTime() {
+        return startDateTime;
     }
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public LocalDateTime getEndDateTime() {
+        return endDateTime;
     }
     public Location getLocation() {
         return location;
     }
+
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+    public void setEventInfo(String eventInfo) {
+        this.eventInfo = eventInfo;
+    }
+    public void setStartDateTime(LocalDateTime startDateTime) {
+        this.startDateTime = startDateTime;
+    }
+    public void setEndDateTime(LocalDateTime endDateTime) {
+        this.endDateTime = endDateTime;
+    }
     public void setLocation(Location location) {
         this.location = location;
     }
-
-    public Event(String eventName, String eventInfo, LocalDate startDate, LocalDate endDate, Location location) {
-        this.eventName = eventName;
-        this.eventInfo = eventInfo;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.location = location;
-    }
-    public Event() {}
 
     @Override
     public String toString() {
