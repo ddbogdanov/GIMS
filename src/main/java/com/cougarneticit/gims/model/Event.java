@@ -1,10 +1,12 @@
 package com.cougarneticit.gims.model;
 
+//import com.cougarneticit.gims.model.common.EventStatus;
+import java.time.LocalDate;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -14,37 +16,25 @@ public class Event {
     @Id
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="event_id", length=36)
-    private final UUID eventId = UUID.randomUUID();
+    private UUID eventId;
     @Column(name="name", length=16)
     private String eventName;
     @Column(name="info", length=255)
     private String eventInfo;
     @Column(name="start_date")
-    private Date startDate;
+    private LocalDate startDate;
     @Column(name="end_date")
-    private Date endDate;
+    private LocalDate endDate;
 
-    @OneToOne
+    @OneToOne //TODO fix relationship
     @JoinColumn(name="location_id")
     private Location location;
 
-    //@OneToMany(fetch = FetchType.EAGER, mappedBy = "event", orphanRemoval = false)
-    //private Set<Customer> customers;
-
     @ManyToOne
     @JoinColumn(name="event_status_id")
-    EventStatus eventStatus;
+    private EventStatus eventStatus;
 
-    public Event() {
-
-    }
-    public Event(String eventName, String eventInfo, Date startDate, Date endDate, Location location) {
-        this.eventName = eventName;
-        this.eventInfo = eventInfo;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.location = location;
-    }
+    //@OneToMany(fetch = FetchType.EAGER, mappedBy = "event", orphanRemoval = false)
 
     public UUID getEventId() {
         return eventId;
@@ -52,53 +42,42 @@ public class Event {
     public String getEventName() {
         return eventName;
     }
-    public String getEventInfo() {
-        return eventInfo;
-    }
-    public Date getStartDate() {
-        return startDate;
-    }
-    public Date getEndDate() {
-        return endDate;
-    }
-    public Location getLocation() {
-        return location;
-    }
-    public int getEventStatusId() {
-        return eventStatus.getEventStatusId();
-    }
-    public EventStatus getEventStatus() {
-        return eventStatus;
-    }
-
-    /*public Set<Customer> getCustomers() {
-        return customers;
-    }*/
-
-
-
     public void setEventName(String eventName) {
         this.eventName = eventName;
+    }
+    public String getEventInfo() {
+        return eventInfo;
     }
     public void setEventInfo(String eventInfo) {
         this.eventInfo = eventInfo;
     }
-    public void setStartDate(Date startDate) {
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
-    public void setEndDate(Date endDate) {
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
+    }
+    public Location getLocation() {
+        return location;
     }
     public void setLocation(Location location) {
         this.location = location;
     }
-    public void setStatus(EventStatus eventStatus) {
-        this.eventStatus = eventStatus;
-    }
 
-    /*public void setCustomers(Set<Customer> customers) {
-        this.customers = customers;
-    }*/
+    public Event(String eventName, String eventInfo, LocalDate startDate, LocalDate endDate, Location location) {
+        this.eventName = eventName;
+        this.eventInfo = eventInfo;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
+    }
+    public Event() {}
 
     @Override
     public String toString() {
