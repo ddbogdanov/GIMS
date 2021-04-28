@@ -70,18 +70,7 @@ public class EmpRoomsSceneController extends GIMSController implements Initializ
         }
 
         setCompletedButton.setOnAction(e -> {
-            Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
-
-            boolean newCompletedValue = !selectedTask.isCompleted();
-            selectedTask.setCompleted(newCompletedValue);
-
-            taskRepo.save(selectedTask);
-
-            int oldIndex = taskListView.getSelectionModel().getSelectedIndex();
-            populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
-            taskListView.getSelectionModel().select(oldIndex);
-            setInfoLabels();
-            setTaskInfoLabels();
+            setTaskAsCompleted();
         });
 
         roomListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
@@ -103,6 +92,20 @@ public class EmpRoomsSceneController extends GIMSController implements Initializ
         });
     }
 
+    private void setTaskAsCompleted() {
+        Task selectedTask = taskListView.getSelectionModel().getSelectedItem();
+
+        boolean newCompletedValue = !selectedTask.isCompleted();
+        selectedTask.setCompleted(newCompletedValue);
+
+        taskRepo.save(selectedTask);
+
+        int oldIndex = taskListView.getSelectionModel().getSelectedIndex();
+        populateTaskListView(roomListView.getSelectionModel().getSelectedItem().getRoomId());
+        taskListView.getSelectionModel().select(oldIndex);
+        setInfoLabels();
+        setTaskInfoLabels();
+    }
     private void populateRoomListView() {
         ObservableList<Room> roomList = FXCollections.observableArrayList();
 
