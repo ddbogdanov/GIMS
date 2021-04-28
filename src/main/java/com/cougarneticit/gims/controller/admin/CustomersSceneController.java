@@ -369,6 +369,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
         stayComboBox.setDisable(false);
         stayComboBox.getSelectionModel().clearSelection();
 
+        orderFormLabel.setText("Create Order");
         orderTotalLabel.setText("-");
 
         orderFormSubmitButton.setText("Create");

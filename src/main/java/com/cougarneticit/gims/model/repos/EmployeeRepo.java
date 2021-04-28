@@ -8,4 +8,5 @@ import java.util.UUID;
 
 public interface EmployeeRepo extends CrudRepository<Employee, UUID> {
     List<Employee> findAll();
+    Employee findByUser_UserId(UUID userId);
 }

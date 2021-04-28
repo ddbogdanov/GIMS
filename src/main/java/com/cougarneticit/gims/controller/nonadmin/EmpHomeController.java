@@ -33,7 +33,7 @@ public class EmpHomeController extends GIMSController implements Initializable {
 
     @FXML AnchorPane pane;
     @FXML JFXButton exitButton, minimizeButton, maximizeButton;
-    @FXML JFXButton homeTab, roomTab, eventTab, settingsTab;
+    @FXML JFXButton homeTab, roomTab; //eventTab, settingsTab;
     @FXML BorderPane mainView;
 
     public EmpHomeController(FxWeaver fxWeaver) {
@@ -48,8 +48,8 @@ public class EmpHomeController extends GIMSController implements Initializable {
         ArrayList<JFXButton> buttonList = new ArrayList<>();
         buttonList.add(homeTab);
         buttonList.add(roomTab);
-        buttonList.add(eventTab);
-        buttonList.add(settingsTab);
+        //buttonList.add(eventTab);
+        //buttonList.add(settingsTab);
 
         preloadViews();
 
@@ -64,14 +64,14 @@ public class EmpHomeController extends GIMSController implements Initializable {
             setActiveButton(roomTab, buttonList);
             showEmpRoomsView();
         });
-        eventTab.setOnAction(e -> {
+        /*eventTab.setOnAction(e -> {
             setActiveButton(eventTab, buttonList);
             showEmpEventsView();
         });
         settingsTab.setOnAction(e -> {
             setActiveButton(settingsTab, buttonList);
             showEmpSettingsView();
-        });
+        });*/
 
         //Duplicated code - fix by dynamically loading tabs into a common HomeController. Too much work for me.
         minimizeButton.setOnAction(e -> {

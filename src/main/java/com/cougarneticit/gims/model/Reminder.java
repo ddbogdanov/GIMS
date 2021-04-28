@@ -26,4 +26,9 @@ public class Reminder {
         this.user = user;
         this.reminder = reminder;
     }
+
+    @Override
+    public String toString() {
+        return reminder;
+    }
 }

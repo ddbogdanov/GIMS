@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="606.0" prefWidth="1090.0" style="-fx-background-color: #33333D;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.nonadmin.EmpHomeController">
+<AnchorPane fx:id="pane" prefHeight="700.0" prefWidth="1090.0" style="-fx-background-color: #33333D;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.nonadmin.EmpHomeController">
    <children>
       <AnchorPane layoutY="7.0" prefHeight="60.0" prefWidth="1090.0" style="-fx-background-color: #007b68;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <effect>
@@ -32,7 +32,7 @@
                         <Font name="Roboto Regular" size="24.0" />
                      </font>
                   </Label>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                  <AnchorPane maxWidth="250.0" prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
                      <children>
                         <JFXButton fx:id="homeTab" layoutX="21.0" prefHeight="60.0" prefWidth="115.0" ripplerFill="#5bddc7" text="Home" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
@@ -44,10 +44,10 @@
                         </JFXButton>
                      </children>
                      <HBox.margin>
-                        <Insets left="60.0" />
+                        <Insets left="200.0" />
                      </HBox.margin>
                   </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                  <AnchorPane maxWidth="250.0" prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
                      <children>
                         <JFXButton fx:id="roomTab" layoutX="14.0" prefHeight="60.0" prefWidth="110.0" ripplerFill="#5bddc7" text="Rooms" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
@@ -59,31 +59,7 @@
                         </JFXButton>
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <JFXButton fx:id="eventTab" layoutX="4.0" layoutY="3.0" prefHeight="60.0" prefWidth="90.0" ripplerFill="#5bddc7" text="Events" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="CALENDAR" size="16" />
-                           </graphic>
-                        </JFXButton>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
-                     <children>
-                        <JFXButton fx:id="settingsTab" layoutX="94.0" layoutY="-4.0" prefHeight="60.0" prefWidth="90.0" ripplerFill="#5bddc7" text="Settings" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <font>
-                              <Font size="14.0" />
-                           </font>
-                           <graphic>
-                              <FontAwesomeIconView fill="WHITE" glyphName="GEAR" size="16" />
-                           </graphic>
-                        </JFXButton>
-                     </children>
-                  </AnchorPane>
-                  <AnchorPane prefHeight="60.0" prefWidth="90.0" HBox.hgrow="ALWAYS">
+                  <AnchorPane prefHeight="60.0" prefWidth="0.0" HBox.hgrow="ALWAYS">
                      <children>
                         <JFXButton fx:id="minimizeButton" focusTraversable="false" layoutX="106.0" layoutY="18.0" ripplerFill="#5bddc7" text="" AnchorPane.rightAnchor="65.0" AnchorPane.topAnchor="5.0">
                            <graphic>

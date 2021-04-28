@@ -15,7 +15,7 @@
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="1090.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="roomNameLabel" alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Welcome to GIMS" textFill="WHITE">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Welcome to GIMS" textFill="WHITE">
                <font>
                   <Font name="Roboto Regular" size="34.0" />
                </font>
@@ -159,7 +159,7 @@
                                     <Insets top="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <JFXTextArea fx:id="taskDescriptionTextArea" focusColor="#11ab97" labelFloat="true" prefHeight="100.0" prefWidth="425.0" promptText="Reminder" style="-fx-background-color: #3e3e4a; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+                              <JFXTextArea fx:id="reminderDescriptionArea" focusColor="#11ab97" labelFloat="true" prefHeight="100.0" prefWidth="425.0" promptText="Reminder" style="-fx-background-color: #3e3e4a; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
