@@ -68,9 +68,9 @@
                         <Insets right="15.0" top="5.0" />
                      </VBox.margin>
                   </Separator>
-                  <HBox prefHeight="318.0" prefWidth="733.0">
+                  <HBox prefHeight="318.0" prefWidth="733.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Shift Start" textFill="WHITE">
                                  <font>
@@ -105,10 +105,10 @@
                         </VBox>
                         <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
                            <HBox.margin>
-                              <Insets bottom="40.0" top="65.0" />
+                              <Insets top="30.0" />
                            </HBox.margin>
                         </Separator>
-                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Shift End" textFill="WHITE">
                                  <font>
@@ -143,9 +143,9 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox prefHeight="318.0" prefWidth="733.0">
+                  <HBox prefHeight="318.0" prefWidth="733.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0">
+                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Clocking" textFill="WHITE">
                                  <font>
@@ -196,7 +196,12 @@
                               </HBox>
                            </children>
                         </VBox>
-                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0">
+                        <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
+                           <HBox.margin>
+                              <Insets bottom="15.0" />
+                           </HBox.margin>
+                        </Separator>
+                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0" HBox.hgrow="ALWAYS">
                            <children>
                               <Label text="Actions" textFill="WHITE">
                                  <font>

@@ -608,7 +608,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         roomNameLabel.setText(selectedRoom.getRoomId() + ": " + selectedRoom.getRoomName());
         activeTasksLabel.setText(String.valueOf(taskRepo.countAllByRoom_RoomId(selectedRoom.getRoomId())));
         statusLabel.setText(String.valueOf(selectedRoom.getRoomStatus()));
-        switch(selectedRoom.getRoomStatus().getEventStatus()) {
+        switch(selectedRoom.getRoomStatus().getRoomStatus()) {
             case "OCCUPIED":
                 statusLabel.setTextFill(Color.web("#F73331"));
                 break;

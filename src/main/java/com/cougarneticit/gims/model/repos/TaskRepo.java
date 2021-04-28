@@ -13,4 +13,5 @@ public interface TaskRepo extends CrudRepository<Task, UUID> {
     int countAllByEmployee_EmployeeIdAndCompleted(UUID employeeId, boolean completed);
     int countAllByRoom_RoomId(Character roomId);
     int countAllByRoom_RoomIdAndCompleted(Character roomId, boolean completed);
+    int countAllByCompleted(boolean completed);
 }

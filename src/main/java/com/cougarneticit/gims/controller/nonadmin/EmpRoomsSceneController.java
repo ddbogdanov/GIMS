@@ -9,7 +9,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
-import java.util.Comparator;
 import java.util.ResourceBundle;
 
 @Component
@@ -129,7 +127,7 @@ public class EmpRoomsSceneController extends GIMSController implements Initializ
         roomNameLabel.setText(selectedRoom.getRoomId() + ": " + selectedRoom.getRoomName());
         activeTasksLabel.setText(String.valueOf(taskRepo.countAllByRoom_RoomIdAndCompleted(selectedRoom.getRoomId(), false)));
         statusLabel.setText(String.valueOf(selectedRoom.getRoomStatus()));
-        switch(selectedRoom.getRoomStatus().getEventStatus()) {
+        switch(selectedRoom.getRoomStatus().getRoomStatus()) {
             case "OCCUPIED":
                 statusLabel.setTextFill(Color.web("#F73331"));
                 break;

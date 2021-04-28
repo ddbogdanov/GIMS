@@ -14,7 +14,7 @@ public class RoomStatus {
     @Column(name="room_status_id")
     private int roomStatusId;
     @Column(name="status", length=8)
-    private String eventStatus;
+    private String roomStatus;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy= "roomStatus", cascade=CascadeType.REMOVE)
     private Set<Room> rooms;
@@ -23,18 +23,18 @@ public class RoomStatus {
 
     }
     public RoomStatus(String eventStatus) {
-        this.eventStatus = eventStatus;
+        this.roomStatus = eventStatus;
     }
 
     public int getRoomStatusId() {
         return roomStatusId;
     }
-    public String getEventStatus() {
-        return eventStatus;
+    public String getRoomStatus() {
+        return roomStatus;
     }
 
     @Override
     public String toString() {
-        return eventStatus;
+        return roomStatus;
     }
 }

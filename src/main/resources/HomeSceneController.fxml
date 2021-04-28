@@ -124,7 +124,7 @@
                               <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                         </Label>
-                        <JFXListView fx:id="taskListView" prefHeight="310.0" prefWidth="515.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
+                        <JFXListView fx:id="reminderListView" prefHeight="310.0" prefWidth="515.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                            <VBox.margin>
                               <Insets left="15.0" right="15.0" />
                            </VBox.margin>
@@ -159,7 +159,7 @@
                                     <Insets top="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <JFXTextArea fx:id="reminderDescriptionArea" focusColor="#11ab97" labelFloat="true" prefHeight="100.0" prefWidth="425.0" promptText="Reminder" style="-fx-background-color: #3e3e4a; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
+                              <JFXTextArea fx:id="reminderTextArea" focusColor="#11ab97" labelFloat="true" prefHeight="100.0" prefWidth="425.0" promptText="Reminder" style="-fx-background-color: #3e3e4a; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
