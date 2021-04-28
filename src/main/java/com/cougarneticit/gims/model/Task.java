@@ -52,6 +52,10 @@ public class Task {
         this.description = description;
     }
 
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public UUID getTaskId() {
         return taskId;
     }

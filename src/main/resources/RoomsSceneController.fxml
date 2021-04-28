@@ -289,7 +289,7 @@
                                           <Insets left="15.0" right="15.0" top="5.0" />
                                        </VBox.margin>
                                     </AnchorPane>
-                                    <JFXListView fx:id="taskListView" prefHeight="250.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
+                                    <JFXListView fx:id="taskListView" prefHeight="250.0" prefWidth="389.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets left="15.0" right="15.0" />
                                        </VBox.margin>
