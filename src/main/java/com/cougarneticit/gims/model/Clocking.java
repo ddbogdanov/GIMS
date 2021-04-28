@@ -12,33 +12,55 @@ public class Clocking {
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="clocking_id")
-    int clockingId;
+    private int clockingId;
     @Column(name="in_datetime")
-    LocalDateTime inDateTime;
+    private LocalDateTime inDateTime;
     @Column(name="out_datetime")
-    LocalDateTime outDateTime;
-
+    private LocalDateTime outDateTime;
+    @Column(name="clocked_in")
+    private boolean clockedIn;
+    @Column(name="clocked_out")
+    private boolean clockedOut;
     //TODO boolean clockedIn/clockedOut maybe? remove LocalDateTimes from constructors and use clockIn() and clockOut() maybe?
 
-    @OneToOne(fetch=FetchType.EAGER)
-    @JoinColumn(name="shift_id")
+    @OneToOne(mappedBy="clocking", fetch=FetchType.EAGER, cascade=CascadeType.REMOVE)
     private Shift shift;
 
     public Clocking() {
         inDateTime = null;
         outDateTime = null;
         shift = null;
+        clockedIn = false;
+        clockedOut = false;
     }
-    public Clocking(Shift shift, LocalDateTime inDateTime, LocalDateTime outDateTime) {
+    public Clocking(Shift shift) {
         this.shift = shift;
-        this.inDateTime = inDateTime;
-        this.outDateTime = outDateTime;
+        clockedIn = false;
+        clockedOut = false;
     }
     public Clocking(int clockingId, Shift shift, LocalDateTime inDateTime, LocalDateTime outDateTime) {
         this.clockingId = clockingId;
         this.shift = shift;
         this.inDateTime = inDateTime;
         this.outDateTime = outDateTime;
+        clockedIn = false;
+        clockedOut = false;
+    }
+
+    public boolean isClockedIn() {
+        return clockedIn;
+    }
+    public boolean isClockedOut() {
+        return clockedOut;
+    }
+
+    public void clockIn(LocalDateTime inDateTime) {
+        this.inDateTime = inDateTime;
+        clockedIn = true;
+    }
+    public void clockOut(LocalDateTime outDateTime) {
+        this.outDateTime = outDateTime;
+        clockedOut = true;
     }
 
     @Override

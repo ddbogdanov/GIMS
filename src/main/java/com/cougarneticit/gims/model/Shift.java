@@ -25,7 +25,8 @@ public class Shift {
     @Column(name="end_datetime", length=28)
     private LocalDateTime endDateTime;
 
-    @OneToOne(mappedBy="shift", fetch=FetchType.EAGER, cascade=CascadeType.REMOVE)
+    @OneToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name="clocking_id")
     private Clocking clocking;
 
     @ManyToOne
@@ -37,12 +38,14 @@ public class Shift {
         this.startDateTime = null;
         this.endDateTime = null;
         this.employee = null;
+        clocking = new Clocking(this);
     }
     public Shift(UUID shiftId, Employee employee, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         this.shiftId = shiftId;
         this.employee = employee;
         this.startDateTime = startDateTime;
         this.endDateTime = endDateTime;
+        clocking = new Clocking(this);
     }
 
     public void setShiftId(UUID shiftId) {
@@ -64,14 +67,23 @@ public class Shift {
     public UUID getEmployeeId() {
         return employee.getEmployeeId();
     }
+    public Employee getEmployee() {
+        return employee;
+    }
+    public Clocking getClocking() {
+        return clocking;
+    }
+    public boolean isClockedIn() {
+        return clocking.isClockedIn();
+    }
+    public boolean isClockedOut() {
+        return clocking.isClockedOut();
+    }
     public LocalDateTime getStartDateTime() {
         return startDateTime;
     }
     public LocalDateTime getEndDateTime() {
         return endDateTime;
-    }
-    public Employee getEmployee() {
-        return employee;
     }
 
     @Override

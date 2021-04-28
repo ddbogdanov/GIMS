@@ -1,5 +1,239 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="700.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.nonadmin.EmpShiftsSceneController" />
+<AnchorPane fx:id="pane" prefHeight="700.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.nonadmin.EmpShiftsSceneController">
+   <children>
+      <HBox layoutX="319.0" layoutY="172.0" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="355.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Shifts" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto Regular" size="34.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                     <VBox.margin>
+                        <Insets left="15.0" top="5.0" />
+                     </VBox.margin>
+                  </Separator>
+                  <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                     <children>
+                        <Label prefHeight="15.0" prefWidth="243.0" text="Your Shifts" textFill="#5bddc7">
+                           <font>
+                              <Font name="Roboto Regular" size="10.0" />
+                           </font>
+                        </Label>
+                     </children>
+                     <VBox.margin>
+                        <Insets left="15.0" right="15.0" top="5.0" />
+                     </VBox.margin>
+                  </AnchorPane>
+                  <JFXListView fx:id="shiftListView" prefHeight="245.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
+                     <VBox.margin>
+                        <Insets bottom="15.0" left="15.0" right="15.0" />
+                     </VBox.margin>
+                  </JFXListView>
+               </children>
+            </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
+               <HBox.margin>
+                  <Insets bottom="15.0" top="15.0" />
+               </HBox.margin>
+            </Separator>
+            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="733.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Clock-In / Clock-Out" textFill="WHITE">
+                     <font>
+                        <Font name="Roboto Regular" size="34.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets top="15.0" />
+                     </VBox.margin>
+                  </Label>
+                  <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                     <VBox.margin>
+                        <Insets right="15.0" top="5.0" />
+                     </VBox.margin>
+                  </Separator>
+                  <HBox prefHeight="318.0" prefWidth="733.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0">
+                           <children>
+                              <Label text="Shift Start" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                                 <VBox.margin>
+                                    <Insets left="60.0" right="60.0" top="10.0" />
+                                 </VBox.margin>
+                              </Separator>
+                              <Label fx:id="shiftStartDateLabel" alignment="CENTER" text="12/12/2021" textFill="#5d5c67">
+                                 <font>
+                                    <Font name="Roboto Regular" size="34.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="60.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label fx:id="shiftStartTimeLabel" alignment="CENTER" text="8:00 AM" textFill="#5d5c67">
+                                 <font>
+                                    <Font name="Roboto Regular" size="34.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
+                           <HBox.margin>
+                              <Insets bottom="40.0" top="65.0" />
+                           </HBox.margin>
+                        </Separator>
+                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0">
+                           <children>
+                              <Label text="Shift End" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                                 <VBox.margin>
+                                    <Insets left="60.0" right="60.0" top="10.0" />
+                                 </VBox.margin>
+                              </Separator>
+                              <Label fx:id="shiftEndDateLabel" alignment="CENTER" text="12/12/2021" textFill="#5d5c67">
+                                 <font>
+                                    <Font name="Roboto Regular" size="34.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="60.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label fx:id="shiftEndTimeLabel" alignment="CENTER" text="5:00 PM" textFill="#5d5c67">
+                                 <font>
+                                    <Font name="Roboto Regular" size="34.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="318.0" prefWidth="733.0">
+                     <children>
+                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0">
+                           <children>
+                              <Label text="Clocking" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                                 <VBox.margin>
+                                    <Insets left="60.0" right="60.0" top="10.0" />
+                                 </VBox.margin>
+                              </Separator>
+                              <HBox alignment="CENTER" prefHeight="41.0" prefWidth="366.0" spacing="10.0">
+                                 <children>
+                                    <Label alignment="CENTER" text="Clocked in?:" textFill="#5d5c67">
+                                       <font>
+                                          <Font name="Roboto Regular" size="34.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="clockedInLabel" alignment="CENTER" text="No" textFill="#5d5c67">
+                                       <font>
+                                          <Font name="Roboto Regular" size="34.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="30.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox alignment="CENTER" prefHeight="41.0" prefWidth="366.0" spacing="10.0">
+                                 <children>
+                                    <Label alignment="CENTER" text="Clocked out?:" textFill="#5d5c67">
+                                       <font>
+                                          <Font name="Roboto Regular" size="34.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="clockedOutLabel" alignment="CENTER" text="No" textFill="#5d5c67">
+                                       <font>
+                                          <Font name="Roboto Regular" size="34.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="15.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                        </VBox>
+                        <VBox alignment="TOP_CENTER" prefHeight="318.0" prefWidth="366.0">
+                           <children>
+                              <Label text="Actions" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="20.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                                 <VBox.margin>
+                                    <Insets left="60.0" right="60.0" top="10.0" />
+                                 </VBox.margin>
+                              </Separator>
+                              <JFXButton fx:id="clockInButton" prefHeight="32.0" prefWidth="160.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Clock-In" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </JFXButton>
+                              <JFXButton fx:id="clockOutButton" prefHeight="32.0" prefWidth="160.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Clock-Out" textFill="WHITE">
+                                 <font>
+                                    <Font name="Roboto Regular" size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </JFXButton>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

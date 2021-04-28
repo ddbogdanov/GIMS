@@ -77,15 +77,15 @@ public class EventsSceneController extends GIMSController implements Initializab
     }
 
     private void populateEvents() {
-
+        //TODO ???
         ObservableList<Event> events = FXCollections.observableArrayList();
         List<Event> allEvents = eventRepo.findAll();
-        System.out.println(allEvents); // Empty List
 
         if(!allEvents.isEmpty()) {
             events.addAll(allEvents);
         }
         eventsListView.setItems(events);
+
     }
     private void populateLocations() {
 
@@ -123,7 +123,8 @@ public class EventsSceneController extends GIMSController implements Initializab
         if(isNameValid && isLocationValid && isDateRangeValid) {
             if ("Add Event".equals(saveEventButton.getText())) {
                 eventRepo.save(new Event(name, extraInfo, dateMaker.apply(startDate, startTime), dateMaker.apply(endDate, endTime), location));
-            } else {
+            }
+            else {
                 Event event = eventsListView.getSelectionModel().getSelectedItem();
                 event.setEventName(name);
                 event.setEventInfo(extraInfo);
@@ -132,27 +133,34 @@ public class EventsSceneController extends GIMSController implements Initializab
                 event.setLocation(location);
                 eventRepo.save(event);
             }
-        } else if(!isNameValid) {
+        }
+        else if(!isNameValid) {
             eventNameHelpLabel.setText("Event Name should contain characters");
             eventNameHelpLabel.setDisable(false);
-        } else if(!isStartDateValid) {
+        }
+        else if(!isStartDateValid) {
             eventDateRangeHelpLabel.setText("Start Date cannot be null");
             eventDateRangeHelpLabel.setDisable(false);
-        } else if(!isStartTimeValid) {
+        }
+        else if(!isStartTimeValid) {
             eventDateRangeHelpLabel.setText("Start Time cannot be null");
             eventDateRangeHelpLabel.setDisable(false);
-        } else if(!isEndDateValid) {
+        }
+        else if(!isEndDateValid) {
             eventDateRangeHelpLabel.setText("End Date cannot be null");
             eventDateRangeHelpLabel.setDisable(false);
-        } else if(!isEndTimeValid) {
+        }
+        else if(!isEndTimeValid) {
             eventDateRangeHelpLabel.setText("End Time cannot be null");
             eventDateRangeHelpLabel.setDisable(false);
-        } else if(!isDateRangeValid) {
+        }
+        else if(!isDateRangeValid) {
             eventDateRangeHelpLabel.setText("Date Range is invalid (start > end)");
             eventDateRangeHelpLabel.setDisable(false);
         }
         populateEvents();
     }
+
     private void editEvent() {
         eventFormLabel.setText("Edit Event");
         Event event = eventsListView.getSelectionModel().getSelectedItem();
