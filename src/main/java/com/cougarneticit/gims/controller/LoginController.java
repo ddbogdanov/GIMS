@@ -24,6 +24,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -78,20 +79,30 @@ public class LoginController extends GIMSController implements Initializable {
         Pbkdf2PasswordEncoder passwordEncoder = new Pbkdf2PasswordEncoder();
 
         try {
-            if(passwordEncoder.matches(password, userRepo.findByUsername(username).get(0).getPassword())) {
+            //User user = new User(UUID.randomUUID(), "LeslD", "admin", true); // Debug
+            User user = userRepo.findByUsername(username).get(0);
+            String userPassword = user.getPassword();
+            
+            if(passwordEncoder.matches(password, userPassword)) {
 
+<<<<<<< Updated upstream
                 String hashedPassword = userRepo.findByUsername(username).get(0).getPassword();
                 userId = userRepo.findByUsername(username).get(0).getUserId();
                 isAdmin = userRepo.findByUsername(username).get(0).isAdmin();
                 User user = new User(userId, username, hashedPassword, isAdmin);
+=======
+                userId = user.getUser_id();
+                isAdmin = user.isAdmin();
+                User activeUser = new User(userId, username, userPassword, isAdmin);
+>>>>>>> Stashed changes
 
                 loginStatus.setTextFill(Color.web("#FFFFFF"));
                 loginStatus.setText("Login Successful!");
                 loginStatus.setVisible(true);
 
-                setActiveUser(user);
+                setActiveUser(activeUser);
 
-                if(user.isAdmin()) {
+                if(activeUser.isAdmin()) {
                     loadAdminView();
                 }
                 else {
