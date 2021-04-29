@@ -25,8 +25,9 @@ public class Order {
 
     @OneToMany(fetch=FetchType.EAGER, mappedBy="order", cascade=CascadeType.REMOVE)
     Set<AdditionalCharge> additionalCharges;
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="order", cascade=CascadeType.REMOVE)
+    Set<EventCharge> eventCharges;
 
-    //TODO relationship with order. Allow adding event charge to order.
     @ManyToOne
     @JoinColumn(name="customer_id")
     private Customer customer;

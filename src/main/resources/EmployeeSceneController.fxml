@@ -481,7 +481,7 @@
                         </Label>
                         <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="200.0">
                            <children>
-                              <JFXComboBox fx:id="employeeComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="124.0" promptText="Choose Employee" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                              <JFXComboBox fx:id="employeeComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="158.0" promptText="Choose Employee" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
                               <Label fx:id="shiftFormHelpLabel" prefHeight="15.0" prefWidth="91.0" text="All fields required" textFill="#f73331" visible="false">
                                  <font>
                                     <Font name="Roboto Regular" size="10.0" />

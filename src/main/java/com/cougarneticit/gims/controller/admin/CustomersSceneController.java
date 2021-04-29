@@ -193,6 +193,11 @@ public class CustomersSceneController extends GIMSController implements Initiali
                 chargeFormOrderIdLabel.setText("Order #" + newVal.getOrderId());
             }
         });
+        chargeListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                chargeListLabel.setText("Event Charges - {Order ID}");
+            }
+        });
         stayStartDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
             //Lazy workaround to unwanted behavior produced by the DatePicker
             if(newVal != null) {
@@ -531,8 +536,12 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
                 if (charge.getCharge().compareTo(oldCharge) < 0) {
                     charge.setCharge(oldCharge.subtract(charge.getCharge()).multiply(new BigDecimal(-1)));
-                } else if (charge.getCharge().compareTo(oldCharge) > 0) {
+                }
+                else if (charge.getCharge().compareTo(oldCharge) > 0) {
                     charge.setCharge(charge.getCharge().subtract(oldCharge));
+                }
+                else {
+                    charge.setCharge(new BigDecimal(0));
                 }
 
                 updateOrderTotal(charge); //TODO calculate order total in order object

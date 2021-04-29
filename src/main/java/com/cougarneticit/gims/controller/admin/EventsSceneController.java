@@ -1,12 +1,8 @@
 package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
-import com.cougarneticit.gims.model.Event;
-import com.cougarneticit.gims.model.EventStatus;
-import com.cougarneticit.gims.model.Location;
-import com.cougarneticit.gims.model.repos.EventRepo;
-import com.cougarneticit.gims.model.repos.EventStatusRepo;
-import com.cougarneticit.gims.model.repos.LocationRepo;
+import com.cougarneticit.gims.model.*;
+import com.cougarneticit.gims.model.repos.*;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,12 +10,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.*;
 import java.util.*;
@@ -36,20 +34,33 @@ public class EventsSceneController extends GIMSController implements Initializab
     LocationRepo locationRepo;
     @Autowired
     EventStatusRepo eventStatusRepo;
+    @Autowired
+    OrderRepo orderRepo;
+    @Autowired
+    EventChargeRepo eventChargeRepo;
+    @Autowired
+    CustomerRepo customerRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXListView<Event> eventListView;
     @FXML private JFXListView<Location> locationListView;
+    @FXML private JFXListView<Order> orderListView;
+    @FXML private JFXListView<EventCharge> eventChargeListView;
     @FXML private JFXComboBox<Location> locationComboBox;
     @FXML private JFXComboBox<EventStatus> eventStatusComboBox;
+    @FXML private JFXComboBox<Customer> customerComboBox;
     @FXML private JFXDatePicker eventStartDatePicker, eventEndDatePicker;
     @FXML private JFXTimePicker eventStartTimePicker, eventEndTimePicker;
-    @FXML private JFXTextField eventNameTextField, locationNameTextField, capacityTextField;
-    @FXML private JFXTextArea eventExtraInfoArea, locationInfoTextArea;
-    @FXML private Label eventFormLabel, locationFormLabel, eventFormHelpLabel, locationFormHelpLabel;
+    @FXML private JFXTextField eventNameTextField, locationNameTextField, capacityTextField, chargeAmountTextField;
+    @FXML private JFXTextArea eventExtraInfoArea, locationInfoTextArea, chargeDescriptionTextArea;
+    @FXML private Label
+            eventFormLabel, locationFormLabel, eventFormHelpLabel, locationFormHelpLabel,
+            chargeFormLabel, chargeOrderIdLabel, chargeFormHelpLabel, chargeAmountHelpLabel,
+            chargeFormOrderIdLabel, chargeListLabel;
     @FXML private JFXButton
             eventFormSubmitButton, eventFormCancelButton, locationFormSubmitButton, locationFormCancelButton,
-            editEventButton, viewEventButton, deleteEventButton, editLocationButton, viewLocationButton, deleteLocationButton;
+            editEventButton, viewEventButton, deleteEventButton, editLocationButton, viewLocationButton, deleteLocationButton,
+            editChargeButton, deleteChargeButton, chargeFormSubmitButton, chargeFormCancelButton;
 
     public EventsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -63,6 +74,7 @@ public class EventsSceneController extends GIMSController implements Initializab
         populateLocationListView();
         populateLocationComboBox();
         populateEventStatusComboBox();
+        populateCustomerComboBox();
 
         //Event Form
         eventFormSubmitButton.setOnAction(e -> {
@@ -97,7 +109,215 @@ public class EventsSceneController extends GIMSController implements Initializab
         locationFormCancelButton.setOnAction(e -> {
             resetLocationForm();
         });
+
+        //Charge Form
+        chargeFormSubmitButton.setOnAction(e -> {
+            submitCharge();
+        });
+        chargeFormCancelButton.setOnAction(e -> {
+            resetChargeForm();
+        });
+        editChargeButton.setOnAction(e -> {
+            editCharge();
+        });
+        deleteChargeButton.setOnAction(e -> {
+            deleteCharge();
+        });
+
+        chargeAmountTextField.focusedProperty().addListener((obs, oldVal, newVal) -> chargeAmountHelpLabel.setVisible(newVal));
+        customerComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(customerComboBox.getValue() != null) {
+                populateOrderListView();
+                resetChargeForm();
+                chargeListLabel.setText("Event Charges - {Order ID}");
+                eventChargeListView.getItems().clear();
+            }
+        });
+        orderListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                populateChargeListView(newVal.getOrderId());
+                resetChargeForm();
+                chargeListLabel.setText("Event Charges - Order #" + newVal.getOrderId());
+            }
+        });
+        eventChargeListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                chargeListLabel.setText("Event Charges - {Order ID}");
+            }
+        });
     }
+
+    //Button Actions - Charge Form
+    private void submitCharge() {
+        if(validateChargeForm()) {
+            Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+            if(selectedOrder != null) {
+                EventCharge charge = new EventCharge(
+                        selectedOrder,
+                        chargeDescriptionTextArea.getText(),
+                        new BigDecimal(chargeAmountTextField.getText()));
+                eventChargeRepo.save(charge);
+                updateOrderTotal(charge);
+                populateOrderListView();
+                populateChargeListView(selectedOrder.getOrderId());
+                resetChargeForm();
+            }
+            else {
+                System.err.println("Nothing selected in order list");
+            }
+        }
+    }
+    private void resetChargeForm() {
+        chargeFormSubmitButton.setText("Add Event Charge");
+
+        chargeAmountTextField.clear();
+        chargeDescriptionTextArea.clear();
+
+        chargeFormHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        chargeFormHelpLabel.setVisible(false);
+        chargeAmountHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        chargeAmountHelpLabel.setText("####.##");
+        chargeAmountHelpLabel.setVisible(false);
+        chargeFormOrderIdLabel.setText("Order #--");
+        chargeFormLabel.setText("Add Charge");
+
+        chargeFormSubmitButton.setOnAction(e -> {
+            submitCharge();
+        });
+    }
+    private void editCharge() {
+        resetChargeForm();
+        try {
+            chargeFormSubmitButton.setOnAction(e -> {
+                submitChargeEdits();
+            });
+
+            populateChargeForm();
+            chargeFormLabel.setText("Edit a Charge");
+            chargeFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            chargeFormSubmitButton.setOnAction(e -> {
+                submitCharge();
+            });
+            System.err.println("Nothing selected in charges list");
+        }
+    }
+    private void submitChargeEdits() {
+        if(validateChargeForm()) {
+            if(orderListView.getSelectionModel().getSelectedItem() != null) {
+                BigDecimal oldCharge = eventChargeListView.getSelectionModel().getSelectedItem().getCharge();
+
+                EventCharge charge = new EventCharge(
+                        eventChargeListView.getSelectionModel().getSelectedItem().getChargeId(),
+                        orderListView.getSelectionModel().getSelectedItem(),
+                        chargeDescriptionTextArea.getText(),
+                        new BigDecimal(chargeAmountTextField.getText()));
+                eventChargeRepo.save(charge);
+
+                if (charge.getCharge().compareTo(oldCharge) < 0) {
+                    charge.setCharge(oldCharge.subtract(charge.getCharge()).multiply(new BigDecimal(-1)));
+                }
+                else if (charge.getCharge().compareTo(oldCharge) > 0) {
+                    charge.setCharge(charge.getCharge().subtract(oldCharge));
+                }
+                else {
+                    charge.setCharge(new BigDecimal(0));
+                }
+
+                updateOrderTotal(charge); //TODO calculate order total in order object
+                populateOrderListView();
+                populateChargeListView(eventChargeListView.getSelectionModel().getSelectedItem().getChargeId());
+                resetChargeForm();
+            }
+            else {
+                System.err.println("Nothing selected in order list to submit edit");
+            }
+        }
+    }
+    private void deleteCharge() {
+        EventCharge selectedCharge = eventChargeListView.getSelectionModel().getSelectedItem();
+
+        eventChargeRepo.delete(selectedCharge);
+
+        selectedCharge.setCharge(selectedCharge.getCharge().multiply(new BigDecimal(-1)));
+        updateOrderTotal(selectedCharge);
+
+        populateOrderListView();
+        populateChargeListView(selectedCharge.getOrderId());
+        resetChargeForm();
+    }
+
+    //Util Methods - Charge Form
+    private boolean validateChargeForm() {
+        try {
+            BigDecimal d = new BigDecimal(chargeAmountTextField.getText());
+        }
+        catch(NumberFormatException ex) {
+            chargeAmountHelpLabel.setTextFill(Color.web("#F73331"));
+            chargeAmountHelpLabel.setText("Invalid format: ####.##");
+            chargeAmountHelpLabel.setVisible(true);
+            return false;
+        }
+        if(chargeDescriptionTextArea.getText().isBlank()) {
+            chargeFormHelpLabel.setTextFill(Color.web("#F73331"));
+            chargeFormHelpLabel.setText("Description cannot be blank");
+            chargeFormHelpLabel.setVisible(true);
+            return false;
+        }
+        return true;
+    }
+    private void updateOrderTotal(EventCharge charge) {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+        Customer selectedCustomer = customerComboBox.getValue();
+
+        BigDecimal oldTotal = selectedOrder.getTotal();
+        BigDecimal newTotal = oldTotal.add(charge.getCharge());
+
+        Order order = new Order(
+                selectedOrder.getOrderId(),
+                selectedCustomer,
+                selectedOrder.getStay(),
+                newTotal);
+
+        orderRepo.save(order);
+    }
+    private void populateOrderListView() {
+        Customer selectedCustomer = customerComboBox.getValue();
+        ObservableList<Order> orders = FXCollections.observableArrayList();
+
+        if(orderRepo.count() != 0) {
+            orders.addAll(orderRepo.findAllByCustomer_CustomerId(selectedCustomer.getCustomerId()));
+        }
+        orderListView.setItems(orders.sorted());
+    }
+    private void populateChargeListView(int orderId) {
+        chargeListLabel.setText("Event Charges - Order #" + orderId);
+        ObservableList<EventCharge> charges = FXCollections.observableArrayList();
+
+        if(eventChargeRepo.count() != 0) {
+            charges.addAll(eventChargeRepo.findAllByOrder_OrderId(orderId));
+        }
+        eventChargeListView.setItems(charges);
+    }
+    private void populateCustomerComboBox() {
+        ObservableList<Customer> customerList = FXCollections.observableArrayList();
+        if(customerRepo.count() != 0) {
+            customerList.addAll(customerRepo.findAll());
+        }
+        customerComboBox.setItems(customerList);
+    }
+    private void populateChargeForm() {
+        EventCharge selectedCharge = eventChargeListView.getSelectionModel().getSelectedItem();
+
+        chargeAmountTextField.setText(selectedCharge.getCharge().toString());
+        chargeDescriptionTextArea.setText(selectedCharge.getDescription());
+    }
+
+
+
+
+
 
     //Button Actions - Event Form
     private void submitEvent() {
@@ -299,8 +519,8 @@ public class EventsSceneController extends GIMSController implements Initializab
         eventNameTextField.setText(selectedEvent.getEventName());
         eventStartDatePicker.setValue(selectedEvent.getStartDateTime().toLocalDate());
         eventStartTimePicker.setValue(selectedEvent.getStartDateTime().toLocalTime());
-        eventEndDatePicker.setValue(selectedEvent.getStartDateTime().toLocalDate());
-        eventEndTimePicker.setValue(selectedEvent.getStartDateTime().toLocalTime());
+        eventEndDatePicker.setValue(selectedEvent.getEndDateTime().toLocalDate());
+        eventEndTimePicker.setValue(selectedEvent.getEndDateTime().toLocalTime());
         eventExtraInfoArea.setText(selectedEvent.getEventInfo());
     }
     private void populateLocationComboBox() {
