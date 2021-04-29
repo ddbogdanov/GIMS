@@ -27,16 +27,23 @@ public class Customer {
     @OneToMany(fetch=FetchType.EAGER, mappedBy="customer", cascade=CascadeType.REMOVE)
     private Set<Order> orders;
 
-    //OneToMany with state and country
+    @ManyToOne
+    @JoinColumn(name="state_id")
+    private State state;
+    @ManyToOne
+    @JoinColumn(name="country_id")
+    private Country country;
 
     public Customer() {
 
     }
-    public Customer(UUID customerId, String customerName, String customerPhone, String customerEmail) {
+    public Customer(UUID customerId, String customerName, String customerPhone, String customerEmail, Country country, State state) {
         this.customerId = customerId;
         this.customerName = customerName;
         this.customerPhone = customerPhone;
         this.customerEmail = customerEmail;
+        this.country = country;
+        this.state = state;
     }
 
     public UUID getCustomerId() {
@@ -50,6 +57,12 @@ public class Customer {
     }
     public String getCustomerEmail() {
         return customerEmail;
+    }
+    public String getCountryString() {
+        return country.toString();
+    }
+    public String getStateString() {
+        return state.toString();
     }
     public Set<Stay> getStays() {
         return stays;

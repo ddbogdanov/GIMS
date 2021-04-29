@@ -12,8 +12,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -40,11 +42,17 @@ public class CustomersSceneController extends GIMSController implements Initiali
     private OrderRepo orderRepo;
     @Autowired
     private AdditionalChargeRepo additionalChargeRepo;
+    @Autowired
+    private StateRepo stateRepo;
+    @Autowired
+    private CountryRepo countryRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<Customer> customerComboBox;
     @FXML private JFXComboBox<Room> roomComboBox;
     @FXML private JFXComboBox<Stay> stayComboBox;
+    @FXML private JFXComboBox<String> stateComboBox;
+    @FXML private JFXComboBox<String> countryComboBox;
     @FXML private JFXListView<Customer> customerListView;
     @FXML private JFXListView<Stay> stayListView;
     @FXML private JFXListView<Order> orderListView;
@@ -80,6 +88,11 @@ public class CustomersSceneController extends GIMSController implements Initiali
             populateStayComboBox(customerListView.getSelectionModel().getSelectedItem().getCustomerId());
             populateCustomerComboBox();
             populateRoomComboBox();
+            populateCountryComboBox();
+            populateStateComboBox();
+
+            TextFields.bindAutoCompletion(countryComboBox.getEditor(), countryComboBox.getItems());
+            TextFields.bindAutoCompletion(stateComboBox.getEditor(), stateComboBox.getItems());
 
             orderListLabel.setText("Orders - " + customerListView.getSelectionModel().getSelectedItem().getCustomerName());
             customerNameLabel.setText(customerListView.getSelectionModel().getSelectedItem().getCustomerName());
@@ -170,6 +183,18 @@ public class CustomersSceneController extends GIMSController implements Initiali
                 chargeListView.getItems().clear();
             }
         });
+        countryComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal != null) {
+                if(newVal.equals("United States")) {
+                    stateComboBox.setDisable(false);
+                }
+                else {
+                    stateComboBox.getSelectionModel().clearSelection();
+                    stateComboBox.setValue(null);
+                    stateComboBox.setDisable(true);
+                }
+            }
+        });
         orderListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if(newVal == null) {
                 //orderListView.getSelectionModel().select(oldVal);
@@ -220,7 +245,10 @@ public class CustomersSceneController extends GIMSController implements Initiali
         String email = customerEmailTextField.getText();
 
         if(validateCustomerForm(name, phone, email)) {
-            Customer customer = new Customer(UUID.randomUUID(), name, phone, email);
+            Country country = countryRepo.findByCountryName(countryComboBox.getValue());
+            State state = stateRepo.findByStateName(stateComboBox.getValue());
+
+            Customer customer = new Customer(UUID.randomUUID(), name, phone, email, country, state);
 
             customerRepo.save(customer);
 
@@ -230,6 +258,11 @@ public class CustomersSceneController extends GIMSController implements Initiali
     }
     private void resetCustomerForm() {
         customerFormLabel.setText("Add a Customer");
+
+        countryComboBox.getSelectionModel().clearSelection();
+        countryComboBox.setValue(null);
+        stateComboBox.getSelectionModel().clearSelection();
+        stateComboBox.setValue(null);
 
         //Reset buttons
         customerFormSubmitButton.setText("Add Customer");
@@ -262,16 +295,14 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
     }
     private void viewCustomer() {
+        resetCustomerForm();
         customerFormLabel.setText("View a Customer");
-        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
 
-        customerNameTextField.setText(selectedCustomer.getCustomerName());
         customerNameTextField.setEditable(false);
-        customerPhoneTextField.setText(selectedCustomer.getCustomerPhone());
         customerPhoneTextField.setEditable(false);
-        customerEmailTextField.setText(selectedCustomer.getCustomerEmail());
         customerEmailTextField.setEditable(false);
         customerFormSubmitButton.setDisable(true);
+        populateCustomerForm();
     }
     private void editCustomer() {
         resetCustomerForm();
@@ -297,9 +328,16 @@ public class CustomersSceneController extends GIMSController implements Initiali
         String email = customerEmailTextField.getText();
 
         if(validateCustomerForm(name, phone, email)) {
+            Country country = countryRepo.findByCountryName(countryComboBox.getValue());
+            State state = stateRepo.findByStateName(stateComboBox.getValue());
+
             Customer updatedCustomer = new Customer(
                     customerListView.getSelectionModel().getSelectedItem().getCustomerId(),
-                    name, phone, email);
+                    name,
+                    phone,
+                    email,
+                    country,
+                    state);
             customerRepo.save(updatedCustomer);
 
             populateCustomerListView();
@@ -330,6 +368,25 @@ public class CustomersSceneController extends GIMSController implements Initiali
         customerNameTextField.setText(selectedCustomer.getCustomerName());
         customerPhoneTextField.setText(selectedCustomer.getCustomerPhone());
         customerEmailTextField.setText(selectedCustomer.getCustomerEmail());
+
+        try {
+            for (String s : countryComboBox.getItems()) {
+                if (selectedCustomer.getCountryString().equals(s)) {
+                    countryComboBox.getSelectionModel().select(s);
+                    break;
+                }
+            }
+
+            for (String s : stateComboBox.getItems()) {
+                if (selectedCustomer.getStateString().equals(s)) {
+                    stateComboBox.getSelectionModel().select(s);
+                    break;
+                }
+            }
+        }
+        catch(NullPointerException ex) {
+            System.err.println("Selected customer does not have a state or a country assigned");
+        }
     }
     private boolean validateCustomerForm(String name, String phone, String email) {
         boolean isNameValid = validateName(name);
@@ -354,10 +411,36 @@ public class CustomersSceneController extends GIMSController implements Initiali
             customerEmailHelpLabel.setVisible(true);
             return false;
         }
+        else if(countryComboBox.getValue() == null ) {
+            return false;
+        }
+        else if(countryComboBox.getValue().isBlank()) {
+            return false;
+        }
         else {
             return true;
         }
 
+    }
+    private void populateCountryComboBox() {
+        ObservableList<String> countryStringList = FXCollections.observableArrayList();
+        if(countryRepo.count() != 0) {
+            List<Country> countries = countryRepo.findAll();
+            for(Country c : countries) {
+                countryStringList.add(c.toString());
+            }
+        }
+        countryComboBox.setItems(countryStringList);
+    }
+    private void populateStateComboBox() {
+        ObservableList<String> stateStringList = FXCollections.observableArrayList();
+        if(stateRepo.count() != 0) {
+            List<State> states = stateRepo.findAll();
+            for(State s : states) {
+                stateStringList.add(s.toString());
+            }
+        }
+        stateComboBox.setItems(stateStringList);
     }
 
     //Button Actions - Order Form

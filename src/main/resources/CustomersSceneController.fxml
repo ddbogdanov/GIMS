@@ -105,12 +105,12 @@
                            <children>
                               <Label fx:id="customerNameHelpLabel" prefHeight="12.0" prefWidth="224.0" text="First Last" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
-                                    <Font name="Roboto Regular" size="12.0" />
+                                    <Font name="Roboto Regular" size="10.0" />
                                  </font>
                               </Label>
                            </children>
                            <VBox.margin>
-                              <Insets top="5.0" />
+                              <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                         </AnchorPane>
                         <JFXTextField fx:id="customerPhoneTextField" focusColor="#11ab97" labelFloat="true" prefHeight="30.0" prefWidth="258.0" promptText="Customer Phone" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
@@ -125,12 +125,12 @@
                            <children>
                               <Label fx:id="customerPhoneHelpLabel" prefHeight="12.0" prefWidth="224.0" text="First Last" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
-                                    <Font name="Roboto Regular" size="12.0" />
+                                    <Font name="Roboto Regular" size="10.0" />
                                  </font>
                               </Label>
                            </children>
                            <VBox.margin>
-                              <Insets top="5.0" />
+                              <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                         </AnchorPane>
                         <JFXTextField fx:id="customerEmailTextField" focusColor="#11ab97" labelFloat="true" prefHeight="30.0" prefWidth="258.0" promptText="Customer Email" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67">
@@ -145,11 +145,23 @@
                            <children>
                               <Label fx:id="customerEmailHelpLabel" prefHeight="12.0" prefWidth="224.0" text="First Last" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                  <font>
-                                    <Font name="Roboto Regular" size="12.0" />
+                                    <Font name="Roboto Regular" size="10.0" />
                                  </font>
                               </Label>
                            </children>
+                           <VBox.margin>
+                              <Insets left="15.0" right="15.0" top="5.0" />
+                           </VBox.margin>
                         </AnchorPane>
+                        <HBox alignment="CENTER" prefHeight="28.0" prefWidth="256.0" spacing="10.0">
+                           <VBox.margin>
+                              <Insets left="15.0" right="15.0" top="20.0" />
+                           </VBox.margin>
+                           <children>
+                              <JFXComboBox fx:id="countryComboBox" editable="true" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="123.0" promptText="Country" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                              <JFXComboBox fx:id="stateComboBox" disable="true" editable="true" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="123.0" promptText="State" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                           </children>
+                        </HBox>
                         <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="270.0" VBox.vgrow="ALWAYS">
                            <children>
                               <JFXButton fx:id="customerFormSubmitButton" prefHeight="32.0" prefWidth="172.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Customer" textFill="WHITE">
