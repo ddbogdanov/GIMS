@@ -253,6 +253,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
             customerRepo.save(customer);
 
             populateCustomerListView();
+            populateCustomerComboBox();
             resetCustomerForm();
         }
     }
@@ -352,6 +353,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
         resetCustomerForm();
         populateCustomerListView();
+        populateCustomerComboBox();
     }
     //Util Methods - Customer Form
     private void populateCustomerListView() {

@@ -175,7 +175,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     }
 
     //Button Actions - Employee form
-    //TODO create EmployeeRate objects from employeeRateComboBox
     private void submitEmployee() {
         User selectedUser = userComboBox.getSelectionModel().getSelectedItem();
         String name = nameTextField.getText();

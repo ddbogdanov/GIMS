@@ -17,7 +17,7 @@ public class EmployeeRate {
     @Column(name="rate")
     private BigDecimal rate;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="employeeRate", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="employeeRate", cascade = CascadeType.REMOVE)
     private Set<Employee> employees;
 
     public EmployeeRate() {
