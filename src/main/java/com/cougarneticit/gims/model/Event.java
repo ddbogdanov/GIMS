@@ -1,7 +1,5 @@
 package com.cougarneticit.gims.model;
 
-//import com.cougarneticit.gims.model.common.EventStatus;
-import java.time.LocalDate;
 import org.hibernate.annotations.Type;
 import org.springframework.stereotype.Component;
 
@@ -64,6 +62,15 @@ public class Event {
     public Location getLocation() {
         return location;
     }
+    public UUID getLocationId() {
+        return location.getLocationId();
+    }
+    public EventStatus getEventStatus() {
+        return eventStatus;
+    }
+    public int getEventStatusId() {
+        return eventStatus.getEventStatusId();
+    }
 
     public void setEventName(String eventName) {
         this.eventName = eventName;
@@ -83,6 +90,6 @@ public class Event {
 
     @Override
     public String toString() {
-        return eventName;
+        return eventName + " | " + eventStatus.getEventStatus() + " | At: " + location.getLocationName();
     }
 }

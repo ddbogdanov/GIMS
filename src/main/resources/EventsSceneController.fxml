@@ -19,7 +19,7 @@
    <children>
       <HBox layoutX="201.0" layoutY="191.0" prefHeight="700.0" prefWidth="1090.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="285.0">
+            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="650.0" HBox.hgrow="ALWAYS">
                <children>
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Events" textFill="WHITE">
                      <font>
@@ -34,174 +34,176 @@
                         <Insets left="15.0" top="5.0" />
                      </VBox.margin>
                   </Separator>
-                  <AnchorPane prefHeight="12.0" prefWidth="243.0">
-                     <VBox.margin>
-                        <Insets left="15.0" right="15.0" top="5.0" />
-                     </VBox.margin>
+                  <HBox prefHeight="100.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <Label prefHeight="15.0" prefWidth="243.0" text="Event List - All" textFill="#5bddc7">
-                           <font>
-                              <Font name="Roboto Regular" size="10.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </AnchorPane>
-                  <JFXListView fx:id="eventsListView" prefHeight="245.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
-                     <VBox.margin>
-                        <Insets left="15.0" right="15.0" />
-                     </VBox.margin>
-                  </JFXListView>
-                  <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="367.0">
-                     <VBox.margin>
-                        <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
-                     </VBox.margin>
-                     <children>
-                        <JFXButton fx:id="editEventButton" prefHeight="30.0" prefWidth="86.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit" textFill="WHITE" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font name="Roboto Regular" size="14.0" />
-                           </font>
+                        <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="350.0">
+                           <children>
+                              <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="5.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Label prefHeight="15.0" prefWidth="243.0" text="Event List - All" textFill="#5bddc7">
+                                       <font>
+                                          <Font name="Roboto Regular" size="10.0" />
+                                       </font>
+                                    </Label>
+                                 </children>
+                              </AnchorPane>
+                              <JFXListView fx:id="eventListView" prefHeight="170.0" prefWidth="320.0" stylesheets="@static/GIMScss.css">
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" />
+                                 </VBox.margin>
+                              </JFXListView>
+                              <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="320.0">
+                                 <VBox.margin>
+                                    <Insets bottom="15.0" left="15.0" right="15.0" top="10.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <JFXButton fx:id="editEventButton" prefHeight="32.0" prefWidth="107.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="viewEventButton" prefHeight="32.0" prefWidth="107.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                    <JFXButton fx:id="deleteEventButton" prefHeight="32.0" prefWidth="87.0" ripplerFill="#f71c19" style="-fx-border-color: #F73331; -fx-border-radius: 5;" text="Delete" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                    </JFXButton>
+                                 </children>
+                              </HBox>
+                              <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
+                                 <VBox.margin>
+                                    <Insets left="15.0" />
+                                 </VBox.margin>
+                              </Separator>
+                              <VBox alignment="TOP_CENTER" prefHeight="387.0" prefWidth="350.0" VBox.vgrow="ALWAYS">
+                                 <children>
+                                    <Label fx:id="eventFormLabel" text="Add an Event" textFill="WHITE" VBox.vgrow="ALWAYS">
+                                       <font>
+                                          <Font name="Roboto Regular" size="20.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets top="5.0" />
+                                       </VBox.margin>
+                                    </Label>
+                                    <HBox minHeight="28.0" prefHeight="28.0" prefWidth="350.0" spacing="10.0">
+                                       <children>
+                                          <JFXComboBox fx:id="locationComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="186.0" promptText="Choose Location" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                                          <JFXComboBox fx:id="eventStatusComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="125.0" promptText="Choose Status" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="15.0" right="15.0" top="15.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                    <JFXTextField fx:id="eventNameTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="372.0" promptText="Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="NEVER">
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
+                                       <VBox.margin>
+                                          <Insets left="15.0" right="15.0" top="20.0" />
+                                       </VBox.margin>
+                                    </JFXTextField>
+                                    <HBox alignment="CENTER" prefHeight="28.0" VBox.vgrow="NEVER">
+                                       <VBox.margin>
+                                          <Insets left="15.0" right="15.0" top="20.0" />
+                                       </VBox.margin>
+                                       <children>
+                                          <JFXDatePicker fx:id="eventStartDatePicker" defaultColor="#007b68" editable="false" prefHeight="28.0" promptText="Start Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                                             <HBox.margin>
+                                                <Insets right="5.0" />
+                                             </HBox.margin>
+                                          </JFXDatePicker>
+                                          <JFXTimePicker fx:id="eventStartTimePicker" defaultColor="#007b68" editable="true" prefHeight="32.0" promptText="Start Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                                             <HBox.margin>
+                                                <Insets left="5.0" />
+                                             </HBox.margin>
+                                          </JFXTimePicker>
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="28.0" VBox.vgrow="NEVER">
+                                       <VBox.margin>
+                                          <Insets left="15.0" right="15.0" top="20.0" />
+                                       </VBox.margin>
+                                       <children>
+                                          <JFXDatePicker fx:id="eventEndDatePicker" defaultColor="#007b68" editable="false" prefHeight="28.0" promptText="End Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                                             <HBox.margin>
+                                                <Insets right="5.0" />
+                                             </HBox.margin>
+                                          </JFXDatePicker>
+                                          <JFXTimePicker fx:id="eventEndTimePicker" defaultColor="#007b68" editable="true" prefHeight="32.0" promptText="End Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
+                                             <HBox.margin>
+                                                <Insets left="5.0" />
+                                             </HBox.margin>
+                                          </JFXTimePicker>
+                                       </children>
+                                    </HBox>
+                                    <JFXTextArea fx:id="eventExtraInfoArea" focusColor="#11ab97" labelFloat="true" prefHeight="82.0" prefWidth="258.0" promptText="Extra Info" style="-fx-background-color: #33333d; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                                       <VBox.margin>
+                                          <Insets left="15.0" right="15.0" top="20.0" />
+                                       </VBox.margin>
+                                    </JFXTextArea>
+                                    <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                                       <children>
+                                          <Label fx:id="eventFormHelpLabel" prefHeight="15.0" prefWidth="243.0" text="First Last" textFill="#f73331" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <font>
+                                                <Font name="Roboto Regular" size="10.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets left="15.0" right="15.0" top="5.0" />
+                                       </VBox.margin>
+                                    </AnchorPane>
+                  
+                                          <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="240.0">
+                                       <children>
+                                          <JFXButton fx:id="eventFormSubmitButton" prefHeight="30.0" prefWidth="218.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Event" textFill="WHITE">
+                                             <font>
+                                                <Font name="Roboto Regular" size="14.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets />
+                                             </HBox.margin>
+                                          </JFXButton>
+                                          <JFXButton fx:id="eventFormCancelButton" prefHeight="32.0" prefWidth="87.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Cancel" textFill="WHITE">
+                                             <font>
+                                                <Font name="Roboto Regular" size="14.0" />
+                                             </font>
+                                             <HBox.margin>
+                                                <Insets left="15.0" />
+                                             </HBox.margin>
+                                          </JFXButton>
+                                       </children>
+                                       <VBox.margin>
+                                          <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                                       </VBox.margin>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
                            <HBox.margin>
-                              <Insets right="10.0" />
+                              <Insets bottom="15.0" />
                            </HBox.margin>
-                        </JFXButton>
-                        <JFXButton fx:id="viewEventButton" prefHeight="30.0" prefWidth="86.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View" textFill="WHITE" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font name="Roboto Regular" size="14.0" />
-                           </font>
-                           <HBox.margin>
-                              <Insets right="10.0" />
-                           </HBox.margin>
-                        </JFXButton>
-                        <JFXButton fx:id="deleteEventButton" prefHeight="30.0" prefWidth="63.0" ripplerFill="#f71c19" style="-fx-border-color: #F73331; -fx-border-radius: 5;" text="Delete" textFill="WHITE" HBox.hgrow="ALWAYS">
-                           <font>
-                              <Font name="Roboto Regular" size="14.0" />
-                           </font>
-                        </JFXButton>
+                        </Separator>
                      </children>
                   </HBox>
-                  <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
-                     <VBox.margin>
-                        <Insets left="15.0" />
-                     </VBox.margin>
-                  </Separator>
-                  <VBox alignment="TOP_CENTER" prefHeight="325.0" prefWidth="285.0">
-                     <children>
-                        <Label fx:id="eventFormLabel" text="Add an Event" textFill="WHITE" VBox.vgrow="ALWAYS">
-                           <font>
-                              <Font name="Roboto Regular" size="20.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets top="5.0" />
-                           </VBox.margin>
-                        </Label>
-                        <JFXComboBox fx:id="locationComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Choose Location" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
-                           <VBox.margin>
-                              <Insets top="13.0" />
-                           </VBox.margin>
-                        </JFXComboBox>
-                        <JFXTextField fx:id="eventNameTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
-                           <font>
-                              <Font name="Roboto Regular" size="14.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="5.0" />
-                           </VBox.margin>
-                        </JFXTextField>
-                        <AnchorPane prefHeight="12.0" prefWidth="243.0">
-                           <children>
-                              <Label fx:id="eventNameHelpLabel" prefHeight="15.0" prefWidth="243.0" text="First Last" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <font>
-                                    <Font name="Roboto Regular" size="10.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="5.0" />
-                           </VBox.margin>
-                        </AnchorPane>
-                        <HBox alignment="CENTER" prefHeight="28.0" VBox.vgrow="NEVER">
-                           <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="5.0" />
-                           </VBox.margin>
-                           <children>
-                              <JFXDatePicker fx:id="eventStartDatePicker" defaultColor="#007b68" editable="false" prefHeight="28.0" promptText="Start Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets right="5.0" />
-                                 </HBox.margin>
-                              </JFXDatePicker>
-                              <JFXTimePicker fx:id="eventStartTimePicker" defaultColor="#007b68" editable="true" prefHeight="32.0" promptText="Start Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets left="5.0" />
-                                 </HBox.margin>
-                              </JFXTimePicker>
-                           </children>
-                        </HBox>
-                        <HBox alignment="CENTER" prefHeight="28.0" VBox.vgrow="NEVER">
-                           <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="5.0" />
-                           </VBox.margin>
-                           <children>
-                              <JFXDatePicker fx:id="eventEndDatePicker" defaultColor="#007b68" editable="false" prefHeight="28.0" promptText="End Date" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets right="5.0" />
-                                 </HBox.margin>
-                              </JFXDatePicker>
-                              <JFXTimePicker fx:id="eventEndTimePicker" defaultColor="#007b68" editable="true" prefHeight="32.0" promptText="End Time" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" HBox.hgrow="NEVER">
-                                 <HBox.margin>
-                                    <Insets left="5.0" />
-                                 </HBox.margin>
-                              </JFXTimePicker>
-                           </children>
-                        </HBox>
-                        <AnchorPane prefHeight="12.0" prefWidth="243.0">
-                           <children>
-                              <Label fx:id="eventDateRangeHelpLabel" prefHeight="15.0" prefWidth="243.0" text="First Last" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <font>
-                                    <Font name="Roboto Regular" size="10.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                           <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="5.0" />
-                           </VBox.margin>
-                        </AnchorPane>
-                        <HBox alignment="CENTER" prefHeight="28.0" VBox.vgrow="NEVER">
-                           <VBox.margin>
-                              <Insets left="15.0" right="15.0" top="5.0" />
-                           </VBox.margin>
-                           <children>
-                              <JFXTextArea fx:id="eventExtraInfo" focusColor="#11ab97" labelFloat="true" prefHeight="80.0" prefWidth="243.0" promptText="Extra Info" style="-fx-background-color: #33333d; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" />
-                           </children>
-                        </HBox>
-
-                        <HBox alignment="BOTTOM_LEFT" prefHeight="32.0" prefWidth="255.0" VBox.vgrow="ALWAYS">
-                           <children>
-                              <JFXButton fx:id="saveEventButton" prefHeight="32.0" prefWidth="158.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Event" textFill="WHITE">
-                                 <font>
-                                    <Font name="Roboto Regular" size="14.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets />
-                                 </HBox.margin>
-                              </JFXButton>
-                              <JFXButton fx:id="cancelEventButton" prefHeight="32.0" prefWidth="87.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Cancel" textFill="WHITE">
-                                 <font>
-                                    <Font name="Roboto Regular" size="14.0" />
-                                 </font>
-                                 <HBox.margin>
-                                    <Insets left="15.0" />
-                                 </HBox.margin>
-                              </JFXButton>
-                           </children>
-                           <VBox.margin>
-                              <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
-                           </VBox.margin>
-                        </HBox>
-                     </children>
-                  </VBox>
                </children>
             </VBox>
-            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="285.0">
+            <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="285.0" HBox.hgrow="ALWAYS">
                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Locations" textFill="WHITE">
                   <font>
                      <Font name="Roboto Regular" size="34.0" />

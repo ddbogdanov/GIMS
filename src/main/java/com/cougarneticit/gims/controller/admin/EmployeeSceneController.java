@@ -469,7 +469,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     }
     private void editShift() {
         resetShiftForm();
-
         try {
             shiftFormSubmitButton.setOnAction(e -> {
                 submitShiftEdits();
