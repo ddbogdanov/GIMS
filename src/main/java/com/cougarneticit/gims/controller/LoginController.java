@@ -27,6 +27,8 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Component
 @FxmlView("/LoginController.fxml")
@@ -85,16 +87,9 @@ public class LoginController extends GIMSController implements Initializable {
             
             if(passwordEncoder.matches(password, userPassword)) {
 
-<<<<<<< Updated upstream
-                String hashedPassword = userRepo.findByUsername(username).get(0).getPassword();
-                userId = userRepo.findByUsername(username).get(0).getUserId();
-                isAdmin = userRepo.findByUsername(username).get(0).isAdmin();
-                User user = new User(userId, username, hashedPassword, isAdmin);
-=======
-                userId = user.getUser_id();
+                userId = user.getUserId();
                 isAdmin = user.isAdmin();
                 User activeUser = new User(userId, username, userPassword, isAdmin);
->>>>>>> Stashed changes
 
                 loginStatus.setTextFill(Color.web("#FFFFFF"));
                 loginStatus.setText("Login Successful!");
