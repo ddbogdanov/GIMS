@@ -25,10 +25,12 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.List;
 
 
 @Component
@@ -42,6 +44,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     @Autowired
     RoomRepo roomRepo;
     @Autowired
+    RoomRateRepo roomRateRepo;
+    @Autowired
     EmployeeRepo employeeRepo;
     @Autowired
     PriorityRepo priorityRepo;
@@ -53,7 +57,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<Priority> priorityComboBox;
     @FXML private JFXComboBox<RoomStatus> roomStatusComboBox;
-    @FXML private JFXComboBox<RoomRate> roomRateComboBox;
+    @FXML private JFXComboBox<String> roomRateComboBox;
     @FXML private JFXComboBox<Room> roomComboBox;
     @FXML private JFXComboBox<Employee> employeeComboBox;
     @FXML private JFXDatePicker dueDatePicker;
@@ -70,7 +74,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
 
     @FXML private JFXButton
             roomFormSubmitButton, roomFormCancelButton, roomFormDeleteButton, refreshTaskFormButton,
-            taskEditButton, taskViewButton, taskDeleteButton, taskFormSubmitButton, taskFormCancelButton, roomReportButton;
+            taskEditButton, taskViewButton, taskDeleteButton, taskFormSubmitButton, taskFormCancelButton, roomReportButton, deleteRateButton;
 
     public RoomsSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -105,6 +109,7 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             }
         });
         employeeComboBox.getItems().addAll(employeeRepo.findAll());
+        populateRoomRateComboBox();
 
         //Room Form Actions
         editToggleButton.setOnAction(e -> {
@@ -121,6 +126,9 @@ public class RoomsSceneController extends GIMSController implements Initializabl
         });
         roomReportButton.setOnAction(e -> {
             generateRoomReport();
+        });
+        deleteRateButton.setOnAction(e -> {
+            deleteRate();
         });
 
         //Task Form Actions
@@ -177,7 +185,6 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     }
 
     //Button Actions - Room form
-    //TODO: Allow creation of RoomRate objects from roomRateComboBox
     private void editToggle() {
         if(editToggleButton.isSelected()) {
             try {
@@ -204,11 +211,12 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     }
     private void submitRoomEdits() {
         if(validateRoomForm()) {
+            RoomRate rate = getOrCreateRate();
             Room updatedRoom = new Room(
                     roomIdTextField.getText().charAt(0),
                     roomNameTextField.getText(),
                     roomStatusComboBox.getValue(),
-                    null); //TODO assign rate
+                    rate); //TODO assign rate
             roomRepo.save(updatedRoom);
 
             populateRoomListView();
@@ -222,7 +230,9 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     private void submitRoom() {
         if(validateRoomForm()) {
             if (!roomRepo.existsById(roomIdTextField.getText().charAt(0))) {
-                Room room = new Room(roomIdTextField.getText().charAt(0), roomNameTextField.getText(), roomStatusComboBox.getValue(), null); //TODO assign rate
+                RoomRate rate = getOrCreateRate();
+
+                Room room = new Room(roomIdTextField.getText().charAt(0), roomNameTextField.getText(), roomStatusComboBox.getValue(), rate); //TODO assign rate
                 roomRepo.save(room);
 
                 populateRoomListView();
@@ -248,6 +258,8 @@ public class RoomsSceneController extends GIMSController implements Initializabl
     }
     private void resetRoomForm() {
         roomStatusComboBox.getSelectionModel().clearSelection();
+        roomRateComboBox.getSelectionModel().clearSelection();
+        roomRateComboBox.setValue(null);
 
         editToggleButton.selectedProperty().setValue(false);
         roomFormSubmitButton.setText("Add Room");
@@ -339,6 +351,13 @@ public class RoomsSceneController extends GIMSController implements Initializabl
             System.err.println("FileChooser closed without selecting path, or File Not Found");
         }
     }
+    private void deleteRate() {
+        if(!roomRateComboBox.getValue().isBlank()) {
+            roomRateRepo.deleteByRate(new BigDecimal(roomRateComboBox.getValue()));
+            populateRoomRateComboBox();
+            populateRoomListView();
+        }
+    }
 
     //Util Methods - Room form
     private void populateRoomListView() {
@@ -361,6 +380,30 @@ public class RoomsSceneController extends GIMSController implements Initializabl
                 break;
             }
         }
+        roomRateComboBox.setValue(selectedRoom.getRoomRate().toString());
+    }
+    private void populateRoomRateComboBox() {
+        roomRateComboBox.getItems().clear();
+        ObservableList<String> roomRateStringList = FXCollections.observableArrayList();
+        if(roomRateRepo.count() != 0) {
+            List<RoomRate> roomRates = roomRateRepo.findAll();
+            for(RoomRate rr : roomRates) {
+                roomRateStringList.add(rr.getRoomStringRate());
+            }
+        }
+        roomRateComboBox.setItems(roomRateStringList);
+    }
+    private RoomRate getOrCreateRate() {
+        RoomRate rate;
+        if(roomRateRepo.existsByRate(new BigDecimal(roomRateComboBox.getValue()))) {
+            rate = roomRateRepo.findByRate(new BigDecimal(roomRateComboBox.getValue()));
+        }
+        else {
+            rate = new RoomRate(new BigDecimal(roomRateComboBox.getValue()));
+            roomRateRepo.save(rate);
+            populateRoomRateComboBox();
+        }
+        return rate;
     }
     private boolean validateRoomForm() {
         if(roomIdTextField.getText().isBlank()) {

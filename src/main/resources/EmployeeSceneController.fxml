@@ -171,10 +171,28 @@
                               <Insets left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
                         </AnchorPane>
-                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="255.0" spacing="10.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="255.0">
                            <children>
                               <JFXComboBox fx:id="userComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="122.0" promptText="Choose User" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
-                              <JFXComboBox fx:id="employeeRateComboBox" editable="true" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="122.0" promptText="Employee Rate" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                              <JFXComboBox fx:id="employeeRateComboBox" editable="true" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="90.0" promptText="Rate" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
+                                 <HBox.margin>
+                                    <Insets left="10.0" />
+                                 </HBox.margin></JFXComboBox>
+                              <JFXButton fx:id="deleteRateButton" focusTraversable="false" ripplerFill="#5bddc7" text="">
+                                 <graphic>
+                                    <FontAwesomeIconView fill="WHITE" glyphName="TIMES" size="14" />
+                                 </graphic>
+                                 <tooltip>
+                                    <Tooltip hideOnEscape="false" opacity="0.8" text="Delete selected rate">
+                                       <font>
+                                          <Font name="Roboto Regular" size="12.0" />
+                                       </font>
+                                    </Tooltip>
+                                 </tooltip>
+                                 <HBox.margin>
+                                    <Insets left="5.0" />
+                                 </HBox.margin>
+                              </JFXButton>
                            </children>
                            <VBox.margin>
                               <Insets left="15.0" right="15.0" top="10.0" />

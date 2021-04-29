@@ -21,6 +21,7 @@ import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,11 +51,13 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     private ShiftRepo shiftRepo;
     @Autowired
     private EmployeeReportRepo employeeReportRepo;
+    @Autowired
+    private EmployeeRateRepo employeeRateRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<User> userComboBox;
     @FXML private JFXComboBox<Employee> employeeComboBox;
-    @FXML private JFXComboBox<EmployeeRate> employeeRateComboBox;
+    @FXML private JFXComboBox<String> employeeRateComboBox;
     @FXML private JFXListView<Employee> employeeListView;
     @FXML private JFXListView<Shift> shiftListView;
     @FXML private JFXListView<Task> taskListView;
@@ -70,7 +73,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
 
     @FXML private JFXButton
             viewEmployeeButton, editEmployeeButton, deleteEmployeeButton, employeeFormSubmitButton,  employeeFormCancelButton,
-            shiftEditButton, shiftDeleteButton, shiftFormSubmitButton, shiftFormCancelButton, employeeReportButton;
+            shiftEditButton, shiftDeleteButton, shiftFormSubmitButton, shiftFormCancelButton, employeeReportButton, deleteRateButton;
 
     public EmployeeSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -82,6 +85,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         initStage(stage, pane, null, null, null, null, true);
 
         populateUserComboBox();
+        populateEmployeeRateComboBox();
         populateEmployeeComboBox();
         populateEmployeeListView();
         employeeListView.getSelectionModel().select(0);
@@ -111,6 +115,9 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         });
         employeeReportButton.setOnAction(e -> {
             generateEmployeeReport();
+        });
+        deleteRateButton.setOnAction(e -> {
+            deleteRate();
         });
 
         shiftFormSubmitButton.setOnAction(e -> {
@@ -176,7 +183,10 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         String email = emailTextField.getText();
 
         if(validateEmployeeForm(selectedUser, name, phone, email, false)) {
-            Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email, null); //TODO: set EmployeeRate
+
+            EmployeeRate rate = getOrCreateRate();
+
+            Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email, rate); //TODO: set EmployeeRate
             employeeRepo.save(emp);
 
             populateEmployeeListView();
@@ -191,6 +201,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         nameTextField.setDisable(true);
         phoneTextField.setDisable(true);
         emailTextField.setDisable(true);
+        employeeRateComboBox.setDisable(true);
         employeeFormSubmitButton.setDisable(true);
 
         employeeFormCancelButton.setText("Reset");
@@ -224,10 +235,11 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         String email = emailTextField.getText();
 
         if(validateEmployeeForm(selectedUser, name, phone, email, true)) {
+            EmployeeRate rate = getOrCreateRate();
             Employee updatedEmployee = new Employee(
                     employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(),
                     employeeListView.getSelectionModel().getSelectedItem().getUser(),
-                    name, phone, email, null); //TODO set EmployeeRate
+                    name, phone, email, rate);
             employeeRepo.save(updatedEmployee);
 
             populateEmployeeListView();
@@ -254,6 +266,8 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         populateUserComboBox();
         userComboBox.getSelectionModel().clearSelection();
         userComboBox.setDisable(false);
+        employeeRateComboBox.getSelectionModel().clearSelection();
+        employeeRateComboBox.setDisable(false);
 
         //Reset buttons
         employeeFormSubmitButton.setText("Add Employee");
@@ -355,6 +369,13 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             System.err.println("FileChooser closed without selecting path, or File Not Found");
         }
     }
+    private void deleteRate() {
+        if(!employeeRateComboBox.getValue().isBlank()) {
+            employeeRateRepo.deleteByRate(new BigDecimal(employeeRateComboBox.getValue()));
+            populateEmployeeRateComboBox();
+            populateEmployeeListView();
+        }
+    }
     //Util Methods - Employee form
     private void populateEmployeeForm() {
         Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
@@ -366,6 +387,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
                 break;
             }
         }
+        employeeRateComboBox.setValue(selectedEmployee.getEmployeeRate().toString());
         nameTextField.setText(selectedEmployee.getName());
         phoneTextField.setText(selectedEmployee.getPhone());
         emailTextField.setText(selectedEmployee.getEmail());
@@ -378,6 +400,17 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             userList.addAll(userRepo.findAll());
         }
         userComboBox.setItems(userList);
+    }
+    private void populateEmployeeRateComboBox() {
+        employeeRateComboBox.getItems().clear();
+        ObservableList<String> employeeRateStringList = FXCollections.observableArrayList();
+        if(employeeRateRepo.count() != 0) {
+            List<EmployeeRate> employeeRates = employeeRateRepo.findAll();
+            for(EmployeeRate er : employeeRates) {
+                employeeRateStringList.add(er.getEmployeeStringRate());
+            }
+        }
+        employeeRateComboBox.setItems(employeeRateStringList);
     }
     private void populateEmployeeListView() {
         ObservableList<Employee> employeeList = FXCollections.observableArrayList();
@@ -425,6 +458,18 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         else {
             return true;
         }
+    }
+    private EmployeeRate getOrCreateRate() {
+        EmployeeRate rate;
+        if(employeeRateRepo.existsByRate(new BigDecimal(employeeRateComboBox.getValue()))) {
+            rate = employeeRateRepo.findByRate(new BigDecimal(employeeRateComboBox.getValue()));
+        }
+        else {
+            rate = new EmployeeRate(new BigDecimal(employeeRateComboBox.getValue()));
+            employeeRateRepo.save(rate);
+            populateEmployeeRateComboBox();
+        }
+        return rate;
     }
 
     //Button Actions - Shift form

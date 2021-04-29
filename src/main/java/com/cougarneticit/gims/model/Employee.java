@@ -75,6 +75,9 @@ public class Employee {
     public String getEmail() {
         return employeeEmail;
     }
+    public EmployeeRate getEmployeeRate() {
+        return employeeRate;
+    }
     public Set<Task> getTasks() {
         return tasks;
     }

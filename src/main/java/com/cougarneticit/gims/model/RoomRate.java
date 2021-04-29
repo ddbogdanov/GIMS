@@ -33,4 +33,12 @@ public class RoomRate {
     public BigDecimal getRoomRate() {
         return rate;
     }
+    public String getRoomStringRate() {
+        return rate.toString();
+    }
+
+    @Override
+    public String toString() {
+        return rate.toString();
+    }
 }

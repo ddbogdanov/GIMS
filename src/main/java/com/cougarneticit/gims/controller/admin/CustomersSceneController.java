@@ -610,7 +610,7 @@ public class CustomersSceneController extends GIMSController implements Initiali
             orderRepo.save(order);
         }
     }
-    private Order addAdditionalCharges(Order editedOrder, Set<AdditionalCharge> addCharges, Set<EventCharge> eventCharges) {
+    private void addAdditionalCharges(Order editedOrder, Set<AdditionalCharge> addCharges, Set<EventCharge> eventCharges) {
         BigDecimal newTotal = new BigDecimal(0);
 
         if(!addCharges.isEmpty()) {
@@ -625,7 +625,6 @@ public class CustomersSceneController extends GIMSController implements Initiali
         }
 
         editedOrder.addToTotal(newTotal);
-        return editedOrder;
     }
     private boolean validateChargeForm() {
         try {

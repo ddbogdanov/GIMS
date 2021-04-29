@@ -17,7 +17,7 @@ public class EmployeeRate {
     @Column(name="rate")
     private BigDecimal rate;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="employeeRate", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="employeeRate", cascade = CascadeType.REMOVE)
     private Set<Employee> employees;
 
     public EmployeeRate() {
@@ -25,6 +25,10 @@ public class EmployeeRate {
     }
     public EmployeeRate(BigDecimal rate) {
         this.rate = rate;
+    }
+
+    public String getEmployeeStringRate() {
+        return rate.toString();
     }
 
     @Override
