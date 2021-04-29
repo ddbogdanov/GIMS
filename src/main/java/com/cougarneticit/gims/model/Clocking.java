@@ -23,7 +23,7 @@ public class Clocking {
     private boolean clockedOut;
     //TODO boolean clockedIn/clockedOut maybe? remove LocalDateTimes from constructors and use clockIn() and clockOut() maybe?
 
-    @OneToOne(mappedBy="clocking", fetch=FetchType.EAGER, cascade=CascadeType.REMOVE)
+    @OneToOne(mappedBy="clocking", fetch=FetchType.LAZY, cascade=CascadeType.REMOVE)
     private Shift shift;
 
     public Clocking() {

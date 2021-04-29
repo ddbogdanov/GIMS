@@ -17,7 +17,7 @@ public class RoomRate {
     @Column(name="rate")
     private BigDecimal rate;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="roomRate", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="roomRate", cascade=CascadeType.REMOVE)
     private Set<Room> rooms;
 
     public RoomRate() {

@@ -22,9 +22,9 @@ public class Customer {
     @Column(name="customer_email", length=320) //VarChar(320)
     private String customerEmail;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="customer", cascade=CascadeType.REMOVE, orphanRemoval=true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="customer", cascade=CascadeType.REMOVE, orphanRemoval=true)
     private Set<Stay> stays;
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="customer", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="customer", cascade=CascadeType.REMOVE)
     private Set<Order> orders;
 
     @ManyToOne

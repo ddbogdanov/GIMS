@@ -18,9 +18,9 @@ public class Room {
 
     @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<Task> tasks;
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<Stay> stays;
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="room", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="room", cascade=CascadeType.REMOVE)
     private Set<RoomReport> roomReports;
 
     @ManyToOne

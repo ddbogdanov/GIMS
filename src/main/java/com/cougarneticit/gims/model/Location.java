@@ -19,7 +19,7 @@ public class Location {
     private String locationName;
     @Column(name="info", length=255)
     private String locationInfo;
-    @Column(name="audienceCapacity")
+    @Column(name="audience_capacity")
     private int capacity;
 
     @OneToMany(fetch=FetchType.EAGER, mappedBy="location", cascade=CascadeType.REMOVE)

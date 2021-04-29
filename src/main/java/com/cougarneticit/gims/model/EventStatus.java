@@ -13,10 +13,10 @@ public class EventStatus {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="event_status_id")
     private int eventStatusId;
-    @Column(name="status", length=6)
+    @Column(name="event_status", length=6)
     private String eventStatus;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="eventStatus", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="eventStatus", cascade=CascadeType.REMOVE)
     private Set<Event> events;
 
     public EventStatus() {

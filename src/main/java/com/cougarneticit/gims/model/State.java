@@ -18,7 +18,7 @@ public class State {
     @Column(name="state_name")
     private String stateName;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="state", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="state", cascade = CascadeType.REMOVE)
     private Set<Customer> customers;
 
     public State() {

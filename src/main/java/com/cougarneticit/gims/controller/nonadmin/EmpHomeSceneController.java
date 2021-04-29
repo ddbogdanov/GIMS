@@ -109,8 +109,13 @@ public class EmpHomeSceneController extends GIMSController implements Initializa
     private void setInfoLabels() {
         Employee activeEmployee = employeeRepo.findByUser_UserId(getActiveUser().getUserId());
 
-        activeTasksLabel.setText(String.valueOf(taskRepo.countAllByEmployee_EmployeeIdAndCompleted(activeEmployee.getEmployeeId(), false)));
-        completedTasksLabel.setText(String.valueOf(taskRepo.countAllByEmployee_EmployeeIdAndCompleted(activeEmployee.getEmployeeId(), true)));
+        try {
+            activeTasksLabel.setText(String.valueOf(taskRepo.countAllByEmployee_EmployeeIdAndCompleted(activeEmployee.getEmployeeId(), false)));
+            completedTasksLabel.setText(String.valueOf(taskRepo.countAllByEmployee_EmployeeIdAndCompleted(activeEmployee.getEmployeeId(), true)));
+        }
+        catch(NullPointerException ex) {
+
+        }
     }
 
     public AnchorPane getScene() {

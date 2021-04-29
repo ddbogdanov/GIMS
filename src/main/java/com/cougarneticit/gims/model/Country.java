@@ -16,7 +16,7 @@ public class Country {
     @Column(name="country_name")
     private String countryName;
 
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="country", cascade = CascadeType.REMOVE)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="country", cascade = CascadeType.REMOVE)
     private Set<Customer> customers;
 
     public Country() {

@@ -183,11 +183,17 @@ public class EmployeeSceneController extends GIMSController implements Initializ
 
         if(validateEmployeeForm(selectedUser, name, phone, email, false)) {
 
-            EmployeeRate rate = getOrCreateRate();
+            if(employeeRateComboBox.getValue().isBlank() || employeeRateComboBox.getValue() == null) {
 
-            Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email, rate); //TODO: set EmployeeRate
-            employeeRepo.save(emp);
+                Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email, null); //TODO: set EmployeeRate
+                employeeRepo.save(emp);
+            }
+            else {
+                EmployeeRate rate = getOrCreateRate();
 
+                Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email, rate); //TODO: set EmployeeRate
+                employeeRepo.save(emp);
+            }
             populateEmployeeListView();
             populateEmployeeComboBox();
             setInfoLabels();
@@ -386,7 +392,12 @@ public class EmployeeSceneController extends GIMSController implements Initializ
                 break;
             }
         }
-        employeeRateComboBox.setValue(selectedEmployee.getEmployeeRate().toString());
+        try {
+            employeeRateComboBox.setValue(selectedEmployee.getEmployeeRate().toString());
+        }
+        catch(NullPointerException ex) {
+
+        }
         nameTextField.setText(selectedEmployee.getName());
         phoneTextField.setText(selectedEmployee.getPhone());
         emailTextField.setText(selectedEmployee.getEmail());

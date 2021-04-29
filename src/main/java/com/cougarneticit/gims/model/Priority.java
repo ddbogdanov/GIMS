@@ -16,7 +16,7 @@ public class Priority {
     @Column(name="priority", length=6)
     private String priority;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="priority", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="priority", cascade=CascadeType.REMOVE)
     private Set<Task> tasks;
 
     public Priority() {

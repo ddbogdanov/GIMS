@@ -19,9 +19,9 @@ public class Event {
     private String eventName;
     @Column(name="info", length=255)
     private String eventInfo;
-    @Column(name="start_date")
+    @Column(name="start_datetime")
     private LocalDateTime startDateTime;
-    @Column(name="end_date")
+    @Column(name="end_datetime")
     private LocalDateTime endDateTime;
 
     @ManyToOne
