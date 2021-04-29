@@ -15,7 +15,7 @@ public class Event {
     @Type(type="org.hibernate.type.UUIDCharType")
     @Column(name="event_id", length=36)
     private UUID eventId;
-    @Column(name="name", length=16)
+    @Column(name="name", length=128)
     private String eventName;
     @Column(name="info", length=255)
     private String eventInfo;
