@@ -314,11 +314,6 @@ public class EventsSceneController extends GIMSController implements Initializab
         chargeDescriptionTextArea.setText(selectedCharge.getDescription());
     }
 
-
-
-
-
-
     //Button Actions - Event Form
     private void submitEvent() {
         if(validateEventForm()) {

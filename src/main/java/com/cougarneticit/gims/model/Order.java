@@ -34,6 +34,7 @@ public class Order {
 
     public Order() {
         customer = null;
+        stay = null;
         total = null;
     }
     public Order(Customer customer, Stay stay, BigDecimal total) {
@@ -45,6 +46,13 @@ public class Order {
         this.orderId = orderId;
         this.customer = customer;
         this.stay = stay;
+        this.total = total;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
+    public void setTotal(BigDecimal total) {
         this.total = total;
     }
 
@@ -62,6 +70,16 @@ public class Order {
     }
     public BigDecimal getTotal() {
         return total;
+    }
+    public Set<AdditionalCharge> getAdditionalCharges() {
+        return additionalCharges;
+    }
+    public Set<EventCharge> getEventCharges() {
+        return eventCharges;
+    }
+
+    public void addToTotal(BigDecimal total) {
+        this.total = this.total.add(total);
     }
 
     @Override

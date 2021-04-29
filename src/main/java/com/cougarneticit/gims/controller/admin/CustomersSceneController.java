@@ -404,6 +404,12 @@ public class CustomersSceneController extends GIMSController implements Initiali
     private void submitOrderEdits() {
         Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
         Order editedOrder = createOrder(selectedOrder.getCustomer());
+        editedOrder.setOrderId(selectedOrder.getOrderId());
+
+        Set<AdditionalCharge> addCharges = selectedOrder.getAdditionalCharges();
+        Set<EventCharge> eventCharges = selectedOrder.getEventCharges();
+        addAdditionalCharges(editedOrder, addCharges, eventCharges);
+
         orderRepo.save(editedOrder);
 
         populateOrderListView(selectedOrder.getCustomer().getCustomerId(), selectedOrder.getCustomer().getCustomerName());
@@ -438,18 +444,21 @@ public class CustomersSceneController extends GIMSController implements Initiali
     private void populateOrderForm() {
         Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
 
-        try {
-            for (Stay stay : stayComboBox.getItems()) {
-                if (selectedOrder.getStayId() == stay.getStayId()) {
-                    stayComboBox.getSelectionModel().select(stay);
-                    break;
-                }
-            }
-        }
-        catch(NullPointerException ex) {
-            System.err.println("Selected order does not have a stay assigned");
-        }
-        orderTotalLabel.setText("$" + selectedOrder.getTotal().toString());
+       if(selectedOrder.getStay() != null) {
+           try {
+               for (Stay stay : stayComboBox.getItems()) {
+                   if (selectedOrder.getStayId() == stay.getStayId()) {
+                       stayComboBox.getSelectionModel().select(stay);
+                       break;
+                   }
+               }
+           } catch (NullPointerException ex) {
+               ex.printStackTrace();
+               System.err.println("Selected order does not have a stay assigned");
+           }
+       }
+       orderTotalLabel.setText("$" + selectedOrder.getTotal().toString());
+
     }
     private Order createOrder(Customer customer) {
         Stay selectedStay;
@@ -557,14 +566,16 @@ public class CustomersSceneController extends GIMSController implements Initiali
     private void deleteCharge() {
         AdditionalCharge selectedCharge = chargeListView.getSelectionModel().getSelectedItem();
 
-        additionalChargeRepo.delete(selectedCharge);
+        if(selectedCharge != null) {
+            additionalChargeRepo.delete(selectedCharge);
 
-        selectedCharge.setCharge(selectedCharge.getCharge().multiply(new BigDecimal(-1)));
-        updateOrderTotal(selectedCharge);
+            selectedCharge.setCharge(selectedCharge.getCharge().multiply(new BigDecimal(-1)));
+            updateOrderTotal(selectedCharge);
 
-        populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
-        populateChargeListView(selectedCharge.getOrderId());
-        resetChargeForm();
+            populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateChargeListView(selectedCharge.getOrderId());
+            resetChargeForm();
+        }
     }
     //Util Methods - Charge Form
     private void populateChargeListView(int orderId) {
@@ -586,16 +597,35 @@ public class CustomersSceneController extends GIMSController implements Initiali
         Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
         Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
 
-        BigDecimal oldTotal = selectedOrder.getTotal();
-        BigDecimal newTotal = oldTotal.add(charge.getCharge());
+        if(selectedOrder != null) {
+            BigDecimal oldTotal = selectedOrder.getTotal();
+            BigDecimal newTotal = oldTotal.add(charge.getCharge());
 
-        Order order = new Order(
-                selectedOrder.getOrderId(),
-                selectedCustomer,
-                selectedOrder.getStay(),
-                newTotal);
+            Order order = new Order(
+                    selectedOrder.getOrderId(),
+                    selectedCustomer,
+                    selectedOrder.getStay(),
+                    newTotal);
 
-        orderRepo.save(order);
+            orderRepo.save(order);
+        }
+    }
+    private Order addAdditionalCharges(Order editedOrder, Set<AdditionalCharge> addCharges, Set<EventCharge> eventCharges) {
+        BigDecimal newTotal = new BigDecimal(0);
+
+        if(!addCharges.isEmpty()) {
+            for (AdditionalCharge charge : addCharges) {
+                newTotal = newTotal.add(charge.getCharge());
+            }
+        }
+        if(!eventCharges.isEmpty()) {
+            for (EventCharge charge : eventCharges) {
+                newTotal = newTotal.add(charge.getCharge());
+            }
+        }
+
+        editedOrder.addToTotal(newTotal);
+        return editedOrder;
     }
     private boolean validateChargeForm() {
         try {
