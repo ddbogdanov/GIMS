@@ -149,10 +149,13 @@
                                           </JFXTimePicker>
                                        </children>
                                     </HBox>
-                                    <JFXTextArea fx:id="eventExtraInfoArea" focusColor="#11ab97" labelFloat="true" prefHeight="82.0" prefWidth="258.0" promptText="Extra Info" style="-fx-background-color: #33333d; -fx-background-radius: 5; -fx-border-color: #5d5c67; -fx-border-radius: 5;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                                    <JFXTextArea fx:id="eventExtraInfoArea" focusColor="#11ab97" labelFloat="true" prefHeight="82.0" prefWidth="258.0" promptText="Extra Info" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets left="15.0" right="15.0" top="20.0" />
                                        </VBox.margin>
+                                       <font>
+                                          <Font name="Roboto Regular" size="14.0" />
+                                       </font>
                                     </JFXTextArea>
                                     <AnchorPane prefHeight="12.0" prefWidth="243.0">
                                        <children>
@@ -203,6 +206,11 @@
                   </HBox>
                </children>
             </VBox>
+            <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css">
+               <HBox.margin>
+                  <Insets bottom="15.0" top="15.0" />
+               </HBox.margin>
+            </Separator>
             <VBox alignment="TOP_CENTER" prefHeight="700.0" prefWidth="285.0" HBox.hgrow="ALWAYS">
                <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" text="Locations" textFill="WHITE">
                   <font>
@@ -234,12 +242,12 @@
                      <Insets left="15.0" right="15.0" />
                   </VBox.margin>
                </JFXListView>
-               <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="367.0">
+               <HBox alignment="CENTER_RIGHT" prefHeight="32.0" prefWidth="331.0">
                   <VBox.margin>
                      <Insets bottom="10.0" left="15.0" right="15.0" top="10.0" />
                   </VBox.margin>
                   <children>
-                     <JFXButton fx:id="editLocationButton" prefHeight="30.0" prefWidth="86.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit" textFill="WHITE" HBox.hgrow="ALWAYS">
+                     <JFXButton fx:id="editLocationButton" prefHeight="30.0" prefWidth="112.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Edit" textFill="WHITE" HBox.hgrow="ALWAYS">
                         <font>
                            <Font name="Roboto Regular" size="14.0" />
                         </font>
@@ -247,7 +255,7 @@
                            <Insets right="10.0" />
                         </HBox.margin>
                      </JFXButton>
-                     <JFXButton fx:id="viewLocationButton" prefHeight="30.0" prefWidth="86.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View" textFill="WHITE" HBox.hgrow="ALWAYS">
+                     <JFXButton fx:id="viewLocationButton" prefHeight="30.0" prefWidth="112.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="View" textFill="WHITE" HBox.hgrow="ALWAYS">
                         <font>
                            <Font name="Roboto Regular" size="14.0" />
                         </font>
@@ -255,7 +263,7 @@
                            <Insets right="10.0" />
                         </HBox.margin>
                      </JFXButton>
-                     <JFXButton fx:id="deleteLocationButton" prefHeight="30.0" prefWidth="63.0" ripplerFill="#f71c19" style="-fx-border-color: #F73331; -fx-border-radius: 5;" text="Delete" textFill="WHITE" HBox.hgrow="ALWAYS">
+                     <JFXButton fx:id="deleteLocationButton" prefHeight="30.0" prefWidth="87.0" ripplerFill="#f71c19" style="-fx-border-color: #F73331; -fx-border-radius: 5;" text="Delete" textFill="WHITE" HBox.hgrow="ALWAYS">
                         <font>
                            <Font name="Roboto Regular" size="14.0" />
                         </font>
@@ -277,38 +285,46 @@
                            <Insets top="5.0" />
                         </VBox.margin>
                      </Label>
-                     <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="256.0">
-                        <children>
-                           <JFXTextField fx:id="locationNameField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="256.0" promptText="Location Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
-                        </children>
+                     <JFXTextField fx:id="locationNameTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="256.0" promptText="Location Name" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
                         <VBox.margin>
                            <Insets left="15.0" right="15.0" top="15.0" />
                         </VBox.margin>
-                     </HBox>
-                     <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="256.0">
-                        <children>
-                           <JFXTextField fx:id="locationAudienceCapacity" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="256.0" promptText="Capacity" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
-                        </children>
+                        <font>
+                           <Font name="Roboto Regular" size="14.0" />
+                        </font>
+                     </JFXTextField>
+                     <JFXTextField fx:id="capacityTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="256.0" promptText="Capacity" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
                         <VBox.margin>
                            <Insets left="15.0" right="15.0" top="15.0" />
                         </VBox.margin>
-                     </HBox>
-                     <HBox alignment="CENTER_LEFT" prefHeight="28.0" prefWidth="256.0">
+                        <font>
+                           <Font name="Roboto Regular" size="14.0" />
+                        </font>
+                     </JFXTextField>
+                     <JFXTextArea fx:id="locationInfoTextArea" focusColor="#11ab97" labelFloat="true" prefHeight="50.0" prefWidth="256.0" promptText="Location Info" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                        <font>
+                           <Font name="Roboto Regular" size="14.0" />
+                        </font>
+                        <VBox.margin>
+                           <Insets left="15.0" right="15.0" top="15.0" />
+                        </VBox.margin>
+                     </JFXTextArea>
+                     <AnchorPane prefHeight="12.0" prefWidth="243.0">
                         <children>
-                           <JFXTextArea fx:id="locationInformation" focusColor="#11ab97" labelFloat="true" prefHeight="50.0" prefWidth="256.0" promptText="Location Info" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
+                           <Label fx:id="locationFormHelpLabel" prefHeight="15.0" prefWidth="243.0" text="First Last" textFill="#f73331" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                               <font>
-                                 <Font name="Roboto Regular" size="14.0" />
+                                 <Font name="Roboto Regular" size="10.0" />
                               </font>
-                           </JFXTextArea>
+                           </Label>
                         </children>
                         <VBox.margin>
-                           <Insets left="15.0" right="15.0" top="15.0" />
+                           <Insets left="15.0" right="15.0" top="5.0" />
                         </VBox.margin>
-                     </HBox>
+                     </AnchorPane>
 
-                     <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="256.0" VBox.vgrow="ALWAYS">
+                     <HBox alignment="BOTTOM_RIGHT" prefHeight="32.0" prefWidth="256.0">
                         <children>
-                           <JFXButton fx:id="addLocationButton" prefHeight="32.0" prefWidth="158.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add" textFill="WHITE">
+                           <JFXButton fx:id="locationFormSubmitButton" prefHeight="32.0" prefWidth="230.0" ripplerFill="#5bddc7" style="-fx-background-color: #007b68;" text="Add Location" textFill="WHITE">
                               <font>
                                  <Font name="Roboto Regular" size="14.0" />
                               </font>
@@ -316,7 +332,7 @@
                                  <Insets />
                               </HBox.margin>
                            </JFXButton>
-                           <JFXButton fx:id="cancelLocationButton" prefHeight="32.0" prefWidth="87.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Cancel" textFill="WHITE">
+                           <JFXButton fx:id="locationFormCancelButton" prefHeight="32.0" prefWidth="87.0" ripplerFill="#5bddc7" style="-fx-border-color: #007b68; -fx-border-radius: 5;" text="Cancel" textFill="WHITE">
                               <font>
                                  <Font name="Roboto Regular" size="14.0" />
                               </font>

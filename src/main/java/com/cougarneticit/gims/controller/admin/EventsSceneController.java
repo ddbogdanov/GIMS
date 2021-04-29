@@ -19,12 +19,10 @@ import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.net.URL;
 import java.time.*;
 import java.util.*;
-import java.util.regex.Pattern;
 
 @Component
 @FxmlView("/EventsSceneController.fxml")
@@ -46,11 +44,11 @@ public class EventsSceneController extends GIMSController implements Initializab
     @FXML private JFXComboBox<EventStatus> eventStatusComboBox;
     @FXML private JFXDatePicker eventStartDatePicker, eventEndDatePicker;
     @FXML private JFXTimePicker eventStartTimePicker, eventEndTimePicker;
-    @FXML private JFXTextField eventNameTextField, locationNameField, locationAudienceCapacity;
-    @FXML private JFXTextArea eventExtraInfoArea, locationInformation;
-    @FXML private Label eventFormLabel, locationFormLabel, eventFormHelpLabel;
+    @FXML private JFXTextField eventNameTextField, locationNameTextField, capacityTextField;
+    @FXML private JFXTextArea eventExtraInfoArea, locationInfoTextArea;
+    @FXML private Label eventFormLabel, locationFormLabel, eventFormHelpLabel, locationFormHelpLabel;
     @FXML private JFXButton
-            eventFormSubmitButton, eventFormCancelButton, addLocationButton, cancelLocationButton,
+            eventFormSubmitButton, eventFormCancelButton, locationFormSubmitButton, locationFormCancelButton,
             editEventButton, viewEventButton, deleteEventButton, editLocationButton, viewLocationButton, deleteLocationButton;
 
     public EventsSceneController(FxWeaver fxWeaver) {
@@ -82,9 +80,10 @@ public class EventsSceneController extends GIMSController implements Initializab
         deleteEventButton.setOnAction(e -> {
             deleteEvent();
         });
+
         //Location Form
-        addLocationButton.setOnAction(e -> {
-            addLocation();
+        locationFormSubmitButton.setOnAction(e -> {
+            submitLocation();
         });
         editLocationButton.setOnAction(e -> {
             editLocation();
@@ -95,7 +94,7 @@ public class EventsSceneController extends GIMSController implements Initializab
         deleteLocationButton.setOnAction(e -> {
             deleteLocation();
         });
-        cancelLocationButton.setOnAction(e -> {
+        locationFormCancelButton.setOnAction(e -> {
             resetLocationForm();
         });
     }
@@ -330,56 +329,126 @@ public class EventsSceneController extends GIMSController implements Initializab
     }
 
     //Button Actions - Location Form
-    private void addLocation() {
-        String name = locationNameField.getText();
-        String audienceCapacity = locationAudienceCapacity.getText();
-        String extraInfo = locationInformation.getText();
+    private void submitLocation() {
+        if(validateLocationForm()) {
+            String name = locationNameTextField.getText();
+            int capacity = Integer.parseInt(capacityTextField.getText());
+            String info = locationInfoTextArea.getText();
 
-        boolean isNameValid = Objects.nonNull(name);
-        boolean isAudienceCapacityValid =
-                StringUtils.hasText(audienceCapacity)
-                        && Pattern.matches("^[1-9]\\d{0,4}", audienceCapacity);
-        if(isAudienceCapacityValid && isNameValid) {
-            if ("Add".equals(addLocationButton.getText())) {
-                locationRepo.save(new Location(UUID.randomUUID(), name, extraInfo, Integer.parseInt(audienceCapacity)));
-            } else {
-                Location location = locationListView.getSelectionModel().getSelectedItem();
-                location.setLocationName(name);
-                location.setCapacity(Integer.parseInt(audienceCapacity));
-                location.setLocationInfo(extraInfo);
-                locationRepo.save(location);
-            }
+            Location location = new Location(
+                    UUID.randomUUID(),
+                    name,
+                    info,
+                    capacity);
+            locationRepo.save(location);
+
+            populateLocationListView();
+            populateLocationComboBox();
+            resetLocationForm();
         }
-        populateLocationListView();
-        resetLocationForm();
     }
     private void editLocation() {
         resetLocationForm();
-        locationFormLabel.setText("Edit Location");
-        Location location = locationListView.getSelectionModel().getSelectedItem();
-        locationNameField.setText(location.getLocationName());
-        locationAudienceCapacity.setText(String.valueOf(location.getCapacity()));
-        locationInformation.setText(location.getLocationInfo());
-        eventFormSubmitButton.setText("Edit Location");
+        try {
+            locationFormSubmitButton.setOnAction(e -> {
+                submitLocationEdits();
+            });
+
+            populateLocationForm();
+            locationFormLabel.setText("Edit Location");
+            locationFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            locationFormSubmitButton.setOnAction(e -> {
+                submitLocation();
+            });
+            System.err.println("Nothing selected in location list");
+        }
+    }
+    private void submitLocationEdits() {
+        if(validateLocationForm()) {
+            UUID locationId = locationListView.getSelectionModel().getSelectedItem().getLocationId();
+            String name = locationNameTextField.getText();
+            int capacity = Integer.parseInt(capacityTextField.getText());
+            String info = locationInfoTextArea.getText();
+
+            Location location = new Location(
+                    locationId,
+                    name,
+                    info,
+                    capacity);
+            locationRepo.save(location);
+
+            populateLocationListView();
+            populateLocationComboBox();
+            resetLocationForm();
+        }
     }
     private void viewLocation() {
-        resetLocationForm();
-        locationFormLabel.setText("View Location");
-        Location location = locationListView.getSelectionModel().getSelectedItem();
-        locationNameField.setText(location.getLocationName());
-        locationNameField.setEditable(false);
-        locationAudienceCapacity.setText(String.valueOf(location.getCapacity()));
-        locationAudienceCapacity.setEditable(false);
-        locationInformation.setText(location.getLocationInfo());
-        locationInformation.setEditable(false);
-        addLocationButton.setVisible(false);
+        try {
+            populateLocationForm();
+
+            locationFormLabel.setText("View Location");
+            locationNameTextField.setDisable(true);
+            capacityTextField.setDisable(true);
+            locationInfoTextArea.setDisable(true);
+            locationFormSubmitButton.setDisable(true);
+
+        }
+        catch(NullPointerException ex) {
+            System.err.println("Nothing selected in location list");
+        }
     }
     private void deleteLocation() {
-        Location location = locationListView.getSelectionModel().getSelectedItem();
-        locationRepo.delete(location);
+        try {
+            Location selectedLocation = locationListView.getSelectionModel().getSelectedItem();
+            locationRepo.delete(selectedLocation);
+
+            populateLocationListView();
+            populateLocationComboBox();
+            resetLocationForm();
+        }
+        catch(NullPointerException ex) {
+            System.err.println("Nothing selected in location list");
+        }
     }
 
     //Util Methods - Location Form
+    private boolean validateLocationForm() {
+        if(locationNameTextField.getText().isBlank()) {
+            locationFormHelpLabel.setText("Set a location name");
+            locationFormHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(capacityTextField.getText().isBlank()) {
+            locationFormHelpLabel.setText("Set a capacity");
+            locationFormHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(locationInfoTextArea.getText().isBlank()) {
+            locationFormHelpLabel.setText("Set location information");
+            locationFormHelpLabel.setVisible(true);
+            return false;
+        }
+        else {
+            try {
+                Integer.parseInt(capacityTextField.getText());
+            }
+            catch(NumberFormatException ex) {
+                locationFormHelpLabel.setText("Capacity is invalid. Type only whole numbers");
+                locationFormHelpLabel.setVisible(true);
+                return false;
+            }
+            return true;
+        }
+    }
+    private void populateLocationForm() {
+        Location selectedLocation = locationListView.getSelectionModel().getSelectedItem();
+
+        locationNameTextField.setText(selectedLocation.getLocationName());
+        capacityTextField.setText(String.valueOf(selectedLocation.getCapacity()));
+        locationInfoTextArea.setText(selectedLocation.getLocationInfo());
+    }
     private void populateLocationListView() {
         ObservableList<Location> locations = FXCollections.observableArrayList();
         if(locationRepo.count() != 0) {
@@ -391,16 +460,21 @@ public class EventsSceneController extends GIMSController implements Initializab
     }
     private void resetLocationForm() {
         locationFormLabel.setText("Add Location");
-        locationNameField.setEditable(true);
-        locationAudienceCapacity.setEditable(true);
-        locationInformation.setEditable(true);
-        addLocationButton.setVisible(true);
-        addLocationButton.setText("Add");
-        locationNameField.clear();
-        locationAudienceCapacity.clear();
-        locationInformation.clear();
-    }
 
+        locationNameTextField.clear();
+        locationNameTextField.setDisable(false);
+        capacityTextField.clear();
+        capacityTextField.setDisable(false);
+        locationInfoTextArea.clear();
+        locationInfoTextArea.setDisable(false);
+
+        locationFormSubmitButton.setText("Add Location");
+        locationFormSubmitButton.setDisable(false);
+
+        locationFormSubmitButton.setOnAction(e -> {
+            submitLocation();
+        });
+    }
 
     public AnchorPane getScene() {
         return pane;
