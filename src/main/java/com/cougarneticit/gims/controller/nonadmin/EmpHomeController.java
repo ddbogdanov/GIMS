@@ -26,14 +26,14 @@ public class EmpHomeController extends GIMSController implements Initializable {
     public static Node empHomeScene, empRoomsScene, empEventsScene, empSettingsScene;
     public static EmpHomeSceneController empHomeSceneController;
     public static EmpRoomsSceneController empRoomsSceneController;
-    public static EmpEventsSceneController empEventsSceneController;
+    public static EmpShiftsSceneController empShiftsSceneController;
     public static EmpSettingsSceneController empSettingsSceneController;
 
     private Stage stage;
 
     @FXML AnchorPane pane;
     @FXML JFXButton exitButton, minimizeButton, maximizeButton;
-    @FXML JFXButton homeTab, roomTab, eventTab, settingsTab;
+    @FXML JFXButton homeTab, roomTab, shiftTab, settingsTab;
     @FXML BorderPane mainView;
 
     public EmpHomeController(FxWeaver fxWeaver) {
@@ -48,8 +48,8 @@ public class EmpHomeController extends GIMSController implements Initializable {
         ArrayList<JFXButton> buttonList = new ArrayList<>();
         buttonList.add(homeTab);
         buttonList.add(roomTab);
-        buttonList.add(eventTab);
-        buttonList.add(settingsTab);
+        buttonList.add(shiftTab);
+        //buttonList.add(settingsTab);
 
         preloadViews();
 
@@ -64,14 +64,14 @@ public class EmpHomeController extends GIMSController implements Initializable {
             setActiveButton(roomTab, buttonList);
             showEmpRoomsView();
         });
-        eventTab.setOnAction(e -> {
-            setActiveButton(eventTab, buttonList);
-            showEmpEventsView();
+        shiftTab.setOnAction(e -> {
+            setActiveButton(shiftTab, buttonList);
+            showEmpShiftsView();
         });
-        settingsTab.setOnAction(e -> {
+        /*settingsTab.setOnAction(e -> {
             setActiveButton(settingsTab, buttonList);
             showEmpSettingsView();
-        });
+        });*/
 
         //Duplicated code - fix by dynamically loading tabs into a common HomeController. Too much work for me.
         minimizeButton.setOnAction(e -> {
@@ -101,8 +101,8 @@ public class EmpHomeController extends GIMSController implements Initializable {
         empRoomsSceneController = fxWeaver.loadController(EmpRoomsSceneController.class);
         empRoomsScene = empRoomsSceneController.getScene();
 
-        empEventsSceneController = fxWeaver.loadController(EmpEventsSceneController.class);
-        empEventsScene = empEventsSceneController.getScene();
+        empShiftsSceneController = fxWeaver.loadController(EmpShiftsSceneController.class);
+        empEventsScene = empShiftsSceneController.getScene();
 
         empSettingsSceneController = fxWeaver.loadController(EmpSettingsSceneController.class);
         empSettingsScene = empSettingsSceneController.getScene();
@@ -117,7 +117,7 @@ public class EmpHomeController extends GIMSController implements Initializable {
     public void showEmpRoomsView() {
         mainView.setCenter(empRoomsScene);
     }
-    public void showEmpEventsView() {
+    public void showEmpShiftsView() {
         mainView.setCenter(empEventsScene);
     }
     public void showEmpSettingsView() {

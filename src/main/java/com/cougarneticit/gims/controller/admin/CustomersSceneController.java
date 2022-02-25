@@ -1,13 +1,8 @@
 package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
-import com.cougarneticit.gims.model.Customer;
-import com.cougarneticit.gims.model.Event;
-import com.cougarneticit.gims.model.Room;
-import com.cougarneticit.gims.model.common.RoomStatus;
-import com.cougarneticit.gims.model.repos.CustomerRepo;
-import com.cougarneticit.gims.model.repos.EventRepo;
-import com.cougarneticit.gims.model.repos.RoomRepo;
+import com.cougarneticit.gims.model.*;
+import com.cougarneticit.gims.model.repos.*;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,13 +12,18 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
+import org.controlsfx.control.textfield.TextFields;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.net.URL;
-import java.time.ZoneOffset;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 @Component
@@ -32,20 +32,45 @@ public class CustomersSceneController extends GIMSController implements Initiali
 
     private Stage stage;
 
-    @Autowired private CustomerRepo customerRepo;
-    @Autowired private RoomRepo roomRepo;
-    @Autowired private EventRepo eventRepo;
+    @Autowired
+    private CustomerRepo customerRepo;
+    @Autowired
+    private RoomRepo roomRepo;
+    @Autowired
+    private StayRepo stayRepo;
+    @Autowired
+    private OrderRepo orderRepo;
+    @Autowired
+    private AdditionalChargeRepo additionalChargeRepo;
+    @Autowired
+    private StateRepo stateRepo;
+    @Autowired
+    private CountryRepo countryRepo;
 
     @FXML private AnchorPane pane;
-    @FXML private JFXButton confirmCustomer, cancelCustomerBooking, viewCustomerButton, editCustomerButton, deleteCustomerButton, customerRefresh, eventReg, cancelEventReg;
+    @FXML private JFXComboBox<Customer> customerComboBox;
+    @FXML private JFXComboBox<Room> roomComboBox;
+    @FXML private JFXComboBox<Stay> stayComboBox;
+    @FXML private JFXComboBox<String> stateComboBox;
+    @FXML private JFXComboBox<String> countryComboBox;
     @FXML private JFXListView<Customer> customerListView;
-    @FXML private JFXComboBox<Room> customerRoomComboBox;
-    @FXML private JFXComboBox<Event> eventRegComboBox;
-    @FXML private JFXTextField customerName, customerPhone, customerEmail, customerState, customerCountry;
-    @FXML private JFXTextArea extraInfo;
-    @FXML private JFXDatePicker startDate, endDate;
-    @FXML private Label customerNameHelpLabel, customerPhoneHelpLabel, customerEmailHelpLabel, customerStateHelpLabel, customerCountryHelpLabel,
-            customerListViewLabel, customerOperationLabel, dateRangeHelpLabel;
+    @FXML private JFXListView<Stay> stayListView;
+    @FXML private JFXListView<Order> orderListView;
+    @FXML private JFXListView<AdditionalCharge> chargeListView;
+    @FXML private JFXDatePicker stayStartDatePicker, stayEndDatePicker;
+    @FXML private JFXTextField customerNameTextField, customerPhoneTextField, customerEmailTextField, chargeAmountTextField;
+    @FXML private JFXTextArea chargeDescriptionTextArea;
+
+    @FXML private Label
+            customerNameHelpLabel, customerPhoneHelpLabel, customerEmailHelpLabel, customerFormLabel,
+            stayListLabel, stayFormLabel, customerNameLabel, orderListLabel, chargeListLabel, orderTotalLabel,
+            orderFormCustomerNameLabel, orderFormLabel, chargeAmountHelpLabel, chargeFormLabel, chargeFormOrderIdLabel;
+
+    @FXML private JFXButton
+            customerFormSubmitButton, customerFormCancelButton, viewCustomerButton, editCustomerButton, deleteCustomerButton,
+            stayFormSubmitButton, stayFormCancelButton, editStayButton, viewStayButton, deleteStayButton, deleteOrderButton,
+            deleteChargeButton, orderFormSubmitButton, orderFormCancelButton, chargeFormSubmitButton, chargeFormCancelButton,
+            editOrderButton, editChargeButton;
 
     public CustomersSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -55,12 +80,34 @@ public class CustomersSceneController extends GIMSController implements Initiali
     public void initialize(URL url, ResourceBundle resourceBundle) {
         this.stage = new Stage();
         initStage(stage, pane, null, null, null, null, true);
-        populateRoomComboBox();
-        populateCustomerList();
-        populateEventList();
+        populateCustomerListView();
+        customerListView.getSelectionModel().select(0);
+        try {
+            populateStayListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateStayComboBox(customerListView.getSelectionModel().getSelectedItem().getCustomerId());
+            populateCustomerComboBox();
+            populateRoomComboBox();
+            populateCountryComboBox();
+            populateStateComboBox();
 
-        confirmCustomer.setOnAction(e -> {
-            addCustomer();
+            TextFields.bindAutoCompletion(countryComboBox.getEditor(), countryComboBox.getItems());
+            TextFields.bindAutoCompletion(stateComboBox.getEditor(), stateComboBox.getItems());
+
+            orderListLabel.setText("Orders - " + customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            customerNameLabel.setText(customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            orderFormCustomerNameLabel.setText(customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+        }
+        catch(NullPointerException ex) {
+            System.err.println("No customers");
+        }
+
+        //Customer form
+        customerFormSubmitButton.setOnAction(e -> {
+            submitCustomer();
+        });
+        customerFormCancelButton.setOnAction(e -> {
+            resetCustomerForm();
         });
         viewCustomerButton.setOnAction(e -> {
             viewCustomer();
@@ -71,254 +118,167 @@ public class CustomersSceneController extends GIMSController implements Initiali
         deleteCustomerButton.setOnAction(e -> {
             deleteCustomer();
         });
-        cancelCustomerBooking.setOnAction(e -> {
-            resetCustomerForm();
+
+        //Order form
+        orderFormSubmitButton.setOnAction(e -> {
+            submitOrder();
         });
-        customerRefresh.setOnAction(e -> {
-            populateRoomComboBox();
-            populateCustomerList();
-            resetCustomerForm();
-            populateEventList();
+        orderFormCancelButton.setOnAction(e -> {
+            resetOrderForm();
         });
-        eventReg.setOnAction(e -> registerEvent());
-        cancelEventReg.setOnAction(e -> cancelEventRegistration());
-    }
+        editOrderButton.setOnAction(e -> {
+            editOrder();
+        });
+        deleteOrderButton.setOnAction(e -> {
+            deleteOrder();
+        });
 
-    private void populateEventList() {
-        eventRegComboBox.setItems(FXCollections.observableList(eventRepo.findAll()));
-    }
-    //Button Actions - Customer Form
-    private void addCustomer() {
-        Room selectedRoom = customerRoomComboBox.getSelectionModel().getSelectedItem();
-        String name = customerName.getText();
-        String phone = customerPhone.getText();
-        String email = customerEmail.getText();
-        String state = customerState.getText();
-        String country = customerCountry.getText();
-        String extraInformation = extraInfo.getText();
+        //Charge form
+        chargeFormSubmitButton.setOnAction(e -> {
+            submitCharge();
+        });
+        chargeFormCancelButton.setOnAction(e -> {
+            resetChargeForm();
+        });
+        editChargeButton.setOnAction(e -> {
+            editCharge();
+        });
+        deleteChargeButton.setOnAction(e -> {
+            deleteCharge();
+        });
 
-        boolean isNameValid = validateName(name);
-        boolean isPhoneValid = validatePhone(phone);
-        boolean isEmailValid = validateEmail(email);
-        boolean isStateValid = validateState(state);
-        boolean isCountryValid = validateCountry(country);
-        boolean isStartDateNotNull = Objects.nonNull(startDate.getValue());
-        boolean isEndDateNotNull = Objects.nonNull(endDate.getValue());
-        boolean isDateRangeValid =
-                isStartDateNotNull
-                        && isEndDateNotNull
-                        && startDate.getValue().compareTo(endDate.getValue()) <= 0;
+        //Stay form
+        stayFormSubmitButton.setOnAction(e -> {
+            submitStay();
+        });
+        stayFormCancelButton.setOnAction(e -> {
+            resetStayForm();
+        });
+        editStayButton.setOnAction(e -> {
+            editStay();
+        });
+        viewStayButton.setOnAction(e -> {
+            viewStay();
+        });
+        deleteStayButton.setOnAction(e -> {
+            deleteStay();
+        });
 
-        if (isNameValid && isPhoneValid && isEmailValid && isStartDateNotNull && isEndDateNotNull && isDateRangeValid) {
-            Date start = Date.from(startDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
-            Date end = Date.from(endDate.getValue().atStartOfDay().toInstant(ZoneOffset.UTC));
-            Customer customer;
-            if(confirmCustomer.getText().equals("Save Changes")) {
-                customer = customerListView.getSelectionModel().getSelectedItem();
-                customer.setCustomerEmail(email);
-                customer.setCustomerName(name);
-                customer.setCustomerPhone(phone);
-                // customer.setState(state) database
-                // customer.setCountry(country) database
-                customer.setExtraInfo(extraInformation);
-                customer.setStartDate(start);
-                customer.setEndDate(end);
+        chargeAmountTextField.focusedProperty().addListener((obs, oldVal, newVal) -> chargeAmountHelpLabel.setVisible(newVal));
+        customerListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                customerListView.getSelectionModel().select(oldVal);
+            }
+            else {
+                populateStayListView(newVal.getCustomerId(), newVal.getCustomerName());
+                populateStayComboBox(newVal.getCustomerId());
+                populateOrderListView(newVal.getCustomerId(), newVal.getCustomerName());
 
-                Room room = roomRepo.findById(customer.getRoomId()).orElse(null);
-
-                if(Objects.nonNull(room)) {
-                    room.setStatus(RoomStatus.VACANT);
+                resetOrderForm();
+                resetChargeForm();
+                customerNameLabel.setText(newVal.getCustomerName());
+                orderFormCustomerNameLabel.setText(newVal.getCustomerName());
+                chargeListLabel.setText("Additional Charges - {Order ID}");
+                orderListView.getSelectionModel().clearSelection();
+                chargeListView.getItems().clear();
+            }
+        });
+        countryComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal != null) {
+                if(newVal.equals("United States")) {
+                    stateComboBox.setDisable(false);
                 }
-            } else {
-                customer = new Customer(UUID.randomUUID(), name, phone, email, extraInformation, start, end);
+                else {
+                    stateComboBox.getSelectionModel().clearSelection();
+                    stateComboBox.setValue(null);
+                    stateComboBox.setDisable(true);
+                }
             }
-            customer.setRoom(selectedRoom.getRoomId());
-            selectedRoom.setStatus(RoomStatus.OCCUPIED);
-            roomRepo.save(selectedRoom);
+        });
+        orderListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                //orderListView.getSelectionModel().select(oldVal);
+            }
+            else {
+                populateChargeListView(newVal.getOrderId());
 
+                resetOrderForm();
+                resetChargeForm();
+                orderTotalLabel.setText("$" + newVal.getTotal().toString());
+                chargeListLabel.setText("Additional Charges - Order #" + newVal.getOrderId());
+                chargeFormOrderIdLabel.setText("Order #" + newVal.getOrderId());
+            }
+        });
+        chargeListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                chargeListView.getSelectionModel().select(oldVal);
+            }
+            else {
+                resetChargeForm();
+                chargeFormOrderIdLabel.setText("Order #" + newVal.getOrderId());
+            }
+        });
+        chargeListView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal == null) {
+                chargeListLabel.setText("Event Charges - {Order ID}");
+            }
+        });
+        stayStartDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                stayStartDatePicker.getEditor().setText(stayStartDatePicker.getConverter().toString(stayStartDatePicker.getValue()));
+            }
+        });
+        stayEndDatePicker.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            //Lazy workaround to unwanted behavior produced by the DatePicker
+            if(newVal != null) {
+                stayEndDatePicker.getEditor().setText(stayEndDatePicker.getConverter().toString(stayEndDatePicker.getValue()));
+            }
+        });
+    }
 
-            populateCustomerList();
-            populateRoomComboBox();
+    //TODO: Update labels after delete customer
+    //Button Actions - Customer Form
+    private void submitCustomer() {
+        String name = customerNameTextField.getText();
+        String phone = customerPhoneTextField.getText();
+        String email = customerEmailTextField.getText();
+
+        if(validateCustomerForm(name, phone, email)) {
+            Country country = countryRepo.findByCountryName(countryComboBox.getValue());
+            State state = stateRepo.findByStateName(stateComboBox.getValue());
+
+            Customer customer = new Customer(UUID.randomUUID(), name, phone, email, country, state);
+
+            customerRepo.save(customer);
+
+            populateCustomerListView();
+            populateCustomerComboBox();
             resetCustomerForm();
         }
-        else {
-            if(!isNameValid) {
-                customerNameHelpLabel.setTextFill(Color.web("#F73331"));
-                customerNameHelpLabel.setText("Invalid format: First Last");
-                customerNameHelpLabel.setVisible(true);
-            } else {
-                customerNameHelpLabel.setVisible(false);
-            }
-            if(!isPhoneValid) {
-                customerPhoneHelpLabel.setTextFill(Color.web("#F73331"));
-                customerPhoneHelpLabel.setText("Invalid format: xxx-xxx-xxxx");
-                customerPhoneHelpLabel.setVisible(true);
-            } else {
-                customerPhoneHelpLabel.setVisible(false);
-            }
-            if(!isPhoneValid) {
-                customerPhoneHelpLabel.setTextFill(Color.web("#F73331"));
-                customerPhoneHelpLabel.setText("Invalid format: xxx-xxx-xxxx");
-                customerPhoneHelpLabel.setVisible(true);
-            } else {
-                customerPhoneHelpLabel.setVisible(false);
-            }
-            if(!isStateValid) {
-                customerStateHelpLabel.setTextFill(Color.web("#F73331"));
-                customerStateHelpLabel.setText("Invalid format: State");
-                customerStateHelpLabel.setVisible(true);
-            } else {
-                customerStateHelpLabel.setVisible(false);
-            }
-            if(!isCountryValid) {
-                customerCountryHelpLabel.setTextFill(Color.web("#F73331"));
-                customerCountryHelpLabel.setText("Invalid format: Country");
-                customerCountryHelpLabel.setVisible(true);
-            } else {
-                customerCountryHelpLabel.setVisible(false);
-            }
-            if(!isEmailValid) {
-                customerEmailHelpLabel.setTextFill(Color.web("#F73331"));
-                customerEmailHelpLabel.setText("Invalid format: email@domain.com");
-                customerEmailHelpLabel.setVisible(true);
-            } else {
-                customerPhoneHelpLabel.setVisible(false);
-            }
-            
-            if(!isStartDateNotNull) {
-                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
-                dateRangeHelpLabel.setText("From Date cannot be null");
-                dateRangeHelpLabel.setVisible(true);
-            } else if(!isEndDateNotNull) {
-                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
-                dateRangeHelpLabel.setText("To date cannot be null");
-                dateRangeHelpLabel.setVisible(true);
-            } else if(!isDateRangeValid) {
-                dateRangeHelpLabel.setTextFill(Color.web("#F73331"));
-                dateRangeHelpLabel.setText("From date cannot be after To date");
-                dateRangeHelpLabel.setVisible(true);
-            }
-        }
-    }
-    private void viewCustomer() {
-        customerOperationLabel.setText("Viewing Customer");
-        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
-
-        for (Room room : customerRoomComboBox.getItems()) {
-            if (room.getRoomId() == selectedCustomer.getRoomId()) {
-                customerRoomComboBox.getSelectionModel().select(room);
-                break;
-            }
-        }
-        customerRoomComboBox.setEditable(false);
-        customerName.setText(selectedCustomer.getCustomerName());
-        customerName.setEditable(false);
-        customerPhone.setText(selectedCustomer.getCustomerPhone());
-        customerPhone.setEditable(false);
-        // customerState.setText() database
-        customerState.setEditable(false);
-        // customerCountry.setText() database
-        customerCountry.setEditable(false);
-        customerEmail.setText(selectedCustomer.getCustomerEmail());
-        customerEmail.setEditable(false);
-        extraInfo.setText(selectedCustomer.getExtraInfo());
-        extraInfo.setEditable(false);
-        startDate.setValue(selectedCustomer.getStartDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
-        startDate.setDisable(true);
-        endDate.setValue(selectedCustomer.getEndDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
-        endDate.setDisable(true);
-        confirmCustomer.setVisible(false);
-    }
-    private void editCustomer() {
-        resetCustomerForm();
-        customerOperationLabel.setText("Edit Customer");
-        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
-
-        for (Room room : customerRoomComboBox.getItems()) {
-            if (room.getRoomId() == selectedCustomer.getRoomId()) {
-                customerRoomComboBox.getSelectionModel().select(room);
-                break;
-            }
-        }
-        customerName.setText(selectedCustomer.getCustomerName());
-        customerPhone.setText(selectedCustomer.getCustomerPhone());
-        customerEmail.setText(selectedCustomer.getCustomerEmail());
-        // customerState.setText() database
-        // customerCountry.setText() database
-        extraInfo.setText(selectedCustomer.getExtraInfo());
-        startDate.setValue(selectedCustomer.getStartDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
-        endDate.setValue(selectedCustomer.getEndDate().toInstant().atOffset(ZoneOffset.UTC).toLocalDate());
-        confirmCustomer.setVisible(true);
-        confirmCustomer.setText("Save Changes");
-    }
-    private void deleteCustomer() {
-        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
-        if(Objects.nonNull(selectedCustomer)) {
-            Room room = roomRepo.findById(selectedCustomer.getRoomId()).orElse(null);
-            if(Objects.nonNull(room)) {
-                room.setStatus(RoomStatus.VACANT);
-                roomRepo.save(room);
-            }
-            customerRepo.delete(selectedCustomer);
-        }
-        resetCustomerForm();
-        populateCustomerList();
-
-    }
-
-    //Util Methods - Customer Form
-    private void populateRoomComboBox() {
-        customerRoomComboBox.getItems().clear();
-        ObservableList<Room> rooms = FXCollections.observableArrayList();
-        if(roomRepo.count() != 0) {
-            rooms.addAll(roomRepo.findAll());
-        }
-        customerRoomComboBox.getItems().addAll(rooms);
-    }
-    private void populateCustomerList() {
-        ObservableList<Customer> customers = FXCollections.observableArrayList();
-
-        if(customerRepo.count() != 0) {
-            customers.addAll(customerRepo.findAll());
-            customerListViewLabel.setText("");
-            customerListViewLabel.setDisable(true);
-        } else {
-            customerListViewLabel.setDisable(false);
-        }
-        customerListView.setItems(customers.sorted());
     }
     private void resetCustomerForm() {
-        customerOperationLabel.setText("Add Customer");
-        customerRoomComboBox.getSelectionModel().clearSelection();
-        customerRoomComboBox.setDisable(false);
+        customerFormLabel.setText("Add a Customer");
+
+        countryComboBox.getSelectionModel().clearSelection();
+        countryComboBox.setValue(null);
+        stateComboBox.getSelectionModel().clearSelection();
+        stateComboBox.setValue(null);
 
         //Reset buttons
-        confirmCustomer.setText("Add Customer");
-        confirmCustomer.setDisable(false);
-        cancelCustomerBooking.setText("Cancel");
+        customerFormSubmitButton.setText("Add Customer");
+        customerFormSubmitButton.setDisable(false);
+        customerFormCancelButton.setText("Cancel");
         //Reset text fields
-        customerName.clear();
-        customerName.setDisable(false);
-        customerName.setEditable(true);
-        customerPhone.clear();
-        customerPhone.setDisable(false);
-        customerPhone.setEditable(true);
-        customerEmail.clear();
-        customerEmail.setDisable(false);
-        customerEmail.setEditable(true);
-        customerState.clear();
-        customerState.setDisable(false);
-        customerState.setEditable(true);
-        customerCountry.clear();
-        customerCountry.setDisable(false);
-        customerCountry.setEditable(true);
-        extraInfo.clear();
-        extraInfo.setDisable(false);
-        extraInfo.setEditable(true);
-        startDate.setValue(null);
-        startDate.setDisable(false);
-        endDate.setValue(null);
-        endDate.setDisable(false);
+        customerNameTextField.clear();
+        customerNameTextField.setDisable(false);
+        customerNameTextField.setEditable(true);
+        customerPhoneTextField.clear();
+        customerPhoneTextField.setDisable(false);
+        customerPhoneTextField.setEditable(true);
+        customerEmailTextField.clear();
+        customerEmailTextField.setDisable(false);
+        customerEmailTextField.setEditable(true);
         //Reset labels
         customerNameHelpLabel.setTextFill(Color.web("#5BDDC7"));
         customerNameHelpLabel.setText("First Last");
@@ -330,19 +290,599 @@ public class CustomersSceneController extends GIMSController implements Initiali
         customerEmailHelpLabel.setText("email@domain.com");
         customerEmailHelpLabel.setVisible(false);
 
+        customerFormSubmitButton.setOnAction(e -> {
+            submitCustomer();
+        });
+
+    }
+    private void viewCustomer() {
+        resetCustomerForm();
+        customerFormLabel.setText("View a Customer");
+
+        customerNameTextField.setEditable(false);
+        customerPhoneTextField.setEditable(false);
+        customerEmailTextField.setEditable(false);
+        customerFormSubmitButton.setDisable(true);
+        populateCustomerForm();
+    }
+    private void editCustomer() {
+        resetCustomerForm();
+        try {
+            customerFormSubmitButton.setOnAction(e -> {
+                submitCustomerEdits();
+            });
+
+            populateCustomerForm();
+            customerFormLabel.setText("Edit a Customer");
+            customerFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            customerFormSubmitButton.setOnAction(e -> {
+                submitCustomer();
+            });
+            System.err.println("Nothing selected in customer list");
+        }
+    }
+    private void submitCustomerEdits() {
+        String name = customerNameTextField.getText();
+        String phone = customerPhoneTextField.getText();
+        String email = customerEmailTextField.getText();
+
+        if(validateCustomerForm(name, phone, email)) {
+            Country country = countryRepo.findByCountryName(countryComboBox.getValue());
+            State state = stateRepo.findByStateName(stateComboBox.getValue());
+
+            Customer updatedCustomer = new Customer(
+                    customerListView.getSelectionModel().getSelectedItem().getCustomerId(),
+                    name,
+                    phone,
+                    email,
+                    country,
+                    state);
+            customerRepo.save(updatedCustomer);
+
+            populateCustomerListView();
+            populateCustomerComboBox();
+            resetCustomerForm();
+        }
+    }
+    private void deleteCustomer() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+
+        customerRepo.delete(selectedCustomer);
+
+        resetCustomerForm();
+        populateCustomerListView();
+        populateCustomerComboBox();
+    }
+    //Util Methods - Customer Form
+    private void populateCustomerListView() {
+        ObservableList<Customer> customers = FXCollections.observableArrayList();
+
+        if(customerRepo.count() != 0) {
+            customers.addAll(customerRepo.findAll());
+        }
+        customerListView.setItems(customers.sorted());
+    }
+    private void populateCustomerForm() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+
+        customerNameTextField.setText(selectedCustomer.getCustomerName());
+        customerPhoneTextField.setText(selectedCustomer.getCustomerPhone());
+        customerEmailTextField.setText(selectedCustomer.getCustomerEmail());
+
+        try {
+            for (String s : countryComboBox.getItems()) {
+                if (selectedCustomer.getCountryString().equals(s)) {
+                    countryComboBox.getSelectionModel().select(s);
+                    break;
+                }
+            }
+
+            for (String s : stateComboBox.getItems()) {
+                if (selectedCustomer.getStateString().equals(s)) {
+                    stateComboBox.getSelectionModel().select(s);
+                    break;
+                }
+            }
+        }
+        catch(NullPointerException ex) {
+            System.err.println("Selected customer does not have a state or a country assigned");
+        }
+    }
+    private boolean validateCustomerForm(String name, String phone, String email) {
+        boolean isNameValid = validateName(name);
+        boolean isPhoneValid = validatePhone(phone);
+        boolean isEmailValid = validateEmail(email);
+
+        if(!isNameValid) {
+            customerNameHelpLabel.setTextFill(Color.web("#F73331"));
+            customerNameHelpLabel.setText("Invalid format: First Last");
+            customerNameHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(!isPhoneValid) {
+            customerPhoneHelpLabel.setTextFill(Color.web("#F73331"));
+            customerPhoneHelpLabel.setText("Invalid format: xxx-xxx-xxxx");
+            customerPhoneHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(!isEmailValid) {
+            customerEmailHelpLabel.setTextFill(Color.web("#F73331"));
+            customerEmailHelpLabel.setText("Invalid format: email@domain.com");
+            customerEmailHelpLabel.setVisible(true);
+            return false;
+        }
+        else if(countryComboBox.getValue() == null ) {
+            return false;
+        }
+        else if(countryComboBox.getValue().isBlank()) {
+            return false;
+        }
+        else {
+            return true;
+        }
+
+    }
+    private void populateCountryComboBox() {
+        ObservableList<String> countryStringList = FXCollections.observableArrayList();
+        if(countryRepo.count() != 0) {
+            List<Country> countries = countryRepo.findAll();
+            for(Country c : countries) {
+                countryStringList.add(c.toString());
+            }
+        }
+        countryComboBox.setItems(countryStringList);
+    }
+    private void populateStateComboBox() {
+        ObservableList<String> stateStringList = FXCollections.observableArrayList();
+        if(stateRepo.count() != 0) {
+            List<State> states = stateRepo.findAll();
+            for(State s : states) {
+                stateStringList.add(s.toString());
+            }
+        }
+        stateComboBox.setItems(stateStringList);
     }
 
-    private void registerEvent() {
-        Event event = eventRegComboBox.getSelectionModel().getSelectedItem();
-            Customer customer = customerListView.getSelectionModel().getSelectedItem();
-            customer.setEvent(event);
-            customerRepo.save(customer);
+    //Button Actions - Order Form
+    private void submitOrder() {
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+
+        Order order = createOrder(selectedCustomer);
+        orderRepo.save(order);
+
+        populateOrderListView(selectedCustomer.getCustomerId(), selectedCustomer.getCustomerName());
+        resetOrderForm();
+    }
+    private void resetOrderForm() {
+        stayComboBox.setDisable(false);
+        stayComboBox.getSelectionModel().clearSelection();
+
+        orderFormLabel.setText("Create Order");
+        orderTotalLabel.setText("-");
+
+        orderFormSubmitButton.setText("Create");
+
+        orderFormSubmitButton.setOnAction(e -> {
+            submitOrder();
+        });
+    }
+    private void editOrder() {
+        resetOrderForm();
+        try {
+            orderFormSubmitButton.setOnAction(e -> {
+                submitOrderEdits();
+            });
+
+            populateOrderForm();
+            orderFormLabel.setText("Edit Order");
+            orderFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            orderFormSubmitButton.setOnAction(e -> {
+                submitOrder();
+            });
+            System.err.println("Nothing selected order list");
+        }
+    }
+    private void submitOrderEdits() {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+        Order editedOrder = createOrder(selectedOrder.getCustomer());
+        editedOrder.setOrderId(selectedOrder.getOrderId());
+
+        Set<AdditionalCharge> addCharges = selectedOrder.getAdditionalCharges();
+        Set<EventCharge> eventCharges = selectedOrder.getEventCharges();
+        addAdditionalCharges(editedOrder, addCharges, eventCharges);
+
+        orderRepo.save(editedOrder);
+
+        populateOrderListView(selectedOrder.getCustomer().getCustomerId(), selectedOrder.getCustomer().getCustomerName());
+        resetOrderForm();
+    }
+    private void deleteOrder() {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+
+        orderRepo.delete(selectedOrder);
+
+        populateOrderListView(selectedOrder.getCustomer().getCustomerId(), selectedOrder.getCustomer().getCustomerName());
+        resetOrderForm();
+    }
+    //Util Methods - Order Form
+    private void populateOrderListView(UUID customerId, String customerName) {
+        orderListLabel.setText("Orders: " + customerName);
+        ObservableList<Order> orders = FXCollections.observableArrayList();
+
+        if(orderRepo.count() != 0) {
+            orders.addAll(orderRepo.findAllByCustomer_CustomerId(customerId));
+        }
+        orderListView.setItems(orders.sorted());
+    }
+    private void populateStayComboBox(UUID customerId) {
+        stayComboBox.getItems().clear();
+        ObservableList<Stay> stayList = FXCollections.observableArrayList();
+        if(stayRepo.count() != 0) {
+            stayList.addAll(stayRepo.findAllByCustomer_CustomerId(customerId));
+        }
+        stayComboBox.setItems(stayList);
+    }
+    private void populateOrderForm() {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+
+       if(selectedOrder.getStay() != null) {
+           try {
+               for (Stay stay : stayComboBox.getItems()) {
+                   if (selectedOrder.getStayId() == stay.getStayId()) {
+                       stayComboBox.getSelectionModel().select(stay);
+                       break;
+                   }
+               }
+           } catch (NullPointerException ex) {
+               ex.printStackTrace();
+               System.err.println("Selected order does not have a stay assigned");
+           }
+       }
+       orderTotalLabel.setText("$" + selectedOrder.getTotal().toString());
+
+    }
+    private Order createOrder(Customer customer) {
+        Stay selectedStay;
+        BigDecimal orderTotal;
+
+        try {
+            selectedStay = stayComboBox.getValue();
+            long daysDuration = ChronoUnit.DAYS.between(selectedStay.getStartDate(), selectedStay.getEndDate());
+            orderTotal = selectedStay.getRoom().getRate().multiply(new BigDecimal(daysDuration));
+        }
+        catch(NullPointerException ex) {
+            selectedStay = null;
+            orderTotal = new BigDecimal(0);
+        }
+
+        return new Order(customer, selectedStay, orderTotal);
     }
 
-    private void cancelEventRegistration() {
-        eventRegComboBox.getSelectionModel().clearSelection();
+    //Button Actions - Charge Form
+    private void submitCharge() {
+        if(validateChargeForm()) {
+            Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+            if(selectedOrder != null) {
+                AdditionalCharge charge = new AdditionalCharge(
+                        selectedOrder,
+                        chargeDescriptionTextArea.getText(),
+                        new BigDecimal(chargeAmountTextField.getText()));
+                additionalChargeRepo.save(charge);
+                updateOrderTotal(charge);
+                populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+                populateChargeListView(selectedOrder.getOrderId());
+                resetChargeForm();
+            }
+            else {
+                System.err.println("Nothing selected in order list");
+            }
+        }
+    }
+    private void resetChargeForm() {
+        chargeFormSubmitButton.setText("Add");
+
+        chargeAmountTextField.clear();
+        chargeDescriptionTextArea.clear();
+
+        chargeAmountHelpLabel.setTextFill(Color.web("#5BDDC7"));
+        chargeAmountHelpLabel.setText("####.##");
+        chargeAmountHelpLabel.setVisible(false);
+        chargeFormOrderIdLabel.setText("Order #--");
+        chargeFormLabel.setText("Add Charge");
+
+        chargeFormSubmitButton.setOnAction(e -> {
+            submitCharge();
+        });
+    }
+    private void editCharge() {
+        resetChargeForm();
+        try {
+            chargeFormSubmitButton.setOnAction(e -> {
+                submitChargeEdits();
+            });
+
+            populateChargeForm();
+            chargeFormLabel.setText("Edit a Charge");
+            chargeFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            chargeFormSubmitButton.setOnAction(e -> {
+                submitCharge();
+            });
+            System.err.println("Nothing selected in charges list");
+        }
+    }
+    private void submitChargeEdits() {
+        if (validateChargeForm()) {
+            if(orderListView.getSelectionModel().getSelectedItem() != null) {
+                BigDecimal oldCharge = chargeListView.getSelectionModel().getSelectedItem().getCharge();
+
+                AdditionalCharge charge = new AdditionalCharge(
+                        chargeListView.getSelectionModel().getSelectedItem().getChargeId(),
+                        orderListView.getSelectionModel().getSelectedItem(),
+                        chargeDescriptionTextArea.getText(),
+                        new BigDecimal(chargeAmountTextField.getText()));
+                additionalChargeRepo.save(charge);
+
+                if (charge.getCharge().compareTo(oldCharge) < 0) {
+                    charge.setCharge(oldCharge.subtract(charge.getCharge()).multiply(new BigDecimal(-1)));
+                }
+                else if (charge.getCharge().compareTo(oldCharge) > 0) {
+                    charge.setCharge(charge.getCharge().subtract(oldCharge));
+                }
+                else {
+                    charge.setCharge(new BigDecimal(0));
+                }
+
+                updateOrderTotal(charge); //TODO calculate order total in order object
+                populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+                populateChargeListView(chargeListView.getSelectionModel().getSelectedItem().getChargeId());
+                resetChargeForm();
+            }
+            else {
+                System.err.println("Nothing selected in order list to submit edit");
+            }
+        }
+    }
+    private void deleteCharge() {
+        AdditionalCharge selectedCharge = chargeListView.getSelectionModel().getSelectedItem();
+
+        if(selectedCharge != null) {
+            additionalChargeRepo.delete(selectedCharge);
+
+            selectedCharge.setCharge(selectedCharge.getCharge().multiply(new BigDecimal(-1)));
+            updateOrderTotal(selectedCharge);
+
+            populateOrderListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateChargeListView(selectedCharge.getOrderId());
+            resetChargeForm();
+        }
+    }
+    //Util Methods - Charge Form
+    private void populateChargeListView(int orderId) {
+        chargeListLabel.setText("Additional Charges - Order #" + orderId);
+        ObservableList<AdditionalCharge> charges = FXCollections.observableArrayList();
+
+        if(additionalChargeRepo.count() != 0) {
+            charges.addAll(additionalChargeRepo.findAllByOrder_OrderId(orderId));
+        }
+        chargeListView.setItems(charges);
+    }
+    private void populateChargeForm() {
+        AdditionalCharge selectedCharge = chargeListView.getSelectionModel().getSelectedItem();
+
+        chargeAmountTextField.setText(selectedCharge.getCharge().toString());
+        chargeDescriptionTextArea.setText(selectedCharge.getDescription());
+    }
+    private void updateOrderTotal(AdditionalCharge charge) {
+        Order selectedOrder = orderListView.getSelectionModel().getSelectedItem();
+        Customer selectedCustomer = customerListView.getSelectionModel().getSelectedItem();
+
+        if(selectedOrder != null) {
+            BigDecimal oldTotal = selectedOrder.getTotal();
+            BigDecimal newTotal = oldTotal.add(charge.getCharge());
+
+            Order order = new Order(
+                    selectedOrder.getOrderId(),
+                    selectedCustomer,
+                    selectedOrder.getStay(),
+                    newTotal);
+
+            orderRepo.save(order);
+        }
+    }
+    private void addAdditionalCharges(Order editedOrder, Set<AdditionalCharge> addCharges, Set<EventCharge> eventCharges) {
+        BigDecimal newTotal = new BigDecimal(0);
+
+        if(!addCharges.isEmpty()) {
+            for (AdditionalCharge charge : addCharges) {
+                newTotal = newTotal.add(charge.getCharge());
+            }
+        }
+        if(!eventCharges.isEmpty()) {
+            for (EventCharge charge : eventCharges) {
+                newTotal = newTotal.add(charge.getCharge());
+            }
+        }
+
+        editedOrder.addToTotal(newTotal);
+    }
+    private boolean validateChargeForm() {
+        try {
+            BigDecimal d = new BigDecimal(chargeAmountTextField.getText());
+        }
+        catch(NumberFormatException ex) {
+            chargeAmountHelpLabel.setTextFill(Color.web("#F73331"));
+            chargeAmountHelpLabel.setText("Invalid format: ####.##");
+            chargeAmountHelpLabel.setVisible(true);
+            return false;
+        }
+
+        if(chargeDescriptionTextArea.getText().isBlank()) {
+            return false;
+        }
+        return true;
     }
 
+    //Button Actions - Stay Form
+    private void submitStay() {
+        if(validateStayForm()) {
+            LocalDate startDate = stayStartDatePicker.getValue();
+            LocalDate endDate = stayEndDatePicker.getValue();
+
+            Stay stay = new Stay(
+                    customerComboBox.getValue(),
+                    roomComboBox.getValue(),
+                    startDate, endDate);
+            stayRepo.save(stay);
+
+            populateStayListView(customerListView.getSelectionModel().getSelectedItem().getCustomerId(), customerListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateStayComboBox(customerListView.getSelectionModel().getSelectedItem().getCustomerId());
+            resetStayForm();
+        }
+    }
+    private void resetStayForm() {
+        customerComboBox.getSelectionModel().clearSelection();
+        customerComboBox.setDisable(false);
+        roomComboBox.getSelectionModel().clearSelection();
+        roomComboBox.setDisable(false);
+
+        stayStartDatePicker.getEditor().clear();
+        stayStartDatePicker.setDisable(false);
+        stayEndDatePicker.getEditor().clear();
+        stayEndDatePicker.setDisable(false);
+
+        stayFormSubmitButton.setText("Add Stay");
+        stayFormSubmitButton.setDisable(false);
+
+        stayFormLabel.setText("Add a Stay");
+
+        stayFormSubmitButton.setOnAction(e -> {
+            submitStay();
+        });
+    }
+    private void editStay() {
+        resetStayForm();
+        try {
+            stayFormSubmitButton.setOnAction(e -> {
+                submitStayEdits();
+            });
+
+            populateStayForm();
+            stayFormLabel.setText("Edit a Stay");
+            stayFormSubmitButton.setText("Submit Edits");
+        }
+        catch(NullPointerException ex) {
+            stayFormSubmitButton.setOnAction(e -> {
+                submitStay();
+            });
+            System.err.println("Nothing selected in stay list");
+        }
+    }
+    private void submitStayEdits() {
+        if(validateStayForm()) {
+            Stay stay = new Stay(
+                    stayListView.getSelectionModel().getSelectedItem().getStayId(),
+                    customerComboBox.getValue(),
+                    roomComboBox.getValue(),
+                    stayStartDatePicker.getValue(),
+                    stayEndDatePicker.getValue());
+            stayRepo.save(stay);
+
+            populateStayListView(stayListView.getSelectionModel().getSelectedItem().getCustomerId(), stayListView.getSelectionModel().getSelectedItem().getCustomerName());
+            populateStayComboBox(customerListView.getSelectionModel().getSelectedItem().getCustomerId());
+            resetStayForm();
+        }
+    }
+    private void viewStay() {
+        resetStayForm();
+
+        customerComboBox.setDisable(true);
+        roomComboBox.setDisable(true);
+        stayStartDatePicker.setDisable(true);
+        stayEndDatePicker.setDisable(true);
+        stayFormSubmitButton.setDisable(true);
+
+        populateStayForm();
+    }
+    private void deleteStay() {
+        Stay selectedStay = stayListView.getSelectionModel().getSelectedItem();
+
+        stayRepo.delete(selectedStay);
+
+        resetStayForm();
+        populateStayListView(selectedStay.getCustomerId(), selectedStay.getCustomerName());
+    }
+    //Util Methods - Stay Form
+    private void populateStayForm() {
+        Stay selectedStay = stayListView.getSelectionModel().getSelectedItem();
+
+        for(Customer customer : customerComboBox.getItems()) {
+            if(selectedStay.getCustomerId().equals(customer.getCustomerId())) {
+                customerComboBox.getSelectionModel().select(customer);
+                customerComboBox.setDisable(true);
+                break;
+            }
+        }
+        for(Room room : roomComboBox.getItems()) {
+            if(selectedStay.getRoomId() == room.getRoomId()) {
+                roomComboBox.getSelectionModel().select(room);
+                break;
+            }
+        }
+
+        LocalDate startDate = selectedStay.getStartDate();
+        LocalDate endDate = selectedStay.getEndDate();
+
+        stayStartDatePicker.setValue(startDate);
+        stayEndDatePicker.setValue(endDate);
+    }
+    private void populateStayListView(UUID customerId, String customerName) {
+        stayListLabel.setText("Stay List - " + customerName);
+        ObservableList<Stay> stays = FXCollections.observableArrayList();
+
+        if(stayRepo.count() != 0) {
+            stays.addAll(stayRepo.findAllByCustomer_CustomerId(customerId));
+        }
+        stayListView.setItems(stays.sorted());
+    }
+    private void populateCustomerComboBox() {
+        customerComboBox.getItems().clear();
+        ObservableList<Customer> customerList = FXCollections.observableArrayList();
+        if(customerRepo.count() != 0) {
+            customerList.addAll(customerRepo.findAll());
+        }
+        customerComboBox.setItems(customerList);
+    }
+    private void populateRoomComboBox() {
+        roomComboBox.getItems().clear();
+        ObservableList<Room> roomList = FXCollections.observableArrayList();
+        if(roomRepo.count() != 0) {
+            roomList.addAll(roomRepo.findAll());
+        }
+        roomComboBox.setItems(roomList);
+    }
+    private boolean validateStayForm() {
+        if(customerComboBox.getSelectionModel().isEmpty()) {
+            return false;
+        }
+        else if(roomComboBox.getSelectionModel().isEmpty()) {
+            return false;
+        }
+        else if(stayStartDatePicker.getValue() == null) {
+            return false;
+        }
+        else if(stayEndDatePicker.getValue() == null) {
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
     public AnchorPane getScene() {
         return pane;
     }

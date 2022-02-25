@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface RoomRepo extends CrudRepository<Room, Character> {
     List<Room> findAll();
+    int countAllByRoomStatus_RoomStatus(String roomStatus);
 }

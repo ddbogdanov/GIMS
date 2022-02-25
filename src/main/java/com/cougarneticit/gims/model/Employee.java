@@ -26,11 +26,16 @@ public class Employee {
     @JoinColumn(name="user_id")
     private User user;
 
-    //TODO: Switch FetchType to LAZY and use Lists instead of Sets. Possible future performance degradation due to EAGER fetching
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="employee", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="employee", cascade=CascadeType.REMOVE)
     private Set<Task> tasks;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy="employee", cascade=CascadeType.REMOVE)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="employee", cascade=CascadeType.REMOVE)
     private Set<Shift> shifts;
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="employee", cascade=CascadeType.REMOVE)
+    private Set<EmployeeReport> employeeReports;
+
+    @ManyToOne
+    @JoinColumn(name="employee_rate_id")
+    private EmployeeRate employeeRate;
 
     public Employee() {
         employeeId = UUID.randomUUID();
@@ -39,12 +44,13 @@ public class Employee {
         employeePhone = null;
         employeeEmail = null;
     }
-    public Employee(UUID employeeId, User user, String employee_name, String employeePhone, String employeeEmail) {
+    public Employee(UUID employeeId, User user, String employee_name, String employeePhone, String employeeEmail, EmployeeRate employeeRate) {
         this.employeeId = employeeId;
         this.user = user;
         this.employeeName = employee_name;
         this.employeePhone = employeePhone;
         this.employeeEmail = employeeEmail;
+        this.employeeRate = employeeRate;
     }
 
     public void setUser(User user) {
@@ -68,6 +74,9 @@ public class Employee {
     }
     public String getEmail() {
         return employeeEmail;
+    }
+    public EmployeeRate getEmployeeRate() {
+        return employeeRate;
     }
     public Set<Task> getTasks() {
         return tasks;

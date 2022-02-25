@@ -85,16 +85,16 @@ public class LoginController extends GIMSController implements Initializable {
             
             if(passwordEncoder.matches(password, userPassword)) {
 
-<<<<<<< Updated upstream
-                String hashedPassword = userRepo.findByUsername(username).get(0).getPassword();
+//<<<<<<< Updated upstream
+                //String hashedPassword = userRepo.findByUsername(username).get(0).getPassword();
                 userId = userRepo.findByUsername(username).get(0).getUserId();
                 isAdmin = userRepo.findByUsername(username).get(0).isAdmin();
-                User user = new User(userId, username, hashedPassword, isAdmin);
-=======
-                userId = user.getUser_id();
+                //User user = new User(userId, username, hashedPassword, isAdmin);
+//=======
+                userId = user.getUserId();
                 isAdmin = user.isAdmin();
                 User activeUser = new User(userId, username, userPassword, isAdmin);
->>>>>>> Stashed changes
+//>>>>>>> Stashed changes
 
                 loginStatus.setTextFill(Color.web("#FFFFFF"));
                 loginStatus.setText("Login Successful!");

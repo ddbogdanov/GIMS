@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.*?>
-<?import de.jensd.fx.glyphs.fontawesome.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXToggleButton?>
+<?import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ContextMenu?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="pane" prefHeight="700.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.RoomsSceneController">
+<AnchorPane fx:id="pane" prefHeight="700.0" prefWidth="1090.0" style="-fx-background-color: #33333d;" stylesheets="@static/GIMScss.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cougarneticit.gims.controller.admin.RoomsSceneController">
    <children>
       <HBox layoutX="410.0" layoutY="265.0" prefHeight="700.0" prefWidth="1090.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -42,8 +54,15 @@
                         </AnchorPane>
                         <JFXListView fx:id="roomListView" prefHeight="250.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                            <VBox.margin>
-                              <Insets bottom="15.0" left="15.0" right="15.0" />
+                              <Insets bottom="15.0" left="15.0" right="15.0" top="5.0" />
                            </VBox.margin>
+                           <contextMenu>
+                              <ContextMenu>
+                                <items>
+                                  <MenuItem mnemonicParsing="false" text="Unspecified Action" />
+                                </items>
+                              </ContextMenu>
+                           </contextMenu>
                         </JFXListView>
                         <Separator prefHeight="1.0" prefWidth="24.0" stylesheets="@static/GIMScss.css">
                            <VBox.margin>
@@ -52,14 +71,30 @@
                         </Separator>
                         <VBox alignment="TOP_CENTER" prefHeight="355.0" prefWidth="265.0">
                            <children>
-                              <Label fx:id="roomFormLabel" text="Add a Room" textFill="WHITE" VBox.vgrow="ALWAYS">
-                                 <font>
-                                    <Font name="Roboto Regular" size="20.0" />
-                                 </font>
+                              <HBox alignment="CENTER" prefHeight="25.0" prefWidth="285.0">
                                  <VBox.margin>
                                     <Insets top="5.0" />
                                  </VBox.margin>
-                              </Label>
+                                 <children>
+                                    <Label fx:id="roomFormLabel" text="Add a Room" textFill="WHITE" translateX="15.0">
+                                       <font>
+                                          <Font name="Roboto Regular" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <JFXButton fx:id="roomReportButton" focusTraversable="false" ripplerFill="#5bddc7" text="" translateX="58.0">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="FILE_TEXT_ALT" size="14" />
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip hideOnEscape="false" opacity="0.8" text="Generate a PDF report for selected room">
+                                             <font>
+                                                <Font name="Roboto Regular" size="12.0" />
+                                             </font>
+                                          </Tooltip>
+                                       </tooltip>
+                                    </JFXButton>
+                                 </children>
+                              </HBox>
                               <JFXToggleButton fx:id="editToggleButton" size="6.0" text="Edit Existing?" textFill="WHITE" toggleColor="#007b68" toggleLineColor="#5bddc7" unToggleColor="#007b68" unToggleLineColor="#5d5c67" />
                               <JFXTextField fx:id="roomIdTextField" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="161.0" promptText="Room ID" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" unFocusColor="#5d5c67" VBox.vgrow="ALWAYS">
                                  <font>
@@ -101,14 +136,41 @@
                                     <Insets left="15.0" right="15.0" top="5.0" />
                                  </VBox.margin>
                               </AnchorPane>
-                              <JFXComboBox fx:id="roomStatusComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="128.0" promptText="Room Status" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
-                                 <VBox.margin>
-                                    <Insets right="125.0" top="15.0" />
-                                 </VBox.margin>
-                              </JFXComboBox>
-                              <AnchorPane prefHeight="12.0" prefWidth="243.0">
+                              <HBox prefHeight="28.0" prefWidth="285.0">
                                  <children>
-                                    <Label fx:id="roomStatusHelpLabel" prefHeight="15.0" prefWidth="243.0" text="Room Status" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <JFXComboBox fx:id="roomStatusComboBox" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="122.0" promptText="Room Status" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css" />
+                                    <JFXComboBox fx:id="roomRateComboBox" editable="true" focusColor="#11ab97" labelFloat="true" prefHeight="28.0" prefWidth="92.0" promptText="Room Rate" style="-fx-background-color: #3e3e4a;" stylesheets="@static/GIMScss.css">
+                                       <HBox.margin>
+                                          <Insets left="10.0" />
+                                       </HBox.margin></JFXComboBox>
+                                    <JFXButton fx:id="deleteRateButton" focusTraversable="false" ripplerFill="#5bddc7" text="">
+                                       <graphic>
+                                          <FontAwesomeIconView fill="WHITE" glyphName="TIMES" size="14" />
+                                       </graphic>
+                                       <tooltip>
+                                          <Tooltip hideOnEscape="false" opacity="0.8" text="Delete selected rate">
+                                             <font>
+                                                <Font name="Roboto Regular" size="12.0" />
+                                             </font>
+                                          </Tooltip>
+                                       </tooltip>
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </JFXButton>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets left="15.0" right="15.0" top="15.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <AnchorPane prefHeight="12.0" prefWidth="180.0">
+                                 <children>
+                                    <Label fx:id="roomStatusHelpLabel" prefHeight="13.0" prefWidth="122.0" text="Room Status" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <font>
+                                          <Font name="Roboto Regular" size="10.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="roomRateHelpLabel" layoutX="128.0" layoutY="5.0" prefHeight="13.0" prefWidth="122.0" text="Room Rate - ##.##" textFill="#5bddc7" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                        <font>
                                           <Font name="Roboto Regular" size="10.0" />
                                        </font>
@@ -155,10 +217,10 @@
                   </VBox>
                </children>
             </AnchorPane>
-            <AnchorPane prefHeight="700.0" prefWidth="520.0" HBox.hgrow="ALWAYS">
+            <AnchorPane prefHeight="700.0" prefWidth="805.0" HBox.hgrow="ALWAYS">
                <children>
                   <Separator orientation="VERTICAL" prefHeight="200.0" prefWidth="0.0" stylesheets="@static/GIMScss.css" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="15.0" />
-                  <VBox alignment="TOP_CENTER" layoutX="181.0" layoutY="141.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <VBox alignment="TOP_CENTER" layoutX="181.0" layoutY="141.0" prefHeight="700.0" prefWidth="805.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
                         <VBox alignment="TOP_CENTER" prefHeight="170.0" prefWidth="520.0">
                            <VBox.margin>
@@ -245,7 +307,7 @@
                                           <Insets left="15.0" right="15.0" top="5.0" />
                                        </VBox.margin>
                                     </AnchorPane>
-                                    <JFXListView fx:id="taskListView" prefHeight="250.0" prefWidth="255.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
+                                    <JFXListView fx:id="taskListView" prefHeight="250.0" prefWidth="389.0" stylesheets="@static/GIMScss.css" VBox.vgrow="ALWAYS">
                                        <VBox.margin>
                                           <Insets left="15.0" right="15.0" />
                                        </VBox.margin>

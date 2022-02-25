@@ -1,14 +1,12 @@
 package com.cougarneticit.gims.controller.admin;
 
 import com.cougarneticit.gims.controller.common.GIMSController;
-import com.cougarneticit.gims.model.Employee;
-import com.cougarneticit.gims.model.Shift;
-import com.cougarneticit.gims.model.Task;
-import com.cougarneticit.gims.model.User;
-import com.cougarneticit.gims.model.repos.EmployeeRepo;
-import com.cougarneticit.gims.model.repos.ShiftRepo;
-import com.cougarneticit.gims.model.repos.TaskRepo;
-import com.cougarneticit.gims.model.repos.UserRepo;
+import com.cougarneticit.gims.model.*;
+import com.cougarneticit.gims.model.repos.*;
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.jfoenix.controls.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,16 +15,23 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import net.rgielen.fxweaver.core.FxWeaver;
 import net.rgielen.fxweaver.core.FxmlView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.math.BigDecimal;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.List;
 
 @Component
 @FxmlView("/EmployeeSceneController.fxml")
@@ -44,10 +49,15 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     private TaskRepo taskRepo;
     @Autowired
     private ShiftRepo shiftRepo;
+    @Autowired
+    private EmployeeReportRepo employeeReportRepo;
+    @Autowired
+    private EmployeeRateRepo employeeRateRepo;
 
     @FXML private AnchorPane pane;
     @FXML private JFXComboBox<User> userComboBox;
     @FXML private JFXComboBox<Employee> employeeComboBox;
+    @FXML private JFXComboBox<String> employeeRateComboBox;
     @FXML private JFXListView<Employee> employeeListView;
     @FXML private JFXListView<Shift> shiftListView;
     @FXML private JFXListView<Task> taskListView;
@@ -63,7 +73,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
 
     @FXML private JFXButton
             viewEmployeeButton, editEmployeeButton, deleteEmployeeButton, employeeFormSubmitButton,  employeeFormCancelButton,
-            shiftEditButton, shiftDeleteButton, shiftFormSubmitButton, shiftFormCancelButton;
+            shiftEditButton, shiftDeleteButton, shiftFormSubmitButton, shiftFormCancelButton, employeeReportButton, deleteRateButton;
 
     public EmployeeSceneController(FxWeaver fxWeaver) {
         super(fxWeaver);
@@ -75,11 +85,17 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         initStage(stage, pane, null, null, null, null, true);
 
         populateUserComboBox();
+        populateEmployeeRateComboBox();
         populateEmployeeComboBox();
         populateEmployeeListView();
         employeeListView.getSelectionModel().select(0);
-        populateShiftListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
-        populateTaskListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
+        try {
+            populateShiftListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
+            populateTaskListView(employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(), employeeListView.getSelectionModel().getSelectedItem().getName());
+        }
+        catch(NullPointerException ex) {
+            System.err.println("No employees");
+        }
         setInfoLabels();
 
         employeeFormSubmitButton.setOnAction(e -> {
@@ -96,6 +112,12 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         });
         deleteEmployeeButton.setOnAction(e -> {
             deleteEmployee();
+        });
+        employeeReportButton.setOnAction(e -> {
+            generateEmployeeReport();
+        });
+        deleteRateButton.setOnAction(e -> {
+            deleteRate();
         });
 
         shiftFormSubmitButton.setOnAction(e -> {
@@ -160,9 +182,18 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         String email = emailTextField.getText();
 
         if(validateEmployeeForm(selectedUser, name, phone, email, false)) {
-            Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email);
-            employeeRepo.save(emp);
 
+            if(employeeRateComboBox.getValue().isBlank() || employeeRateComboBox.getValue() == null) {
+
+                Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email, null); //TODO: set EmployeeRate
+                employeeRepo.save(emp);
+            }
+            else {
+                EmployeeRate rate = getOrCreateRate();
+
+                Employee emp = new Employee(UUID.randomUUID(), selectedUser, name, phone, email, rate); //TODO: set EmployeeRate
+                employeeRepo.save(emp);
+            }
             populateEmployeeListView();
             populateEmployeeComboBox();
             setInfoLabels();
@@ -175,6 +206,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         nameTextField.setDisable(true);
         phoneTextField.setDisable(true);
         emailTextField.setDisable(true);
+        employeeRateComboBox.setDisable(true);
         employeeFormSubmitButton.setDisable(true);
 
         employeeFormCancelButton.setText("Reset");
@@ -208,10 +240,11 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         String email = emailTextField.getText();
 
         if(validateEmployeeForm(selectedUser, name, phone, email, true)) {
+            EmployeeRate rate = getOrCreateRate();
             Employee updatedEmployee = new Employee(
                     employeeListView.getSelectionModel().getSelectedItem().getEmployeeId(),
                     employeeListView.getSelectionModel().getSelectedItem().getUser(),
-                    name, phone, email);
+                    name, phone, email, rate);
             employeeRepo.save(updatedEmployee);
 
             populateEmployeeListView();
@@ -238,6 +271,8 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         populateUserComboBox();
         userComboBox.getSelectionModel().clearSelection();
         userComboBox.setDisable(false);
+        employeeRateComboBox.getSelectionModel().clearSelection();
+        employeeRateComboBox.setDisable(false);
 
         //Reset buttons
         employeeFormSubmitButton.setText("Add Employee");
@@ -272,6 +307,80 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             submitEmployee();
         });
     }
+    private void generateEmployeeReport() {
+        final Font headingFont = new Font(Font.FontFamily.TIMES_ROMAN, 18, Font.BOLD);
+        final Font subHeadingFont = new Font(Font.FontFamily.TIMES_ROMAN, 14, Font.BOLD);
+        final Font bodyFont = new Font(Font.FontFamily.TIMES_ROMAN, 12, Font.NORMAL);
+
+        Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
+        LocalDate date = LocalDate.now();
+
+        try {
+            Document doc = new Document();
+
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setInitialFileName("EmployeeReport" + "_" + selectedEmployee.getName() + "_" + date.toString());
+
+            FileChooser.ExtensionFilter extensionFilter = new FileChooser.ExtensionFilter("PDF Files (*.pdf)", "*.pdf");
+            fileChooser.getExtensionFilters().add(extensionFilter);
+            File file = fileChooser.showSaveDialog(stage);
+            PdfWriter.getInstance(doc, new FileOutputStream(file));
+
+            doc.open();
+
+            //Create a title table for PDF
+            Paragraph title = new Paragraph();
+            title.add(new Paragraph("Employee: " + selectedEmployee.getName() + " Employee Report - Generated on: " + date.toString(), headingFont));
+            title.setAlignment(Element.ALIGN_LEFT);
+            Image gimsLogo = Image.getInstance("src/main/resources/static/img/Logo1png.png");
+            gimsLogo.scaleToFit(50, 50);
+            gimsLogo.setAlignment(Element.ALIGN_RIGHT);
+            PdfPCell leftTitleCell = new PdfPCell();
+            PdfPCell rightTitleCell = new PdfPCell();
+            rightTitleCell.setBorder(Rectangle.NO_BORDER);
+            leftTitleCell.setBorder(Rectangle.NO_BORDER);
+            PdfPTable titleTable = new PdfPTable(2);
+            titleTable.setWidthPercentage(100f);
+            leftTitleCell.addElement(title);
+            rightTitleCell.addElement(gimsLogo);
+            titleTable.addCell(leftTitleCell);
+            titleTable.addCell(rightTitleCell);
+
+            //Create a task count table for PDF
+            int activeTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), false);
+            int completedTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), true);
+            PdfPTable taskCountTable = new PdfPTable(2);
+            taskCountTable.setWidthPercentage(100f);
+            taskCountTable.setSpacingBefore(30f);
+            taskCountTable.setSpacingAfter(30f);
+            taskCountTable.addCell(new PdfPCell(new Paragraph("Active Tasks", subHeadingFont)));
+            taskCountTable.addCell(new PdfPCell(new Paragraph("Completed Tasks", subHeadingFont)));
+            taskCountTable.addCell(new PdfPCell(Phrase.getInstance(String.valueOf(activeTasks))));
+            taskCountTable.addCell(new PdfPCell(Phrase.getInstance(String.valueOf(completedTasks))));
+
+            //TODO: Add more stuff
+
+            doc.addTitle("Employee: " + selectedEmployee.getName() + " Employee Report - Generated on: " + date.toString());
+            doc.addCreationDate();
+            doc.add(titleTable);
+            doc.add(taskCountTable);
+
+            employeeReportRepo.save(new EmployeeReport(UUID.randomUUID(), selectedEmployee, date));
+
+            doc.close();
+        }
+        catch(Exception ex) {
+            ex.printStackTrace();
+            System.err.println("FileChooser closed without selecting path, or File Not Found");
+        }
+    }
+    private void deleteRate() {
+        if(!employeeRateComboBox.getValue().isBlank()) {
+            employeeRateRepo.deleteByRate(new BigDecimal(employeeRateComboBox.getValue()));
+            populateEmployeeRateComboBox();
+            populateEmployeeListView();
+        }
+    }
     //Util Methods - Employee form
     private void populateEmployeeForm() {
         Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
@@ -282,6 +391,12 @@ public class EmployeeSceneController extends GIMSController implements Initializ
                 userComboBox.setDisable(true);
                 break;
             }
+        }
+        try {
+            employeeRateComboBox.setValue(selectedEmployee.getEmployeeRate().toString());
+        }
+        catch(NullPointerException ex) {
+
         }
         nameTextField.setText(selectedEmployee.getName());
         phoneTextField.setText(selectedEmployee.getPhone());
@@ -295,6 +410,17 @@ public class EmployeeSceneController extends GIMSController implements Initializ
             userList.addAll(userRepo.findAll());
         }
         userComboBox.setItems(userList);
+    }
+    private void populateEmployeeRateComboBox() {
+        employeeRateComboBox.getItems().clear();
+        ObservableList<String> employeeRateStringList = FXCollections.observableArrayList();
+        if(employeeRateRepo.count() != 0) {
+            List<EmployeeRate> employeeRates = employeeRateRepo.findAll();
+            for(EmployeeRate er : employeeRates) {
+                employeeRateStringList.add(er.getEmployeeStringRate());
+            }
+        }
+        employeeRateComboBox.setItems(employeeRateStringList);
     }
     private void populateEmployeeListView() {
         ObservableList<Employee> employeeList = FXCollections.observableArrayList();
@@ -329,7 +455,7 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         }
         else if(userComboBox.getSelectionModel().isEmpty()) {
             userHelpLabel.setTextFill(Color.web("#F73331"));
-            userHelpLabel.setText("Select Employee:");
+            userHelpLabel.setText("Select a User");
             userHelpLabel.setVisible(true);
             return false;
         }
@@ -342,6 +468,18 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         else {
             return true;
         }
+    }
+    private EmployeeRate getOrCreateRate() {
+        EmployeeRate rate;
+        if(employeeRateRepo.existsByRate(new BigDecimal(employeeRateComboBox.getValue()))) {
+            rate = employeeRateRepo.findByRate(new BigDecimal(employeeRateComboBox.getValue()));
+        }
+        else {
+            rate = new EmployeeRate(new BigDecimal(employeeRateComboBox.getValue()));
+            employeeRateRepo.save(rate);
+            populateEmployeeRateComboBox();
+        }
+        return rate;
     }
 
     //Button Actions - Shift form
@@ -386,7 +524,6 @@ public class EmployeeSceneController extends GIMSController implements Initializ
     }
     private void editShift() {
         resetShiftForm();
-
         try {
             shiftFormSubmitButton.setOnAction(e -> {
                 submitShiftEdits();
@@ -507,36 +644,41 @@ public class EmployeeSceneController extends GIMSController implements Initializ
         taskListView.setItems(taskList.sorted());
     }
     private void setInfoLabels() {
-        Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
-        List<Shift> employeeShifts = shiftRepo.findAllByEmployee_EmployeeId(selectedEmployee.getEmployeeId());
+        try {
+            Employee selectedEmployee = employeeListView.getSelectionModel().getSelectedItem();
+            List<Shift> employeeShifts = shiftRepo.findAllByEmployee_EmployeeId(selectedEmployee.getEmployeeId());
 
-        int activeTasks, completedTasks;
-        long daysScheduled = 0, hoursScheduled = 0;
+            int activeTasks, completedTasks;
+            long daysScheduled = 0, hoursScheduled = 0;
 
-        employeeNameLabel.setText(selectedEmployee.getName());
-        emailLabel.setText(selectedEmployee.getEmail());
-        phoneLabel.setText(selectedEmployee.getPhone());
+            employeeNameLabel.setText(selectedEmployee.getName());
+            emailLabel.setText(selectedEmployee.getEmail());
+            phoneLabel.setText(selectedEmployee.getPhone());
 
-        activeTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), false);
-        completedTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), true);
+            activeTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), false);
+            completedTasks = taskRepo.countAllByEmployee_EmployeeIdAndCompleted(selectedEmployee.getEmployeeId(), true);
 
-        activeTasksLabel.setText(String.valueOf(activeTasks));
-        completedTasksLabel.setText(String.valueOf(completedTasks));
+            activeTasksLabel.setText(String.valueOf(activeTasks));
+            completedTasksLabel.setText(String.valueOf(completedTasks));
 
-        for(Shift shift : employeeShifts) {
-            LocalDateTime startDateTime = shift.getStartDateTime();
-            LocalDateTime endDateTime = shift.getEndDateTime();
-            long tempDays;
+            for (Shift shift : employeeShifts) {
+                LocalDateTime startDateTime = shift.getStartDateTime();
+                LocalDateTime endDateTime = shift.getEndDateTime();
+                long tempDays;
 
-           tempDays = Math.abs(startDateTime.until(endDateTime, ChronoUnit.DAYS));
-           if(tempDays == 0) {
-               tempDays = 1;
-           }
-           daysScheduled += tempDays;
-           hoursScheduled += Math.abs(startDateTime.until(endDateTime, ChronoUnit.HOURS));
+                tempDays = Math.abs(startDateTime.until(endDateTime, ChronoUnit.DAYS));
+                if (tempDays == 0) {
+                    tempDays = 1;
+                }
+                daysScheduled += tempDays;
+                hoursScheduled += Math.abs(startDateTime.until(endDateTime, ChronoUnit.HOURS));
+            }
+            daysScheduledLabel.setText(String.valueOf(daysScheduled));
+            hoursScheduledLabel.setText(String.valueOf(hoursScheduled));
         }
-        daysScheduledLabel.setText(String.valueOf(daysScheduled));
-        hoursScheduledLabel.setText(String.valueOf(hoursScheduled));
+        catch(NullPointerException ex) {
+            System.err.println("No employees");
+        }
     }
 
     public AnchorPane getScene() { return pane; }
